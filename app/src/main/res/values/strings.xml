@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">Indicador RB</string>
-    <string name="indicador_dinateste">Indicador Dinateste</string>
+    <string name="app_name">Indicador Dinateste</string>
+    <string name="indicadorActivityLabel">Indicador</string>
     <string name="listar_dispositivos">Listar Dispositivos</string>
-    <string name="dispositivos">Dispositivos</string>
+    <string name="dispositivosActivityLabel">Dispositivos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
