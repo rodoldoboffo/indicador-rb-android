@@ -8,4 +8,9 @@ public class DispositivosActivity extends AbstractBaseActivity {
     protected int getLayoutResourceId() {
         return R.layout.activity_dispositivos;
     }
+
+    @Override
+    protected int getOptionsMenu() {
+        return R.menu.dispositivos_menu;
+    }
 }

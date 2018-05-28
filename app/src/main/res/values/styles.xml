@@ -10,12 +10,14 @@
 
     <style name="MyToolbarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:titleTextStyle">@style/MyToolbarTextStyle</item>
+        <item name="android:popupMenuStyle">@style/MyPopupMenuStyle</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
+        <item name="android:titleTextColor">@color/colorAccent</item>
     </style>
 
-    <style name="MyToolbarTextStyle">
-        <item name="android:textColorPrimaryInverse">@color/colorAccent</item>
-        <item name="android:textColorSecondaryInverse">@color/colorAccent</item>
+    <style name="MyPopupMenuStyle">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
     </style>
 
 </resources>

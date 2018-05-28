@@ -13,6 +13,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -62,7 +64,7 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        drawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START, false);
         switch (item.getItemId()) {
             case R.id.navIndicador:
                 iniciaActivity(IndicadorActivity.class);
@@ -92,6 +94,20 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
         catch (PackageManager.NameNotFoundException e) {
             return 0;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = this.getMenuInflater();
+        int menuRes = this.getOptionsMenu();
+        if (menuRes != 0) {
+            inflater.inflate(menuRes, menu);
+        }
+        return true;
+    }
+
+    protected int getOptionsMenu() {
+        return 0;
     }
 
     protected abstract int getLayoutResourceId();
