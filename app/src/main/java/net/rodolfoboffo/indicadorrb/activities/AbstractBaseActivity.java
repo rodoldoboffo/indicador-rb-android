@@ -39,7 +39,6 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
         navigationView.setNavigationItemSelectedListener(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorAccent));
 
         int activityLabelRes = this.getActivityLabel();
         if (activityLabelRes != 0) {

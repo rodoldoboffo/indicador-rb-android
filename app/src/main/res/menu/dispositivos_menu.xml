@@ -6,5 +6,6 @@
     <item
         android:id="@+id/scanDispositivos"
         android:title="@string/scanDispositivos"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_procurar"
+        app:showAsAction="ifRoom" />
 </menu>
