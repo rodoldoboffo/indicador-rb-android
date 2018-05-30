@@ -16,7 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/MyToolbarStyle"/>
+            android:theme="@style/MyToolbarStyle"
+            />
 
         <FrameLayout
             android:id="@+id/contentFrame"
@@ -32,6 +33,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:menu="@menu/principal_menu"
+        app:headerLayout="@layout/menu_header"
         />
 
 </android.support.v4.widget.DrawerLayout>
