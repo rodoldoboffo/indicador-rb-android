@@ -4,4 +4,5 @@
     <string name="listar_dispositivos">Listar Dispositivos</string>
     <string name="dispositivosActivityLabel">Dispositivos</string>
     <string name="scanDispositivos">Procurar</string>
+    <string name="nomeCurtoDaEmpresa">Dinateste</string>
 </resources>
