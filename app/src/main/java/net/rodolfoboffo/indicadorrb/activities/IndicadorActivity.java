@@ -11,10 +11,6 @@ import net.rodolfoboffo.indicadorrb.R;
 
 public class IndicadorActivity extends AbstractBaseActivity {
 
-    private static final int REQUEST_ENABLE_BT = 1;
-    private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothManager bluetoothManager;
-
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_indicador;
@@ -25,22 +21,4 @@ public class IndicadorActivity extends AbstractBaseActivity {
         super.onCreate(savedInstanceState);
     }
 
-    private Boolean verificarBluetooth() {
-        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            return false;
-        }
-        return true;
-    }
-
-    private void listarDispositivos(boolean enable) {
-
-    }
-
-    public void listarDispositivosButtonClick(View view) {
-        this.verificarBluetooth();
-    }
 }

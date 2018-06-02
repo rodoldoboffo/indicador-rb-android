@@ -3,9 +3,9 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navIndicador"
-            android:title="@string/indicadorActivityLabel" />
+            android:title="@string/indicador_activity_label" />
         <item
             android:id="@+id/navDispositivos"
-            android:title="@string/dispositivosActivityLabel" />
+            android:title="@string/dispositivos_activity_label" />
     </group>
 </menu>
