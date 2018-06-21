@@ -5,7 +5,11 @@
     tools:context=".activities.DispositivosActivity">
     <item
         android:id="@+id/scanDispositivos"
-        android:title="@string/scanDispositivos"
+        android:title="@string/procurar_dispositivos_toolbar_button"
         android:icon="@drawable/ic_procurar"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/limparDispositivos"
+        android:title="@string/limpar_dispositivos_toolbar_button"
+        app:showAsAction="never" />
 </menu>
