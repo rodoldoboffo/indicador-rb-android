@@ -2,10 +2,13 @@ package net.rodolfoboffo.indicadorrb.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.Observable;
+import android.databinding.ObservableField;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 

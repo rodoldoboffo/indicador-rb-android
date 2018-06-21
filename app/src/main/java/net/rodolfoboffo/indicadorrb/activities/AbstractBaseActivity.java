@@ -1,6 +1,8 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
+import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -28,6 +31,9 @@ import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 import net.rodolfoboffo.indicadorrb.services.IndicadorServiceBinder;
 
 public abstract class AbstractBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ServiceConnection {
+
+    protected static final int REQUISITAR_ATIVACAO_BLUETOOTH = 1;
+    protected static final int REQUISITAR_PERMISSOES_LOCALIDADE = 2;
 
     protected IndicadorService service;
     protected DrawerLayout drawerLayout;
@@ -58,22 +64,20 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         Intent intent = new Intent(this, IndicadorService.class);
         bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         if (this.service != null) {
             unbindService(this);
             this.service = null;
         }
     }
-
-    public void inicializaObservadoresDoServico() {};
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -120,6 +124,15 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
         }
     }
 
+    protected void requisitarAtivacaoBluetooth() {
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(enableBtIntent, REQUISITAR_ATIVACAO_BLUETOOTH);
+    }
+
+    protected void requisitarPermissoesDeLocalidade() {
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUISITAR_PERMISSOES_LOCALIDADE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = this.getMenuInflater();
@@ -135,7 +148,6 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
         IndicadorServiceBinder binder = (IndicadorServiceBinder)service;
         this.service = binder.getService();
         Log.d(this.getClass().getSimpleName(), "Serviço conectado.");
-        this.inicializaObservadoresDoServico();
     }
 
     @Override

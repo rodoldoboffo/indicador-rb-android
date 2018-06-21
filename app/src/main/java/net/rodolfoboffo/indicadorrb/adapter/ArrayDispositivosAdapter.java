@@ -1,15 +1,13 @@
 package net.rodolfoboffo.indicadorrb.adapter;
 
-import android.bluetooth.BluetoothClass;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
@@ -64,9 +62,20 @@ public class ArrayDispositivosAdapter extends BaseAdapter {
         View view = inflater.inflate(R.layout.list_item_dispositivos, parent, false);
 
         TextView textViewNome = (TextView) view.findViewById(R.id.itemDispositivoNomeText);
+        ImageView imageViewIcon = (ImageView) view.findViewById(R.id.itemDispositivoIcon);
         String nomeDoDispositivo = null;
         if (this.dispositivos != null) {
-            nomeDoDispositivo = this.dispositivos.get(position).getNome();
+            DispositivoBLE dispositivo = this.dispositivos.get(position);
+            nomeDoDispositivo = dispositivo.getNome().get();
+            if (dispositivo.getPronto().get()) {
+                imageViewIcon.setImageResource(R.drawable.ic_bluetooth_connected_24dp);
+            }
+            else {
+                imageViewIcon.setImageResource(R.drawable.ic_bluetooth_24dp);
+            }
+        }
+        else {
+            imageViewIcon.setImageResource(R.drawable.ic_bluetooth_24dp);
         }
         nomeDoDispositivo = nomeDoDispositivo != null ?
                 nomeDoDispositivo :
