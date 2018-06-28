@@ -11,9 +11,10 @@ import android.databinding.ObservableList;
 import android.os.Handler;
 import android.util.Log;
 
+import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
-public class GerenciadorDeDispositivos {
+public class GerenciadorDeDispositivos extends AbstractServiceRelatedObject {
 
     public static final int RESPONSE_INICIANDO_ATUALIZACAO = 1;
     public static final int RESPONSE_ATUALIZACAO_JA_INICIADA = 2;
@@ -26,18 +27,14 @@ public class GerenciadorDeDispositivos {
     private ObservableBoolean atualizando;
     private Handler handler;
     private BluetoothManager btManager;
-    private IndicadorService servico;
     private BLEScanCallback bleScanCallback;
-    private ObservableField<DispositivoBLE> dispositivoAtual;
 
     public GerenciadorDeDispositivos(IndicadorService servico) {
+        super(servico);
         this.dispositivos = new ObservableArrayList<>();
         this.atualizando = new ObservableBoolean(false);
         this.handler = new Handler();
-        this.servico = servico;
-        this.dispositivoAtual = new ObservableField<>();
-        this.dispositivoAtual.set(null);
-        this.btManager = (BluetoothManager) this.servico.getSystemService(Context.BLUETOOTH_SERVICE);
+        this.btManager = (BluetoothManager) this.service.getSystemService(Context.BLUETOOTH_SERVICE);
         this.bleScanCallback = new BLEScanCallback();
     }
 
@@ -65,7 +62,7 @@ public class GerenciadorDeDispositivos {
             if (!this.verificarBluetoothAtivado()) {
                 return RESPONSE_BLUETOOTH_NAO_ATIVADO;
             }
-            if (!this.servico.getGerenciadorPermissoes().possuiPermissaoDeLocalidade()) {
+            if (!this.service.getGerenciadorPermissoes().possuiPermissaoDeLocalidade()) {
                 return RESPONSE_SEM_PERMISSAO_DE_LOCALIDADE;
             }
             this.buscarDispositivos();
@@ -127,7 +124,7 @@ public class GerenciadorDeDispositivos {
         private void dispositivoEncontrado(BluetoothDevice device) {
             Log.d(GerenciadorDeDispositivos.this.getClass().getName(), "Dispositivo --> Nome:" + device.getName() +
                     ", Address: " + device.getAddress());
-            DispositivoBLE dispositivo = new DispositivoBLE(device.getName(), device.getAddress(), GerenciadorDeDispositivos.this.servico);
+            DispositivoBLE dispositivo = new DispositivoBLE(device.getName(), device.getAddress(), GerenciadorDeDispositivos.this.service);
             GerenciadorDeDispositivos.this.adicionaDispositivo(dispositivo);
         }
     }

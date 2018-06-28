@@ -1,14 +1,12 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
+import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -27,6 +25,8 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
     private ProgressBar progressBarProcurandoDispositivos;
     private ListView listViewDispositivos;
     private ArrayDispositivosAdapter adapterDispositivos;
+    private ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>> observableListaDispositivosCallback;
+    private Observable.OnPropertyChangedCallback oservableDispositivoCallback;
 
     @Override
     protected int getLayoutResourceId() {
@@ -46,6 +46,51 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
         this.adapterDispositivos = new ArrayDispositivosAdapter(this);
         this.listViewDispositivos.setAdapter(this.adapterDispositivos);
         this.listViewDispositivos.setOnCreateContextMenuListener(this);
+        this.observableListaDispositivosCallback = new ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>>() {
+            @Override
+            public void onChanged(ObservableList<DispositivoBLE> sender) {
+                Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
+                DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeChanged(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
+                Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
+                DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeInserted(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
+                Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Dispositivo inserido na lista de dispositivos.");
+                DispositivoBLE dispositivo = DispositivosActivity.this.service.getGerenciadorDispositivos().getListaDispositivos().get(positionStart);
+                DispositivosActivity.this.inicializaObservadorDispositivo(dispositivo);
+                DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeMoved(ObservableList<DispositivoBLE> sender, int fromPosition, int toPosition, int itemCount) {
+                Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Dispositivo movido na lista de dispositivos.");
+                DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
+                Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Dispositivo removido na lista de dispositivos.");
+                DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
+            }
+        };
+        this.oservableDispositivoCallback = new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Estado do dispositivo foi alterado.");
+                DispositivosActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
+                    }
+                });
+            }
+        };
     }
 
     @Override
@@ -59,11 +104,24 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
 
     public void inicializaObservadoresDoServico() {
         this.inicializaObservadorProgressBar();
+        this.inicializaObservadoresDispositivos();
         this.inicializaObservadorListaDispositivos();
     }
 
+    private void inicializaObservadoresDispositivos() {
+        if (this.service != null) {
+            for (DispositivoBLE dispositivo : this.service.getGerenciadorDispositivos().getListaDispositivos()) {
+                this.inicializaObservadorDispositivo(dispositivo);
+            }
+        }
+    }
+
+    private void inicializaObservadorDispositivo(DispositivoBLE dispositivo) {
+        dispositivo.getPronto().addOnPropertyChangedCallback(DispositivosActivity.this.oservableDispositivoCallback);
+        dispositivo.getConectando().addOnPropertyChangedCallback(DispositivosActivity.this.oservableDispositivoCallback);
+    }
+
     private void inicializaObservadorProgressBar() {
-        DispositivosActivity.this.exibeProgressBarAtualizando(this.service.getGerenciadorDispositivos().isAtualizando().get());
         if (this.service != null) {
             this.service.getGerenciadorDispositivos().isAtualizando().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
@@ -71,42 +129,13 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
                     DispositivosActivity.this.exibeProgressBarAtualizando(((ObservableBoolean) sender).get());
                 }
             });
+            DispositivosActivity.this.exibeProgressBarAtualizando(this.service.getGerenciadorDispositivos().isAtualizando().get());
         }
     }
 
     private void inicializaObservadorListaDispositivos() {
         if (this.service != null) {
-            this.service.getGerenciadorDispositivos().getListaDispositivos().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>>() {
-                @Override
-                public void onChanged(ObservableList<DispositivoBLE> sender) {
-                    Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
-                    DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeChanged(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
-                    Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
-                    DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeInserted(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
-                    Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
-                    DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeMoved(ObservableList<DispositivoBLE> sender, int fromPosition, int toPosition, int itemCount) {
-                    Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
-                    DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeRemoved(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
-                    Log.d(DispositivosActivity.this.getClass().getSimpleName(), "Lista de dispositivos foi alterada.");
-                    DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
-                }
-            });
+            this.service.getGerenciadorDispositivos().getListaDispositivos().addOnListChangedCallback(DispositivosActivity.this.observableListaDispositivosCallback);
             DispositivosActivity.this.adapterDispositivos.notifyDataSetChanged();
         }
     }
@@ -116,17 +145,35 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = this.getMenuInflater();
         inflater.inflate(R.menu.context_menu_dispositivos, menu);
+        AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        int position = contextMenuInfo.position;
+        if (this.service != null) {
+            DispositivoBLE dispositivoBLE = this.service.getGerenciadorDispositivos().getListaDispositivos().get(position);
+            if (dispositivoBLE.getEstadoBluetooth().get() == BluetoothProfile.STATE_CONNECTED) {
+                MenuItem desconectarMenuItem = menu.findItem(R.id.desconectarDispositivo);
+                desconectarMenuItem.setEnabled(true);
+            }
+            else {
+                MenuItem conectarMenuItem = menu.findItem(R.id.conectarDispositivo);
+                conectarMenuItem.setEnabled(true);
+            }
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.conectarDispositivo:
-                AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                int position = contextMenuInfo.position;
-                DispositivoBLE dispositivo = this.service.getGerenciadorDispositivos().getListaDispositivos().get(position);
-                dispositivo.conectar();
-                break;
+        AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int position = contextMenuInfo.position;
+        if (this.service != null) {
+            DispositivoBLE dispositivo = this.service.getGerenciadorDispositivos().getListaDispositivos().get(position);
+            switch (item.getItemId()) {
+                case R.id.conectarDispositivo:
+                    this.service.iniciarIndicador(dispositivo);
+                    break;
+                case R.id.desconectarDispositivo:
+                    dispositivo.desconectar();
+                    break;
+            }
         }
         return true;
     }
@@ -160,32 +207,6 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
             this.service.getGerenciadorDispositivos().limpaListaDispositivos();
         }
         return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUISITAR_PERMISSOES_LOCALIDADE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    this.service.getGerenciadorDispositivos().atualizarListaDispositivos();
-                }
-                break;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUISITAR_ATIVACAO_BLUETOOTH:
-                this.resultAtivacaoBluetooth(resultCode, data);
-                break;
-        }
-    }
-
-    private void resultAtivacaoBluetooth(int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            this.service.getGerenciadorDispositivos().atualizarListaDispositivos();
-        }
     }
 
     private void exibeProgressBarAtualizando(Boolean exibe) {

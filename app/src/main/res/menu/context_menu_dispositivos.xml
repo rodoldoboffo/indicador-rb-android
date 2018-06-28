@@ -2,5 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/conectarDispositivo"
         android:title="@string/conectar_dispositivo_context_menu_item"
+        android:enabled="false"
+        />
+    <item android:id="@+id/desconectarDispositivo"
+        android:title="@string/desconectar_dispositivo_context_menu_item"
+        android:enabled="false"
         />
 </menu>

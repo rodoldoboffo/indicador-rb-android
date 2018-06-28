@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="80dp"
+    android:padding="12dp">
 
     <ImageView
         android:id="@+id/itemDispositivoIcon"
@@ -26,6 +27,33 @@
             android:theme="@style/TextSmall"
             android:textStyle="bold"
             tools:text="Nome do dispositivo"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+
+        <ProgressBar
+            android:id="@+id/itemDispositivoConectandoProgressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:indeterminate="true"
+            android:theme="@style/MyProgressCircleStyle"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/itemDispositivoConectadoText"
+            android:text="@string/item_conectado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextSmall"
+            android:textStyle="bold"
+            android:visibility="gone"
             />
 
     </LinearLayout>

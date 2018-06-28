@@ -19,11 +19,20 @@
         <item name="android:progressBarStyle">@style/Widget.AppCompat.ProgressBar.Horizontal</item>
     </style>
 
+    <style name="MyProgressCircleStyle">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
     <style name="Text">
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
     <style name="TextSmall" parent="@style/Text">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="HugeBlackText">
+        <item name="android:textSize">50sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

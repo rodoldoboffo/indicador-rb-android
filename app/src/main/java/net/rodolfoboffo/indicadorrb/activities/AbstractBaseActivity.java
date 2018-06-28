@@ -64,15 +64,16 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         Intent intent = new Intent(this, IndicadorService.class);
-        bindService(intent, this, Context.BIND_AUTO_CREATE);
+        this.startService(intent);
+        this.bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if (this.service != null) {
             unbindService(this);
             this.service = null;
@@ -129,8 +130,38 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
         startActivityForResult(enableBtIntent, REQUISITAR_ATIVACAO_BLUETOOTH);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUISITAR_ATIVACAO_BLUETOOTH:
+                this.resultAtivacaoBluetooth(resultCode, data);
+                break;
+        }
+    }
+
+    protected void resultAtivacaoBluetooth(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (this.service != null) {
+                this.service.getGerenciadorDispositivos().atualizarListaDispositivos();
+            }
+        }
+    }
+
     protected void requisitarPermissoesDeLocalidade() {
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUISITAR_PERMISSOES_LOCALIDADE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUISITAR_PERMISSOES_LOCALIDADE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (this.service != null) {
+                        this.service.getGerenciadorDispositivos().atualizarListaDispositivos();
+                    }
+                }
+                break;
+        }
     }
 
     @Override

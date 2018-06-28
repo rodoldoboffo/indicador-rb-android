@@ -12,12 +12,13 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.util.Log;
 
+import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
-public class DispositivoBLE {
+public class DispositivoBLE extends AbstractServiceRelatedObject {
 
     public static final UUID UART_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
     public static final  UUID UART_CHARACTERISTIC_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
@@ -30,24 +31,27 @@ public class DispositivoBLE {
     public static final int RESPONSE_DISPOSITIVO_NAO_ESTA_PRONTO = 9;
     public static final int RESPONSE_DADOS_ENVIADOS = 10;
 
-    private IndicadorService service;
     private ObservableField<String> nome;
     private ObservableField<String> endereco;
     private ObservableInt estadoBluetooth;
+    private ObservableBoolean conectando;
     private ObservableBoolean servicosDescobertos;
     private ObservableBoolean pronto;
     private BluetoothDevice device;
     private BluetoothGattCallback gattCallback;
     private BluetoothGatt gatt;
     private BluetoothGattCharacteristic uartCharacteristic;
+    private ObservableField<Mensagem> mensagemRecebida;
 
     public DispositivoBLE(String nome, String endereco, IndicadorService servico) {
+        super(servico);
         this.nome = new ObservableField<>(nome);
         this.endereco = new ObservableField<>(endereco);
         this.estadoBluetooth = new ObservableInt(BluetoothProfile.STATE_DISCONNECTED);
+        this.conectando = new ObservableBoolean(false);
         this.servicosDescobertos = new ObservableBoolean(false);
         this.pronto = new ObservableBoolean(false);
-        this.service = servico;
+        this.mensagemRecebida = new ObservableField<>();
         this.gattCallback = new BLEGattCallback();
         this.estadoBluetooth.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -61,6 +65,14 @@ public class DispositivoBLE {
                 DispositivoBLE.this.verificaPronto();
             }
         });
+    }
+
+    public ObservableBoolean getConectando() {
+        return conectando;
+    }
+
+    public ObservableField<Mensagem> getMensagemRecebida() {
+        return mensagemRecebida;
     }
 
     private Boolean verificaPronto(int estadoBluetooth, Boolean servicoDescoberto) {
@@ -119,6 +131,8 @@ public class DispositivoBLE {
             this.device = this.service.getGerenciadorDispositivos().getBluetoothAdapter().getRemoteDevice(this.getEndereco().get());
             if (this.device != null) {
                 this.device.connectGatt(this.service, false, this.gattCallback);
+                this.conectando.set(true);
+                Log.d(this.getClass().getName(), "Conectando dispositivo.");
                 return RESPONSE_CONECTANDO_DISPOSITIVO;
             }
             else {
@@ -186,8 +200,10 @@ public class DispositivoBLE {
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(DispositivoBLE.this.getClass().getName(), "Desconectado :(");
+                DispositivoBLE.this.gatt.close();
                 DispositivoBLE.this.gatt = null;
                 DispositivoBLE.this.uartCharacteristic = null;
+                DispositivoBLE.this.conectando.set(false);
                 DispositivoBLE.this.estadoBluetooth.set(newState);
                 DispositivoBLE.this.servicosDescobertos.set(false);
             }
@@ -205,11 +221,13 @@ public class DispositivoBLE {
                         Log.d(DispositivoBLE.this.getClass().getName(), "Serviços descobertos!");
                         DispositivoBLE.this.servicosDescobertos.set(true);
                         gatt.setCharacteristicNotification(DispositivoBLE.this.uartCharacteristic, true);
+                        DispositivoBLE.this.conectando.set(false);
                         return;
                     }
                 }
             }
             Log.d(DispositivoBLE.this.getClass().getName(), "Erro descobrindo serviços.");
+            DispositivoBLE.this.conectando.set(false);
             DispositivoBLE.this.servicosDescobertos.set(false);
         }
 
@@ -218,7 +236,10 @@ public class DispositivoBLE {
             super.onCharacteristicChanged(gatt, characteristic);
             byte[] received = characteristic.getValue();
             try {
-                Log.d(DispositivoBLE.this.getClass().getName(),"Recebido: " + new String(received, "ASCII"));
+                String receivedString = new String(received, "ASCII");
+                Log.d(DispositivoBLE.this.getClass().getName(),"Recebido: " + receivedString);
+                Mensagem mensagem = new Mensagem(receivedString);
+                DispositivoBLE.this.mensagemRecebida.set(mensagem);
             } catch (UnsupportedEncodingException e) {
                 Log.d(DispositivoBLE.this.getClass().getName(),"Erro na conversao de dados");
                 e.printStackTrace();
