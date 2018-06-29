@@ -8,9 +8,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import net.rodolfoboffo.indicadorrb.model.indicador.Indicador;
+import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
+import net.rodolfoboffo.indicadorrb.model.indicador.Indicador;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
 public class IndicadorService extends Service {
@@ -18,7 +19,7 @@ public class IndicadorService extends Service {
     private IndicadorServiceBinder binder;
     private GerenciadorDeDispositivos gerenciadorDispositivos;
     private GerenciadorDePermissoes gerenciadoPermissoes;
-    private ObservableField<Indicador> indicador;
+    private ObservableField<AbstractIndicador> indicador;
 
     @Nullable
     @Override
@@ -54,15 +55,15 @@ public class IndicadorService extends Service {
         return this.gerenciadoPermissoes;
     }
 
-    public final ObservableField<Indicador> getIndicador() {
+    public final ObservableField<AbstractIndicador> getIndicador() {
         return this.indicador;
     }
 
     public void iniciarIndicador(DispositivoBLE dispositivo) {
         if (this.indicador.get() != null) {
-            this.indicador.get().getDispositivo().desconectar();
+            this.indicador.get().finalizar();
         }
         this.indicador.set(new Indicador(dispositivo, this));
-        this.indicador.get().getDispositivo().conectar();
+        this.indicador.get().inicializar();
     }
 }

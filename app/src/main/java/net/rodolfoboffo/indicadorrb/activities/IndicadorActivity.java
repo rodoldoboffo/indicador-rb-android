@@ -1,17 +1,9 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.databinding.Observable;
-import android.databinding.ObservableDouble;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
@@ -45,7 +37,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void inicializaObservadorIndicacaoPrincipal() {
         if (this.service != null && this.service.getIndicador().get() != null) {
-            this.service.getIndicador().get().getUltimoValorAD().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            this.service.getIndicador().get().getUltimoValorLido().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     IndicadorActivity.this.runOnUiThread(new Runnable() {
@@ -71,7 +63,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void setIndicacao() {
         if (this.service != null && this.service.getIndicador().get() != null) {
-            this.setIndicacao(this.service.getIndicador().get().getUltimoValorAD().get());
+            this.setIndicacao(this.service.getIndicador().get().getUltimoValorLido().get());
         }
         else {
             this.setIndicacao(Double.NaN);
