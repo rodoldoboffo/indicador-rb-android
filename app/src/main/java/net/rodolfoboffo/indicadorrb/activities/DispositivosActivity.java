@@ -168,7 +168,11 @@ public class DispositivosActivity extends AbstractBaseActivity implements View.O
             DispositivoBLE dispositivo = this.service.getGerenciadorDispositivos().getListaDispositivos().get(position);
             switch (item.getItemId()) {
                 case R.id.conectarDispositivo:
-                    this.service.iniciarIndicador(dispositivo);
+                    if (this.service.getIndicador().get() != null) {
+                        this.service.getIndicador().get().finalizar();
+                    }
+                    this.service.criaIndicador(dispositivo);
+                    dispositivo.conectar();
                     break;
                 case R.id.desconectarDispositivo:
                     dispositivo.desconectar();

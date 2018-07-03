@@ -9,4 +9,5 @@
     <string name="conectar_dispositivo_context_menu_item">Conectar</string>
     <string name="item_conectado">Conectado</string>
     <string name="desconectar_dispositivo_context_menu_item">Desconectar</string>
+    <string name="aquisicao_automatica">Aquisição Automática</string>
 </resources>

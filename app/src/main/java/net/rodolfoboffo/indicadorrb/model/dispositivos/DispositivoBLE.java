@@ -172,6 +172,7 @@ public class DispositivoBLE extends AbstractServiceRelatedObject {
     }
 
     public int enviarDados(String data) {
+        Log.d(this.getClass().getName(), String.format("Enviado String: %s", data));
         return this.enviarDados(data.getBytes());
     }
 

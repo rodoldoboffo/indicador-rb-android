@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/indicador-rb-android.iml" filepath="$PROJECT_DIR$/indicador-rb-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/indicador-rb-android-git.iml" filepath="$PROJECT_DIR$/indicador-rb-android-git.iml" />
       <module fileurl="file://$PROJECT_DIR$/indicadorrbcore/indicadorrbcore.iml" filepath="$PROJECT_DIR$/indicadorrbcore/indicadorrbcore.iml" />
     </modules>
   </component>

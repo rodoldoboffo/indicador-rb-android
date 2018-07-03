@@ -11,7 +11,7 @@ import android.util.Log;
 import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
-import net.rodolfoboffo.indicadorrb.model.indicador.Indicador;
+import net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb.IndicadorRB;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
 public class IndicadorService extends Service {
@@ -59,11 +59,8 @@ public class IndicadorService extends Service {
         return this.indicador;
     }
 
-    public void iniciarIndicador(DispositivoBLE dispositivo) {
-        if (this.indicador.get() != null) {
-            this.indicador.get().finalizar();
-        }
-        this.indicador.set(new Indicador(dispositivo, this));
-        this.indicador.get().inicializar();
+    public ObservableField<AbstractIndicador> criaIndicador(DispositivoBLE dispositivo) {
+        this.indicador.set(new IndicadorRB(dispositivo, this));
+        return this.indicador;
     }
 }
