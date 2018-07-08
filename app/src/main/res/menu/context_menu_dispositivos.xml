@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/conectarDispositivo"
-        android:title="@string/conectar_dispositivo_context_menu_item"
+        android:title="@string/conectar"
         android:enabled="false"
         />
     <item android:id="@+id/desconectarDispositivo"
-        android:title="@string/desconectar_dispositivo_context_menu_item"
+        android:title="@string/desconectar"
         android:enabled="false"
         />
 </menu>

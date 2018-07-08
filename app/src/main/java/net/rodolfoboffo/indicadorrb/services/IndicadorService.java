@@ -47,7 +47,7 @@ public class IndicadorService extends Service {
         return Service.START_NOT_STICKY;
     }
 
-    public final GerenciadorDeDispositivos getGerenciadorDispositivos() {
+    public final GerenciadorDeDispositivos getGerenciadorConexoes() {
         return gerenciadorDispositivos;
     }
 

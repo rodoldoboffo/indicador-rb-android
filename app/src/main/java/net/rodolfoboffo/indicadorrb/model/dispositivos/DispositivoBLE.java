@@ -124,11 +124,11 @@ public class DispositivoBLE extends AbstractServiceRelatedObject {
     }
 
     public int conectar() {
-        if (this.service.getGerenciadorDispositivos().verificarBluetoothAtivado()) {
+        if (this.service.getGerenciadorConexoes().verificarBluetoothAtivado()) {
             if (this.gatt != null) {
                 return RESPONSE_DISPOSITIVO_JA_CONECTADO;
             }
-            this.device = this.service.getGerenciadorDispositivos().getBluetoothAdapter().getRemoteDevice(this.getEndereco().get());
+            this.device = this.service.getGerenciadorConexoes().getBluetoothAdapter().getRemoteDevice(this.getEndereco().get());
             if (this.device != null) {
                 this.device.connectGatt(this.service, false, this.gattCallback);
                 this.conectando.set(true);
@@ -201,7 +201,9 @@ public class DispositivoBLE extends AbstractServiceRelatedObject {
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(DispositivoBLE.this.getClass().getName(), "Desconectado :(");
-                DispositivoBLE.this.gatt.close();
+                if (DispositivoBLE.this.gatt != null) {
+                    DispositivoBLE.this.gatt.close();
+                }
                 DispositivoBLE.this.gatt = null;
                 DispositivoBLE.this.uartCharacteristic = null;
                 DispositivoBLE.this.conectando.set(false);

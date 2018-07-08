@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">Indicador Dinateste</string>
     <string name="indicador_activity_label">Indicador</string>
-    <string name="dispositivos_activity_label">Dispositivos</string>
+    <string name="conexoes_activity_label">Conexões</string>
     <string name="procurar_dispositivos_toolbar_button">Procurar</string>
     <string name="procura_em_andamento">Procura de dispositivos em andamento</string>
     <string name="dispositivo_sem_nome">Dispositivo sem nome</string>
     <string name="limpar_dispositivos_toolbar_button">Limpar</string>
-    <string name="conectar_dispositivo_context_menu_item">Conectar</string>
+    <string name="conectar">Conectar</string>
     <string name="item_conectado">Conectado</string>
-    <string name="desconectar_dispositivo_context_menu_item">Desconectar</string>
+    <string name="desconectar">Desconectar</string>
     <string name="aquisicao_automatica">Aquisição Automática</string>
+    <string name="equipamento_activity_label">Equipamento</string>
 </resources>

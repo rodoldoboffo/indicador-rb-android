@@ -24,8 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.DispositivosActivity"
-            android:label="@string/dispositivos_activity_label"></activity>
+        <activity android:name=".activities.ConexoesActivity"
+            android:label="@string/conexoes_activity_label"></activity>
         
         <service android:name="net.rodolfoboffo.indicadorrb.services.IndicadorService"
             />

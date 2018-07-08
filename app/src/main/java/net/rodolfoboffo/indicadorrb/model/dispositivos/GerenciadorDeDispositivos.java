@@ -46,7 +46,7 @@ public class GerenciadorDeDispositivos extends AbstractServiceRelatedObject {
         return this.atualizando;
     }
 
-    public final ObservableList<DispositivoBLE> getListaDispositivos() {
+    public final ObservableList<DispositivoBLE> getListaConexoes() {
         return this.dispositivos;
     }
 

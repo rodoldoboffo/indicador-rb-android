@@ -5,7 +5,10 @@
             android:id="@+id/navIndicador"
             android:title="@string/indicador_activity_label" />
         <item
-            android:id="@+id/navDispositivos"
-            android:title="@string/dispositivos_activity_label" />
+            android:id="@+id/navConexoes"
+            android:title="@string/conexoes_activity_label" />
+        <item
+            android:id="@+id/navEquipamento"
+            android:title="@string/equipamento_activity_label" />
     </group>
 </menu>

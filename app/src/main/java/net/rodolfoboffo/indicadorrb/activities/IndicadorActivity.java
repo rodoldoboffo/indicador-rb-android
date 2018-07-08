@@ -1,14 +1,15 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
+import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.databinding.Observable;
 import android.databinding.ObservableField;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private TextView indicacaoPrincipalText;
     private Switch switchIndicacaoAutomatica;
-
+    private MenuItem conectarMenuItem;
     private Handler handler;
 
     @Override
@@ -29,11 +30,24 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     @Override
+    protected int getOptionsMenu() {
+        return R.menu.indicador_menu;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.handler = new Handler();
         this.indicacaoPrincipalText = this.findViewById(R.id.indicacao_principal_text);
         this.switchIndicacaoAutomatica = this.findViewById(R.id.switchAquisicaoAutomatica);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Boolean returnValue = super.onCreateOptionsMenu(menu);
+        this.conectarMenuItem = menu.findItem(R.id.conectarDesconectarMenuItem);
+        this.habilitaConectarMenuItem();
+        return returnValue;
     }
 
     @Override
@@ -62,11 +76,45 @@ public class IndicadorActivity extends AbstractBaseActivity {
                             IndicadorActivity.this.habilitaComponentes();
                         }
                     });
+                    indicador.get().getDispositivo().getEstadoBluetooth().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                        @Override
+                        public void onPropertyChanged(Observable sender, int propertyId) {
+                            IndicadorActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    IndicadorActivity.this.habilitaConectarMenuItem();
+                                }
+                            });
+                        }
+                    });
                 }
                 IndicadorActivity.this.habilitaComponentes();
             }
         });
         IndicadorActivity.this.habilitaComponentes();
+        IndicadorActivity.this.habilitaConectarMenuItem();
+    }
+
+    private void habilitaConectarMenuItem() {
+        Log.d(this.getClass().getName(), "Chamando habilitaConectarMenuItem");
+        Log.d(this.getClass().getName(), String.format("this.conectarMenuItem = %s", String.valueOf(this.conectarMenuItem)));
+        if (this.conectarMenuItem != null) {
+            if (this.service == null || (this.service != null && this.service.getIndicador().get() == null)) {
+                this.conectarMenuItem.setTitle(getString(R.string.conectar));
+                this.conectarMenuItem.setEnabled(false);
+            } else {
+                if (this.service.getIndicador().get().getDispositivo().getEstadoBluetooth().get() == BluetoothProfile.STATE_CONNECTED) {
+                    this.conectarMenuItem.setTitle(getString(R.string.desconectar));
+                } else {
+                    this.conectarMenuItem.setTitle(getString(R.string.conectar));
+                }
+                if (this.service.getIndicador().get().getDispositivo().getConectando().get()) {
+                    this.conectarMenuItem.setEnabled(false);
+                } else {
+                    this.conectarMenuItem.setEnabled(true);
+                }
+            }
+        }
     }
 
     private void habilitaComponentes() {
@@ -163,6 +211,17 @@ public class IndicadorActivity extends AbstractBaseActivity {
                     },
                     500
             );
+        }
+    }
+
+    public void conectarDesconectarClick(MenuItem item) {
+        if (this.service != null && this.service.getIndicador().get() != null) {
+            if (this.service.getIndicador().get().getDispositivo().getPronto().get()) {
+                this.service.getIndicador().get().getDispositivo().desconectar();
+            }
+            else {
+                this.service.getIndicador().get().getDispositivo().conectar();
+            }
         }
     }
 }

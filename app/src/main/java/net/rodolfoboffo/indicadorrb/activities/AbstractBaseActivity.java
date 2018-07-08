@@ -98,8 +98,8 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
             case R.id.navIndicador:
                 iniciaActivity(IndicadorActivity.class);
                 break;
-            case R.id.navDispositivos:
-                iniciaActivity(DispositivosActivity.class);
+            case R.id.navConexoes:
+                iniciaActivity(ConexoesActivity.class);
                 break;
             default:
                 break;
@@ -142,7 +142,7 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     protected void resultAtivacaoBluetooth(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (this.service != null) {
-                this.service.getGerenciadorDispositivos().atualizarListaDispositivos();
+                this.service.getGerenciadorConexoes().atualizarListaDispositivos();
             }
         }
     }
@@ -157,7 +157,7 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
             case REQUISITAR_PERMISSOES_LOCALIDADE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (this.service != null) {
-                        this.service.getGerenciadorDispositivos().atualizarListaDispositivos();
+                        this.service.getGerenciadorConexoes().atualizarListaDispositivos();
                     }
                 }
                 break;

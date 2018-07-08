@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.DispositivosActivity">
+    tools:context=".activities.ConexoesActivity">
     <item
         android:id="@+id/scanDispositivos"
         android:title="@string/procurar_dispositivos_toolbar_button"
