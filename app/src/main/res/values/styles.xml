@@ -10,8 +10,8 @@
 
     <style name="MyToolbarStyle" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textColorPrimary">@color/colorAccent</item>
-        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="MyProgressBarStyle">
@@ -34,5 +34,9 @@
     <style name="HugeBlackText">
         <item name="android:textSize">50sp</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="FloatingActionButton">
+
     </style>
 </resources>

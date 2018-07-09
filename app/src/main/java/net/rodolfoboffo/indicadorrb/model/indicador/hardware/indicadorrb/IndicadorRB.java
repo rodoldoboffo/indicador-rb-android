@@ -18,14 +18,14 @@ public class IndicadorRB extends AbstractIndicador {
         this.buffer = new StringBuffer();
         this.ultimoComandoRecebido = new ObservableField<>();
 
-        this.dispositivo.getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.conexao.getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
 
             }
         });
 
-        this.dispositivo.getMensagemRecebida().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.conexao.getMensagemRecebida().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Mensagem m = ((ObservableField<Mensagem>) sender).get();
@@ -65,17 +65,17 @@ public class IndicadorRB extends AbstractIndicador {
 
     @Override
     public void finalizar() {
-        this.dispositivo.desconectar();
+        this.conexao.desconectar();
     }
 
     @Override
     public void inicializar() {
-        this.dispositivo.conectar();
+        this.conexao.conectar();
     }
 
     private void enviaComando(String comando) {
         String comandoComSeparador = String.format("%s%s%s", Comandos.SEPARADOR, comando, Comandos.SEPARADOR);
-        this.dispositivo.enviarDados(comandoComSeparador);
+        this.conexao.enviarDados(comandoComSeparador);
     }
 
     @Override

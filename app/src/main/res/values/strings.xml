@@ -11,4 +11,8 @@
     <string name="desconectar">Desconectar</string>
     <string name="aquisicao_automatica">Aquisição Automática</string>
     <string name="equipamento_activity_label">Equipamento</string>
+    <string name="calibracao_activity_label">Calibração</string>
+    <string name="nova_calibracao_activity_label">Nova Calibração</string>
+    <string name="nomeCalibracaoHint">Nome da Calibração</string>
+    <string name="grandeza">Grandeza</string>
 </resources>

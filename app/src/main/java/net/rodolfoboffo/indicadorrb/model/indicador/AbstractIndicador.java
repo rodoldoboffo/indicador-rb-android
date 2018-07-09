@@ -9,7 +9,7 @@ import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
 public abstract class AbstractIndicador extends AbstractServiceRelatedObject {
 
-    protected DispositivoBLE dispositivo;
+    protected DispositivoBLE conexao;
     protected ObservableDouble ultimoValorLido;
     protected ObservableBoolean aquisicaoAutomatica;
 
@@ -17,15 +17,15 @@ public abstract class AbstractIndicador extends AbstractServiceRelatedObject {
         super(service);
     }
 
-    public AbstractIndicador(DispositivoBLE dispositivo, IndicadorService service) {
+    public AbstractIndicador(DispositivoBLE conexao, IndicadorService service) {
         super(service);
-        this.dispositivo = dispositivo;
+        this.conexao = conexao;
         this.ultimoValorLido = new ObservableDouble(Double.NaN);
         this.aquisicaoAutomatica = new ObservableBoolean(false);
     }
 
-    public DispositivoBLE getDispositivo() {
-        return dispositivo;
+    public DispositivoBLE getConexao() {
+        return conexao;
     }
 
     public ObservableDouble getUltimoValorLido() {

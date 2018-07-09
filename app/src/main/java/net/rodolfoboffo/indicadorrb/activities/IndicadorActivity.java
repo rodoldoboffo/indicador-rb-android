@@ -1,9 +1,11 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
 import android.bluetooth.BluetoothProfile;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.databinding.Observable;
 import android.databinding.ObservableField;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -62,6 +64,32 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.inicializaObservadorIndicacaoPrincipal();
         this.inicializarObservadorAquisicaoAutomatica();
         this.inicializarObservadorIndicador();
+        this.inicializarObservadorConexao();
+    }
+
+    private void inicializarObservadorConexao() {
+        if (this.service.getIndicador().get() != null) {
+            this.service.getIndicador().get().getConexao().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.habilitaComponentes();
+                }
+            });
+            this.service.getIndicador().get().getConexao().getEstadoBluetooth().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.habilitaConectarMenuItem();
+                }
+            });
+            this.service.getIndicador().get().getConexao().getConectando().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.habilitaConectarMenuItem();
+                }
+            });
+        }
+        IndicadorActivity.this.habilitaComponentes();
+        IndicadorActivity.this.habilitaConectarMenuItem();
     }
 
     private void inicializarObservadorIndicador() {
@@ -69,25 +97,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 ObservableField<AbstractIndicador> indicador = (ObservableField<AbstractIndicador>)sender;
-                if (indicador.get() != null) {
-                    indicador.get().getDispositivo().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-                        @Override
-                        public void onPropertyChanged(Observable sender, int propertyId) {
-                            IndicadorActivity.this.habilitaComponentes();
-                        }
-                    });
-                    indicador.get().getDispositivo().getEstadoBluetooth().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-                        @Override
-                        public void onPropertyChanged(Observable sender, int propertyId) {
-                            IndicadorActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    IndicadorActivity.this.habilitaConectarMenuItem();
-                                }
-                            });
-                        }
-                    });
-                }
+                IndicadorActivity.this.inicializarObservadorConexao();
                 IndicadorActivity.this.habilitaComponentes();
             }
         });
@@ -96,29 +106,33 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void habilitaConectarMenuItem() {
-        Log.d(this.getClass().getName(), "Chamando habilitaConectarMenuItem");
-        Log.d(this.getClass().getName(), String.format("this.conectarMenuItem = %s", String.valueOf(this.conectarMenuItem)));
-        if (this.conectarMenuItem != null) {
-            if (this.service == null || (this.service != null && this.service.getIndicador().get() == null)) {
-                this.conectarMenuItem.setTitle(getString(R.string.conectar));
-                this.conectarMenuItem.setEnabled(false);
-            } else {
-                if (this.service.getIndicador().get().getDispositivo().getEstadoBluetooth().get() == BluetoothProfile.STATE_CONNECTED) {
-                    this.conectarMenuItem.setTitle(getString(R.string.desconectar));
-                } else {
-                    this.conectarMenuItem.setTitle(getString(R.string.conectar));
-                }
-                if (this.service.getIndicador().get().getDispositivo().getConectando().get()) {
-                    this.conectarMenuItem.setEnabled(false);
-                } else {
-                    this.conectarMenuItem.setEnabled(true);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.conectarMenuItem != null) {
+                    if (IndicadorActivity.this.service == null || (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() == null)) {
+                        IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.conectar));
+                        IndicadorActivity.this.conectarMenuItem.setEnabled(false);
+                        IndicadorActivity.this.conectarMenuItem.setVisible(false);
+                    } else {
+                        if (IndicadorActivity.this.service.getIndicador().get().getConexao().getEstadoBluetooth().get() == BluetoothProfile.STATE_CONNECTED) {
+                            IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.desconectar));
+                        } else {
+                            IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.conectar));
+                        }
+                        if (IndicadorActivity.this.service.getIndicador().get().getConexao().getConectando().get()) {
+                            IndicadorActivity.this.conectarMenuItem.setEnabled(false);
+                        } else {
+                            IndicadorActivity.this.conectarMenuItem.setEnabled(true);
+                        }
+                    }
                 }
             }
-        }
+        });
     }
 
     private void habilitaComponentes() {
-        if (this.service != null && this.service.getIndicador().get() != null && this.service.getIndicador().get().getDispositivo().getPronto().get()) {
+        if (this.service != null && this.service.getIndicador().get() != null && this.service.getIndicador().get().getConexao().getPronto().get()) {
             this.habilitaComponentes(true);
         }
         else {
@@ -126,8 +140,13 @@ public class IndicadorActivity extends AbstractBaseActivity {
         }
     }
 
-    private void habilitaComponentes(Boolean habilita) {
-        this.switchIndicacaoAutomatica.setEnabled(habilita);
+    private void habilitaComponentes(final Boolean habilita) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IndicadorActivity.this.switchIndicacaoAutomatica.setEnabled(habilita);
+            }
+        });
     }
 
     private void inicializaObservadorIndicacaoPrincipal() {
@@ -135,12 +154,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             this.service.getIndicador().get().getUltimoValorLido().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
-                    IndicadorActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            IndicadorActivity.this.setIndicacao();
-                        }
-                    });
+                        IndicadorActivity.this.setIndicacao();
                 }
             });
         }
@@ -152,12 +166,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             this.service.getIndicador().get().getAquisicaoAutomatica().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
-                    IndicadorActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            IndicadorActivity.this.setAquisicaoAutomatica();
-                        }
-                    });
+                    IndicadorActivity.this.setAquisicaoAutomatica();
                 }
             });
         }
@@ -174,9 +183,14 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void setAquisicaoAutomatica() {
-        if (this.service != null && this.service.getIndicador().get() != null) {
-            this.setAquisicaoAutomatica(this.service.getIndicador().get().getAquisicaoAutomatica().get());
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() != null) {
+                    IndicadorActivity.this.setAquisicaoAutomatica(IndicadorActivity.this.service.getIndicador().get().getAquisicaoAutomatica().get());
+                }
+            }
+        });
     }
 
     private void setAquisicaoAutomatica(Boolean ativado) {
@@ -184,12 +198,17 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void setIndicacao() {
-        if (this.service != null && this.service.getIndicador().get() != null) {
-            this.setIndicacao(this.service.getIndicador().get().getUltimoValorLido().get());
-        }
-        else {
-            this.setIndicacao(Double.NaN);
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() != null) {
+                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().get().getUltimoValorLido().get());
+                }
+                else {
+                    IndicadorActivity.this.setIndicacao(Double.NaN);
+                }
+            }
+        });
     }
 
     public void aquisicaoAutomaticaOnClick(View view) {
@@ -216,11 +235,11 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     public void conectarDesconectarClick(MenuItem item) {
         if (this.service != null && this.service.getIndicador().get() != null) {
-            if (this.service.getIndicador().get().getDispositivo().getPronto().get()) {
-                this.service.getIndicador().get().getDispositivo().desconectar();
+            if (this.service.getIndicador().get().getConexao().getPronto().get()) {
+                this.service.getIndicador().get().getConexao().desconectar();
             }
             else {
-                this.service.getIndicador().get().getDispositivo().conectar();
+                this.service.getIndicador().get().getConexao().conectar();
             }
         }
     }

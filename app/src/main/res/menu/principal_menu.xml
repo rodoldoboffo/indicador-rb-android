@@ -8,6 +8,9 @@
             android:id="@+id/navConexoes"
             android:title="@string/conexoes_activity_label" />
         <item
+            android:id="@+id/navCalibracao"
+            android:title="@string/calibracao_activity_label" />
+        <item
             android:id="@+id/navEquipamento"
             android:title="@string/equipamento_activity_label" />
     </group>
