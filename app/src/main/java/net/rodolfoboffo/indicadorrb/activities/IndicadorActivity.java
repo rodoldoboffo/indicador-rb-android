@@ -68,7 +68,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void inicializarObservadorConexao() {
-        if (this.service.getIndicador().get() != null) {
+        if (this.service != null && this.service.getIndicador().get() != null) {
             this.service.getIndicador().get().getConexao().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
