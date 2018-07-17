@@ -7,14 +7,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.model.basicos.Grandeza;
+import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
+import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 
 public class EditarCalibracaoActivity extends AbstractBaseActivity {
 
     public static final int NOVA_CALIBRACAO = 0;
 
     private Spinner spinnerGrandeza;
-    private ArrayAdapter<CharSequence> spinnerGrandezaAdapter;
+    private EnumArrayAdapter spinnerGrandezaAdapter;
 
     @Override
     protected int getLayoutResourceId() {
@@ -24,7 +25,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.spinnerGrandezaAdapter = ArrayAdapter.createFromResource(this, R.array.grandezasArray, android.R.layout.simple_spinner_dropdown_item);
+        this.spinnerGrandezaAdapter = new EnumArrayAdapter(this, GrandezaEnum.class);
         this.spinnerGrandeza = this.findViewById(R.id.grandezaSpinner);
         this.spinnerGrandeza.setAdapter(spinnerGrandezaAdapter);
     }

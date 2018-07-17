@@ -12,6 +12,7 @@ import android.util.Log;
 import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
+import net.rodolfoboffo.indicadorrb.model.indicador.Calibracao;
 import net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb.IndicadorRB;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
@@ -24,6 +25,7 @@ public class IndicadorService extends Service {
     private GerenciadorDeDispositivos gerenciadorDispositivos;
     private GerenciadorDePermissoes gerenciadoPermissoes;
     private ObservableField<AbstractIndicador> indicador;
+    private ObservableField<Calibracao> calibracao;
 
     @Nullable
     @Override
@@ -39,6 +41,7 @@ public class IndicadorService extends Service {
         this.gerenciadorDispositivos = new GerenciadorDeDispositivos(this);
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.indicador = new ObservableField<>();
+        this.calibracao = new ObservableField<>();
         this.carregarPreferencias();
     }
 

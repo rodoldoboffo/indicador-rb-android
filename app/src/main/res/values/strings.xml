@@ -15,4 +15,10 @@
     <string name="nova_calibracao_activity_label">Nova Calibração</string>
     <string name="nomeCalibracaoHint">Nome da Calibração</string>
     <string name="grandeza">Grandeza</string>
+    <string name="unidadeDeCalibracao">Unidade de Calibração</string>
+    <string name="forca">Força</string>
+    <string name="tensao">Tensão</string>
+    <string name="temperatura">Temperatura</string>
+    <string name="kgf">kgf</string>
+    <string name="gf">gf</string>
 </resources>
