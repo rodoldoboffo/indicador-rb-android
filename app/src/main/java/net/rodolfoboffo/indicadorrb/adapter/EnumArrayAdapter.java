@@ -21,8 +21,12 @@ public class EnumArrayAdapter<T extends AbstractEnumeration> extends BaseAdapter
     List<T> list;
 
     public EnumArrayAdapter(Context context, Class<T> enumClass) {
+        this(context, AbstractEnumeration.getAll(enumClass));
+    }
+
+    public EnumArrayAdapter(Context context, List<T> listEnums) {
         this.context = context;
-        this.list = AbstractEnumeration.getAll(enumClass);
+        this.list = listEnums;
     }
 
     @Override
@@ -50,5 +54,9 @@ public class EnumArrayAdapter<T extends AbstractEnumeration> extends BaseAdapter
         textViewEnum.setText(enumObject.getResourceString());
 
         return view;
+    }
+
+    public List<T> getListaEnums() {
+        return this.list;
     }
 }

@@ -14,28 +14,20 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_add_black_24dp"
+        android:src="@drawable/ic_add_24dp"
         android:theme="@style/FloatingActionButton"
         android:onClick="onNovaCalibracaoButtonClick"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/selectedCalibracaoLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/listViewCalibracoes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </android.support.constraint.ConstraintLayout>
 
     <ListView
         android:id="@+id/listViewCalibracoes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectedCalibracaoLayout" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:divider="@color/colorPrimaryTransparent"
+        android:dividerHeight="0.1dp"
+        android:footerDividersEnabled="true"/>
 
 </android.support.constraint.ConstraintLayout>

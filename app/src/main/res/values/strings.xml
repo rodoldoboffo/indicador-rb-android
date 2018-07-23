@@ -21,4 +21,17 @@
     <string name="temperatura">Temperatura</string>
     <string name="kgf">kgf</string>
     <string name="gf">gf</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="salvar">Salvar</string>
+    <string name="nomeCalibracaoVazioError">Nome da calibração não pode estar vazio.</string>
+    <string name="mpa">MPa</string>
+    <string name="gpa">GPa</string>
+    <string name="celsius">°C</string>
+    <string name="calibracaoComMesmoNome">Já existe uma calibração com esse nome.</string>
+    <string name="selecionar">Selecionar</string>
+    <string name="editar">Editar</string>
+    <string name="remover">Remover</string>
+    <string name="confirmacaoExlcuirCalibracao">Tem certeza que deseja excluir esta calibração?</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
 </resources>

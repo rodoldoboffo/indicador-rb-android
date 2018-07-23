@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/selecionarCalibracao"
+        android:title="@string/selecionar"
+        />
+    <item android:id="@+id/editarCalibracao"
+        android:title="@string/editar"
+        />
+    <item android:id="@+id/removerCalibracao"
+        android:title="@string/remover"
+        />
+</menu>

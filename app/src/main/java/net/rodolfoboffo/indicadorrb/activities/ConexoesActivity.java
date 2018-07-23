@@ -17,14 +17,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.adapter.ArrayDispositivosAdapter;
+import net.rodolfoboffo.indicadorrb.adapter.ArrayConexoesAdapter;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 
 public class ConexoesActivity extends AbstractBaseActivity implements View.OnCreateContextMenuListener{
     private ProgressBar progressBarProcurandoConexoes;
     private ListView listViewConexoes;
-    private ArrayDispositivosAdapter adapterConexoes;
+    private ArrayConexoesAdapter adapterConexoes;
     private ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>> observableListaConexoesCallback;
     private Observable.OnPropertyChangedCallback oservableConexoesCallback;
 
@@ -43,7 +43,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
         super.onCreate(savedInstanceState);
         this.progressBarProcurandoConexoes = this.findViewById(R.id.progressProcurandoDispositivos);
         this.listViewConexoes = this.findViewById(R.id.listViewDispositivos);
-        this.adapterConexoes = new ArrayDispositivosAdapter(this);
+        this.adapterConexoes = new ArrayConexoesAdapter(this);
         this.listViewConexoes.setAdapter(this.adapterConexoes);
         this.listViewConexoes.setOnCreateContextMenuListener(this);
         this.observableListaConexoesCallback = new ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>>() {
@@ -144,7 +144,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = this.getMenuInflater();
-        inflater.inflate(R.menu.context_menu_dispositivos, menu);
+        inflater.inflate(R.menu.context_menu_conexoes, menu);
         AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
         int position = contextMenuInfo.position;
         if (this.service != null) {

@@ -1,6 +1,5 @@
 package net.rodolfoboffo.indicadorrb.adapter;
 
-import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,17 +17,17 @@ import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayDispositivosAdapter extends BaseAdapter {
+public class ArrayConexoesAdapter extends BaseAdapter {
 
     private List<DispositivoBLE> dispositivos;
     private Context context;
 
-    public ArrayDispositivosAdapter(Context context, ArrayList<DispositivoBLE> list) {
+    public ArrayConexoesAdapter(Context context, ArrayList<DispositivoBLE> list) {
         this.context = context;
         this.dispositivos = list;
     }
 
-    public ArrayDispositivosAdapter(Context context) {
+    public ArrayConexoesAdapter(Context context) {
         this(context, null);
     }
 

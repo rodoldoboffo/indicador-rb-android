@@ -194,4 +194,5 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     }
 
     protected abstract int getLayoutResourceId();
+
 }

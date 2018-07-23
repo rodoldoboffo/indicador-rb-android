@@ -12,20 +12,24 @@ import android.util.Log;
 import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
-import net.rodolfoboffo.indicadorrb.model.indicador.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.GerenciadorDeCalibracao;
 import net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb.IndicadorRB;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
+
+import java.util.UUID;
 
 public class IndicadorService extends Service {
 
     public static final String MAIN_PREFERENCES_KEY = "IndicadorService.MainPreferences";
     public static final String BLE_ADDRESS_KEY = "BLEAddress";
+    public static final String ID_CALIBRACAO_KEY = "NomeCalibracao";
 
     private IndicadorServiceBinder binder;
     private GerenciadorDeDispositivos gerenciadorDispositivos;
     private GerenciadorDePermissoes gerenciadoPermissoes;
+    private GerenciadorDeCalibracao gerenciadorCalibracao;
     private ObservableField<AbstractIndicador> indicador;
-    private ObservableField<Calibracao> calibracao;
 
     @Nullable
     @Override
@@ -40,8 +44,8 @@ public class IndicadorService extends Service {
         this.binder = new IndicadorServiceBinder(this);
         this.gerenciadorDispositivos = new GerenciadorDeDispositivos(this);
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
+        this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.indicador = new ObservableField<>();
-        this.calibracao = new ObservableField<>();
         this.carregarPreferencias();
     }
 
@@ -58,6 +62,10 @@ public class IndicadorService extends Service {
             String enderecoBLE = this.indicador.get().getConexao().getEndereco().get();
             editor.putString(BLE_ADDRESS_KEY, enderecoBLE);
         }
+        if (this.gerenciadorCalibracao.getCalibracaoSelecionada().get() != null) {
+            UUID idCalibracao = this.gerenciadorCalibracao.getCalibracaoSelecionada().get().getId();
+            editor.putString(ID_CALIBRACAO_KEY, idCalibracao.toString());
+        }
         editor.commit();
         Log.d(this.getClass().getName(), "Preferencias salvas.");
     }
@@ -65,10 +73,14 @@ public class IndicadorService extends Service {
     public void carregarPreferencias() {
         SharedPreferences preferences = this.getSharedPreferences(MAIN_PREFERENCES_KEY, MODE_PRIVATE);
         String enderecoBLE = preferences.getString(BLE_ADDRESS_KEY, null);
+        String idCalibracaoString = preferences.getString(ID_CALIBRACAO_KEY, null);
         if (enderecoBLE != null) {
             DispositivoBLE conexao = new DispositivoBLE(null, enderecoBLE, this);
             AbstractIndicador indicador = new IndicadorRB(conexao, this);
             this.indicador.set(indicador);
+        }
+        if (idCalibracaoString != null) {
+            this.gerenciadorCalibracao.getCalibracaoSelecionada().set(this.gerenciadorCalibracao.getCalibracao(idCalibracaoString));
         }
         Log.d(this.getClass().getName(), "Preferencias carregadas.");
     }
@@ -93,6 +105,10 @@ public class IndicadorService extends Service {
 
     public final ObservableField<AbstractIndicador> getIndicador() {
         return this.indicador;
+    }
+
+    public final GerenciadorDeCalibracao getGerenciadorCalibracao() {
+        return this.gerenciadorCalibracao;
     }
 
     public ObservableField<AbstractIndicador> criaIndicador(DispositivoBLE dispositivo) {
