@@ -34,4 +34,5 @@
     <string name="confirmacaoExlcuirCalibracao">Tem certeza que deseja excluir esta calibração?</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
+    <string name="pontosDeCalibracao">Pontos de Calibração</string>
 </resources>
