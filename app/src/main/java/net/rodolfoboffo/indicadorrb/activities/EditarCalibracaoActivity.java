@@ -21,6 +21,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
 
     public static final String CALIBRACAO_EXTRA = "EditarCalibracao.Calibracao";
     public static final int NOVA_CALIBRACAO = 0;
+    public static final int EDITAR_CALIBRACAO = 1;
 
     private Calibracao calibracao;
 
@@ -56,8 +57,6 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.atualizaSpinnerUnidades(this.calibracao.getGrandeza().get());
         this.spinnerUnidade.setSelection(this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.calibracao.getUnidadeCalibracao().get()));
 
-
-
         this.inicializaObservadores();
     }
 
@@ -91,7 +90,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         Intent intent = new Intent(context, EditarCalibracaoActivity.class);
         intent.putExtra(CALIBRACAO_EXTRA, calibracao);
         Bundle bundle = new Bundle();
-        context.startActivityForResult(intent, NOVA_CALIBRACAO, bundle);
+        context.startActivityForResult(intent, EDITAR_CALIBRACAO, bundle);
     }
 
     public Boolean validar() {

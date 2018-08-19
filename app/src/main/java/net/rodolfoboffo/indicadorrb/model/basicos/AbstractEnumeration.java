@@ -2,6 +2,8 @@ package net.rodolfoboffo.indicadorrb.model.basicos;
 
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,5 +66,10 @@ public abstract class AbstractEnumeration implements Serializable {
 
     public static <T extends AbstractEnumeration> T getByKey(Class<T> clss, String codigo) {
         return (T)map.get(clss).get(codigo);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.codigo.equals(((AbstractEnumeration)obj).getCodigo());
     }
 }

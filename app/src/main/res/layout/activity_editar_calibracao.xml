@@ -6,12 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ScrollView>
-
     <EditText
         android:id="@+id/nomeCalibracaoText"
         android:layout_width="match_parent"
@@ -77,13 +71,6 @@
         app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -115,6 +102,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/salvar" />
+        android:text="@string/salvar"
+        android:onClick="onSalvarCalibracaoButtonClick"/>
 
 </android.support.constraint.ConstraintLayout>
