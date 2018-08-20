@@ -35,5 +35,6 @@
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
     <string name="pontosDeCalibracao">Pontos de Calibração</string>
-    <string name="naoExistemConexoes">Ainda não existem conexões disponíveis :(</string>
+    <string name="naoExistemConexoes">Ainda não existem conexões disponíveis\nClique no botão "Pesquisar"</string>
+    <string name="naoExistemCalibracoes">Ainda não existem calibrações salvas</string>
 </resources>

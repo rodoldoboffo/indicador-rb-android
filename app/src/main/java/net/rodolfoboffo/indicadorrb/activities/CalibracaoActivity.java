@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.ArrayCalibracoesAdapter;
@@ -22,11 +23,14 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
 
     private ArrayCalibracoesAdapter arrayCalibracoesAdapter;
     private ListView listaCalibracoes;
+    private TextView textViewSemCalibracao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.listaCalibracoes = this.findViewById(R.id.listViewCalibracoes);
+        this.textViewSemCalibracao = this.findViewById(R.id.textViewSemCalibracao);
+        this.listaCalibracoes.setEmptyView(this.textViewSemCalibracao);
         this.arrayCalibracoesAdapter = new ArrayCalibracoesAdapter(this);
         this.listaCalibracoes.setAdapter(this.arrayCalibracoesAdapter);
         this.listaCalibracoes.setOnCreateContextMenuListener(this);

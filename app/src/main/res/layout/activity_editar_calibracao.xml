@@ -1,108 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/nomeCalibracaoText"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="@string/nomeCalibracaoHint"
-        android:inputType="textPersonName"
-        android:theme="@style/BigText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/buttonSalvar">
 
-    <GridLayout
-        android:id="@+id/gridLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:columnCount="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nomeCalibracaoText">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:text="@string/grandeza"
-            android:theme="@style/TextSpinnerLabel" />
+            <RelativeLayout
+                android:id="@+id/layoutTopoCalibracao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
 
-        <Spinner
-            android:id="@+id/grandezaSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal|center_vertical" />
+                <EditText
+                    android:id="@+id/nomeCalibracaoText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/nomeCalibracaoHint"
+                    android:inputType="textPersonName"
+                    android:theme="@style/BigText"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:text="@string/unidadeDeCalibracao"
-            android:theme="@style/TextSpinnerLabel" />
+                <GridLayout
+                    android:id="@+id/gridLayoutCalibracao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:layout_below="@id/nomeCalibracaoText">
 
-        <Spinner
-            android:id="@+id/unidadeCalibracaoSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal|center_vertical" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill_horizontal"
+                        android:text="@string/grandeza"
+                        android:theme="@style/TextSpinnerLabel" />
 
-    </GridLayout>
+                    <Spinner
+                        android:id="@+id/grandezaSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill_horizontal|center_vertical" />
 
-    <TextView
-        android:id="@+id/pontosDeCalibracaoSeparador"
-        style="@style/Separador"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill_horizontal"
+                        android:text="@string/unidadeDeCalibracao"
+                        android:theme="@style/TextSpinnerLabel" />
 
-        android:layout_marginTop="24dp"
-        android:text="@string/pontosDeCalibracao"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
+                    <Spinner
+                        android:id="@+id/unidadeCalibracaoSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill_horizontal|center_vertical" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pontosDeCalibracaoSeparador">
+                </GridLayout>
 
-        <ImageButton
-            style="@style/SmallButton"
-            android:layout_margin="4dp"
-            android:src="@drawable/ic_add_24dp" />
+            </RelativeLayout>
 
-        <ImageButton
-            style="@style/SmallButton"
-            android:layout_margin="4dp"
-            android:src="@drawable/ic_remove_24dp" />
+            <RelativeLayout
+                android:id="@+id/layoutPontosCalibracao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_below="@id/layoutTopoCalibracao">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/pontosDeCalibracaoSeparador"
+                    style="@style/Separador"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pontosDeCalibracao" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pontosDeCalibracaoSeparador"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    >
+
+                    <ListView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_toLeftOf="@id/layoutPontosBotoes">
+
+                    </ListView>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPontosBotoes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignParentRight="true">
+
+                        <ImageButton
+                            style="@style/SmallButton"
+                            android:layout_margin="4dp"
+                            android:src="@drawable/ic_add_24dp" />
+
+                        <ImageButton
+                            style="@style/SmallButton"
+                            android:layout_margin="4dp"
+                            android:src="@drawable/ic_remove_24dp" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
     <Button
         style="@style/Button"
         android:id="@+id/buttonSalvar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
         android:text="@string/salvar"
         android:onClick="onSalvarCalibracaoButtonClick"/>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

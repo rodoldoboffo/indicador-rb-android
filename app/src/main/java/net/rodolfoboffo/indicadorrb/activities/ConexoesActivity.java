@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.ArrayConexoesAdapter;
@@ -24,6 +25,7 @@ import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos
 public class ConexoesActivity extends AbstractBaseActivity implements View.OnCreateContextMenuListener{
     private ProgressBar progressBarProcurandoConexoes;
     private ListView listViewConexoes;
+    private TextView textViewSemConexoes;
     private ArrayConexoesAdapter adapterConexoes;
     private ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>> observableListaConexoesCallback;
     private Observable.OnPropertyChangedCallback oservableConexoesCallback;
@@ -43,7 +45,9 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
         super.onCreate(savedInstanceState);
         this.progressBarProcurandoConexoes = this.findViewById(R.id.progressProcurandoDispositivos);
         this.listViewConexoes = this.findViewById(R.id.listViewDispositivos);
+        this.textViewSemConexoes = this.findViewById(R.id.textViewSemConexao);
         this.adapterConexoes = new ArrayConexoesAdapter(this);
+        this.listViewConexoes.setEmptyView(this.textViewSemConexoes);
         this.listViewConexoes.setAdapter(this.adapterConexoes);
         this.listViewConexoes.setOnCreateContextMenuListener(this);
         this.observableListaConexoesCallback = new ObservableList.OnListChangedCallback<ObservableList<DispositivoBLE>>() {
