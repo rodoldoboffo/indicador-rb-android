@@ -9,7 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
@@ -30,6 +34,8 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     private Spinner spinnerUnidade;
     private EnumArrayAdapter spinnerUnidadeAdapter;
     private EditText nomeCalibracaoText;
+    ListView listViewPontosCalibracao;
+    TextView textViewSemPontosCalibracao;
 
     @Override
     protected int getLayoutResourceId() {
@@ -56,6 +62,10 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.spinnerUnidade = this.findViewById(R.id.unidadeCalibracaoSpinner);
         this.atualizaSpinnerUnidades(this.calibracao.getGrandeza().get());
         this.spinnerUnidade.setSelection(this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.calibracao.getUnidadeCalibracao().get()));
+
+        this.textViewSemPontosCalibracao = this.findViewById(R.id.textViewSemPontosCalibracao);
+        this.listViewPontosCalibracao = this.findViewById(R.id.listViewPontosCalibracao);
+        this.listViewPontosCalibracao.setEmptyView(this.textViewSemPontosCalibracao);
 
         this.inicializaObservadores();
     }

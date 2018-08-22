@@ -37,4 +37,5 @@
     <string name="pontosDeCalibracao">Pontos de Calibração</string>
     <string name="naoExistemConexoes">Ainda não existem conexões disponíveis\nClique no botão "Pesquisar"</string>
     <string name="naoExistemCalibracoes">Ainda não existem calibrações salvas</string>
+    <string name="naoExistemPontosCalibracao">Ainda não foram adicionados pontos nesta calibração</string>
 </resources>
