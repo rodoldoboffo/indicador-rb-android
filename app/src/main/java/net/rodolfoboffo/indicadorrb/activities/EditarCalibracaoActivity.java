@@ -1,10 +1,13 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.databinding.Observable;
+import android.databinding.ObservableList;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,10 +19,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
+import net.rodolfoboffo.indicadorrb.adapter.ArrayPontosCalibracaoAdapter;
 import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
 
 public class EditarCalibracaoActivity extends AbstractBaseActivity {
 
@@ -34,8 +39,9 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     private Spinner spinnerUnidade;
     private EnumArrayAdapter spinnerUnidadeAdapter;
     private EditText nomeCalibracaoText;
-    ListView listViewPontosCalibracao;
-    TextView textViewSemPontosCalibracao;
+    private ListView listViewPontosCalibracao;
+    private TextView textViewSemPontosCalibracao;
+    private ArrayPontosCalibracaoAdapter pontosAdapter;
 
     @Override
     protected int getLayoutResourceId() {
@@ -49,6 +55,11 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.calibracao = (Calibracao) this.getIntent().getSerializableExtra(CALIBRACAO_EXTRA);
         if (this.calibracao == null) {
             this.calibracao = new Calibracao();
+            this.setTitle(R.string.nova_calibracao_activity_label);
+        }
+        else {
+            this.calibracao = this.calibracao.clone();
+            this.setTitle(R.string.editar_calibracao_activity_label);
         }
 
         this.nomeCalibracaoText = this.findViewById(R.id.nomeCalibracaoText);
@@ -63,14 +74,50 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.atualizaSpinnerUnidades(this.calibracao.getGrandeza().get());
         this.spinnerUnidade.setSelection(this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.calibracao.getUnidadeCalibracao().get()));
 
+        this.pontosAdapter = new ArrayPontosCalibracaoAdapter(this, this.calibracao.getPontosCalibracao());
         this.textViewSemPontosCalibracao = this.findViewById(R.id.textViewSemPontosCalibracao);
         this.listViewPontosCalibracao = this.findViewById(R.id.listViewPontosCalibracao);
         this.listViewPontosCalibracao.setEmptyView(this.textViewSemPontosCalibracao);
+        this.listViewPontosCalibracao.setAdapter(this.pontosAdapter);
 
         this.inicializaObservadores();
     }
 
     public void inicializaObservadores() {
+        this.iniciaObservadorSpinnerGrandeza();
+        this.iniciaObservadorListaPontos();
+    }
+
+    private void iniciaObservadorListaPontos() {
+        this.calibracao.getPontosCalibracao().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<PontoCalibracao>>() {
+            @Override
+            public void onChanged(ObservableList<PontoCalibracao> sender) {
+                EditarCalibracaoActivity.this.pontosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeChanged(ObservableList<PontoCalibracao> sender, int positionStart, int itemCount) {
+                EditarCalibracaoActivity.this.pontosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeInserted(ObservableList<PontoCalibracao> sender, int positionStart, int itemCount) {
+                EditarCalibracaoActivity.this.pontosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeMoved(ObservableList<PontoCalibracao> sender, int fromPosition, int toPosition, int itemCount) {
+                EditarCalibracaoActivity.this.pontosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeRemoved(ObservableList<PontoCalibracao> sender, int positionStart, int itemCount) {
+                EditarCalibracaoActivity.this.pontosAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void iniciaObservadorSpinnerGrandeza() {
         this.spinnerGrandeza.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -126,5 +173,9 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
                 this.finish();
             }
         }
+    }
+
+    public void onAdicionarPontoButtonClick(View view) {
+        this.calibracao.adicionaPontoCalibracao(new PontoCalibracao());
     }
 }

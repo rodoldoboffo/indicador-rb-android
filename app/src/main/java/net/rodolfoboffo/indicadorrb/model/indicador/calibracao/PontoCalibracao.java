@@ -25,8 +25,8 @@ public class PontoCalibracao implements Serializable, Cloneable {
     }
 
     public PontoCalibracao(Double valorNaoCalibrado, Double valorCalibrado) {
-        this.setValorNaoCalibrado(valorNaoCalibrado);
-        this.setValorCalibrado(valorCalibrado);
+        this.valorCalibrado = new ObservableDouble(valorCalibrado);
+        this.valorNaoCalibrado = new ObservableDouble(valorNaoCalibrado);
     }
 
     public PontoCalibracao() {

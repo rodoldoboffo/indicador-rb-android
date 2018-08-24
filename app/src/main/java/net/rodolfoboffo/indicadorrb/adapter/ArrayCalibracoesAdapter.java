@@ -23,7 +23,7 @@ public class ArrayCalibracoesAdapter extends BaseAdapter {
     private List<Calibracao> calibracoes;
     private Context context;
 
-    public ArrayCalibracoesAdapter(Context context, ArrayList<Calibracao> list) {
+    public ArrayCalibracoesAdapter(Context context, List<Calibracao> list) {
         this.context = context;
         this.calibracoes = list;
     }

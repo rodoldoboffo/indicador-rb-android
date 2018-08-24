@@ -22,7 +22,7 @@ public class ArrayConexoesAdapter extends BaseAdapter {
     private List<DispositivoBLE> dispositivos;
     private Context context;
 
-    public ArrayConexoesAdapter(Context context, ArrayList<DispositivoBLE> list) {
+    public ArrayConexoesAdapter(Context context, List<DispositivoBLE> list) {
         this.context = context;
         this.dispositivos = list;
     }

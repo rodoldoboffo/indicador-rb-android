@@ -5,6 +5,7 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
@@ -70,16 +71,22 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
         return pontosCalibracao;
     }
 
-    @Override
-    protected Calibracao clone() {
-        Calibracao clone = new Calibracao();
-        clone.setGrandeza(this.getGrandeza().get());
-        clone.setNome(this.getNome().get());
-        clone.setUnidadeCalibracao(this.getUnidadeCalibracao().get());
-        for (int i = 0; i < this.getPontosCalibracao().size(); i++) {
-            clone.adicionaPontoCalibracao(this.getPontosCalibracao().get(i).clone());
+    public Calibracao clone() {
+        try {
+            Calibracao clone = (Calibracao)super.clone();
+            clone.setGrandeza(this.getGrandeza().get());
+            clone.setNome(this.getNome().get());
+            clone.setUnidadeCalibracao(this.getUnidadeCalibracao().get());
+            clone.getPontosCalibracao().clear();
+            for (int i = 0; i < this.getPontosCalibracao().size(); i++) {
+                clone.adicionaPontoCalibracao(this.getPontosCalibracao().get(i).clone());
+            }
+            return clone;
         }
-        return clone;
+        catch (CloneNotSupportedException ex) {
+            Log.e(this.getClass().getName(), "Não foi possível clonar Calibração");
+            return null;
+        }
     }
 
     public void adicionaPontoCalibracao(PontoCalibracao ponto) {

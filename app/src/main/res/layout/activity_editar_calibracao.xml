@@ -20,8 +20,7 @@
     <ScrollView
         android:id="@+id/scrollViewPrincipal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/salvarCalibracaoButton">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -119,19 +118,19 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.1"
                                 style="@style/HeaderTabela"
-                                android:text="#"/>
+                                android:text="@string/numeroHash"/>
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 style="@style/HeaderTabela"
-                                android:text="Digital"/>
+                                android:text="@string/digital"/>
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 style="@style/HeaderTabela"
-                                android:text="Calibração"/>
+                                android:text="@string/calibracao"/>
                         </LinearLayout>
 
                         <ListView
@@ -164,7 +163,8 @@
                         <ImageButton
                             style="@style/SmallButton"
                             android:layout_margin="4dp"
-                            android:src="@drawable/ic_add_24dp" />
+                            android:src="@drawable/ic_add_24dp"
+                            android:onClick="onAdicionarPontoButtonClick"/>
 
                         <ImageButton
                             style="@style/SmallButton"

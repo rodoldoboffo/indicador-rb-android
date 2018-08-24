@@ -13,6 +13,7 @@
     <string name="equipamento_activity_label">Equipamento</string>
     <string name="calibracao_activity_label">Calibração</string>
     <string name="nova_calibracao_activity_label">Nova Calibração</string>
+    <string name="editar_calibracao_activity_label">Editar Calibração</string>
     <string name="nomeCalibracaoHint">Nome da Calibração</string>
     <string name="grandeza">Grandeza</string>
     <string name="unidadeDeCalibracao">Unidade de Calibração</string>
@@ -38,4 +39,7 @@
     <string name="naoExistemConexoes">Ainda não existem conexões disponíveis\nClique no botão "Pesquisar"</string>
     <string name="naoExistemCalibracoes">Ainda não existem calibrações salvas</string>
     <string name="naoExistemPontosCalibracao">Ainda não foram adicionados pontos nesta calibração</string>
+    <string name="numeroHash">#</string>
+    <string name="calibracao">Calibração</string>
+    <string name="digital">Digital</string>
 </resources>
