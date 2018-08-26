@@ -70,8 +70,12 @@ public class ArrayPontosCalibracaoAdapter extends BaseAdapter {
         ImageButton buttonRemove = (ImageButton)view.findViewById(R.id.removePontoButton);
 
         PontoCalibracao ponto = this.pontos.get(position);
-        if (Long.MAX_VALUE != ponto.getValorNaoCalibrado().get()) {
-            editTextDigital.setText(String.valueOf(ponto.getValorNaoCalibrado().get()));
+        if (!Double.isNaN(ponto.getValorNaoCalibrado().get())) {
+            editTextDigital.setText(String.valueOf(new Double(ponto.getValorNaoCalibrado().get()).longValue()));
+        }
+
+        if (!Double.isNaN(ponto.getValorCalibrado().get())) {
+            editTextCalibracao.setText(String.valueOf(ponto.getValorCalibrado().get()));
         }
 
         editTextDigital.addTextChangedListener(new TextWatcher() {
@@ -83,10 +87,32 @@ public class ArrayPontosCalibracaoAdapter extends BaseAdapter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().isEmpty()) {
-                    ArrayPontosCalibracaoAdapter.this.pontos.get(position).setValorNaoCalibrado(Long.MAX_VALUE);
+                    ArrayPontosCalibracaoAdapter.this.pontos.get(position).setValorNaoCalibrado(Double.NaN);
                 }
                 else {
-                    ArrayPontosCalibracaoAdapter.this.pontos.get(position).setValorNaoCalibrado(Long.valueOf(s.toString()));
+                    ArrayPontosCalibracaoAdapter.this.pontos.get(position).setValorNaoCalibrado(Double.valueOf(s.toString()));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editTextCalibracao.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().isEmpty()) {
+                    ArrayPontosCalibracaoAdapter.this.pontos.get(position).setValorCalibrado(Double.NaN);
+                }
+                else {
+                    ArrayPontosCalibracaoAdapter.this.pontos.get(position).setValorCalibrado(Double.valueOf(s.toString()));
                 }
             }
 

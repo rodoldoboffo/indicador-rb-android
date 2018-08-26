@@ -4,7 +4,7 @@ import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
 
 public class PontoCalibracaoPOJO extends POJO<PontoCalibracao> {
 
-    private long valorDigital;
+    private double valorDigital;
     private double valorCalibrado;
 
     public PontoCalibracaoPOJO() {}

@@ -26,6 +26,9 @@ import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 public class EditarCalibracaoActivity extends AbstractBaseActivity {
 
     public static final String CALIBRACAO_EXTRA = "EditarCalibracao.Calibracao";
@@ -65,7 +68,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.nomeCalibracaoText = this.findViewById(R.id.nomeCalibracaoText);
         this.nomeCalibracaoText.setText(this.calibracao.getNome().get());
 
-        this.spinnerGrandezaAdapter = new EnumArrayAdapter(this, GrandezaEnum.class);
+        this.spinnerGrandezaAdapter = new EnumArrayAdapter(this, Arrays.asList(new GrandezaEnum[] {GrandezaEnum.forca, GrandezaEnum.temperatura}));
         this.spinnerGrandeza = this.findViewById(R.id.grandezaSpinner);
         this.spinnerGrandeza.setAdapter(spinnerGrandezaAdapter);
         this.spinnerGrandeza.setSelection(this.spinnerGrandezaAdapter.getListaEnums().indexOf(this.calibracao.getGrandeza().get()));

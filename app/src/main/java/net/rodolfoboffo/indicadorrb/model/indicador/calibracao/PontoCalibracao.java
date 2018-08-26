@@ -6,10 +6,10 @@ import android.databinding.ObservableLong;
 import java.io.Serializable;
 
 public class PontoCalibracao implements Serializable, Cloneable {
-    private ObservableLong valorNaoCalibrado;
+    private ObservableDouble valorNaoCalibrado;
     private ObservableDouble valorCalibrado;
 
-    public ObservableLong getValorNaoCalibrado() {
+    public ObservableDouble getValorNaoCalibrado() {
         return valorNaoCalibrado;
     }
 
@@ -17,7 +17,7 @@ public class PontoCalibracao implements Serializable, Cloneable {
         return valorCalibrado;
     }
 
-    public void setValorNaoCalibrado(Long valorNaoCalibrado) {
+    public void setValorNaoCalibrado(Double valorNaoCalibrado) {
         this.valorNaoCalibrado.set(valorNaoCalibrado);
     }
 
@@ -25,13 +25,13 @@ public class PontoCalibracao implements Serializable, Cloneable {
         this.valorCalibrado.set(valorCalibrado);
     }
 
-    public PontoCalibracao(Long valorNaoCalibrado, Double valorCalibrado) {
+    public PontoCalibracao(Double valorNaoCalibrado, Double valorCalibrado) {
         this.valorCalibrado = new ObservableDouble(valorCalibrado);
-        this.valorNaoCalibrado = new ObservableLong(valorNaoCalibrado);
+        this.valorNaoCalibrado = new ObservableDouble(valorNaoCalibrado);
     }
 
     public PontoCalibracao() {
-        this(Long.MAX_VALUE, Double.NaN);
+        this(Double.NaN, Double.NaN);
     }
 
     @Override
