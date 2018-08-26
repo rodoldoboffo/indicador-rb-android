@@ -126,6 +126,9 @@ public class GerenciadorDeCalibracao {
                     CalibracaoPOJO c = gson.fromJson(calibracaoJson, CalibracaoPOJO.class);
                     Calibracao calibracao = c.convertToModel();
                     this.adicionarCalibracao(calibracao);
+                    if (calibracao.getSelecionado().get()) {
+                        this.selecionaCalibracao(calibracao);
+                    }
                 }
             }
             Log.d(this.getClass().getName(), "Calibrações carregadas.");
@@ -133,5 +136,12 @@ public class GerenciadorDeCalibracao {
         catch (Exception e) {
             Log.e(this.getClass().getName(), "Não foi possível carregar calibrações");
         }
+    }
+
+    public Double getValorAjustado(Double valorDigital) {
+        if (this.calibracaoSelecionada.get() != null && this.calibracaoSelecionada.get().getAjuste().get() != null) {
+            return this.calibracaoSelecionada.get().getAjuste().get().getValorAjustado(valorDigital);
+        }
+        return valorDigital;
     }
 }

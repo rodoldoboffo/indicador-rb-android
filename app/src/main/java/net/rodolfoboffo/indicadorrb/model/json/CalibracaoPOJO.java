@@ -17,6 +17,7 @@ public class CalibracaoPOJO extends POJO<Calibracao> {
     private String unidade;
     private Boolean selecionado;
     private List<PontoCalibracaoPOJO> pontosCalibracao;
+    private RetaPOJO ajuste;
 
     public CalibracaoPOJO() {}
 
@@ -32,6 +33,7 @@ public class CalibracaoPOJO extends POJO<Calibracao> {
             pontos.add(new PontoCalibracaoPOJO(p));
         }
         this.setPontosCalibracao(pontos);
+        this.setAjuste(new RetaPOJO(calibracao.getAjuste().get()));
     }
 
     public String getId() {
@@ -82,6 +84,14 @@ public class CalibracaoPOJO extends POJO<Calibracao> {
         this.selecionado = selecionado;
     }
 
+    public void setAjuste(RetaPOJO reta) {
+        this.ajuste = reta;
+    }
+
+    public RetaPOJO getAjuste() {
+        return this.ajuste;
+    }
+
     public Calibracao convertToModel() {
         Calibracao c = new Calibracao(this.getId());
         c.setNome(this.getNome());
@@ -91,6 +101,7 @@ public class CalibracaoPOJO extends POJO<Calibracao> {
         for (PontoCalibracaoPOJO p : this.pontosCalibracao) {
             c.adicionaPontoCalibracao(p.convertToModel());
         }
+        c.setAjuste(this.ajuste.convertToModel());
         return c;
     }
 }

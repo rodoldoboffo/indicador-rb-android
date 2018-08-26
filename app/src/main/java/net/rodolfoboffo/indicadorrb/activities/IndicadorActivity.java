@@ -19,6 +19,8 @@ import android.widget.TextView;
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
 
+import java.text.NumberFormat;
+
 public class IndicadorActivity extends AbstractBaseActivity {
 
     private TextView indicacaoPrincipalText;
@@ -178,7 +180,11 @@ public class IndicadorActivity extends AbstractBaseActivity {
             this.indicacaoPrincipalText.setText("Sem indicação");
         }
         else {
-            this.indicacaoPrincipalText.setText(String.valueOf(indicacao));
+            NumberFormat format = NumberFormat.getNumberInstance();
+            format.setMaximumFractionDigits(4);
+            format.setMinimumFractionDigits(4);
+            String stringValue = format.format(indicacao);
+            this.indicacaoPrincipalText.setText(stringValue);
         }
     }
 
@@ -202,7 +208,9 @@ public class IndicadorActivity extends AbstractBaseActivity {
             @Override
             public void run() {
                 if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() != null) {
-                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().get().getUltimoValorLido().get());
+                    Double valorDigital = IndicadorActivity.this.service.getIndicador().get().getUltimoValorLido().get();
+                    Double valorAJustado = IndicadorActivity.this.service.getGerenciadorCalibracao().getValorAjustado(valorDigital);
+                    IndicadorActivity.this.setIndicacao(valorAJustado);
                 }
                 else {
                     IndicadorActivity.this.setIndicacao(Double.NaN);

@@ -20,7 +20,7 @@ import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.ArrayCalibracoesAdapter;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
 
-public class CalibracaoActivity extends AbstractBaseActivity implements View.OnCreateContextMenuListener {
+public class CalibracaoActivity extends AbstractBaseActivity implements View.OnCreateContextMenuListener, AdapterView.OnItemClickListener {
 
     private ArrayCalibracoesAdapter arrayCalibracoesAdapter;
     private ListView listaCalibracoes;
@@ -35,6 +35,7 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
         this.arrayCalibracoesAdapter = new ArrayCalibracoesAdapter(this);
         this.listaCalibracoes.setAdapter(this.arrayCalibracoesAdapter);
         this.listaCalibracoes.setOnCreateContextMenuListener(this);
+        this.listaCalibracoes.setOnItemClickListener(this);
     }
 
     @Override
@@ -135,6 +136,13 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (this.service != null) {
+            this.service.getGerenciadorCalibracao().selecionaCalibracao(this.service.getGerenciadorCalibracao().getListaCalibracoes().get(position));
+        }
+    }
+
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = contextMenuInfo.position;
@@ -159,7 +167,7 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
                 .setMessage(this.getString(R.string.confirmacaoExlcuirCalibracao))
-                .setPositiveButton(this.getString(R.string.sim),  new DialogInterface.OnClickListener() {
+                .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         CalibracaoActivity.this.service.getGerenciadorCalibracao().removerCalibracao(calibracao);
@@ -167,7 +175,7 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
                 })
                 .setNegativeButton(this.getString(R.string.nao), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 })

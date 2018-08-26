@@ -22,6 +22,7 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
     protected ObservableField<UnidadeEnum> unidadeCalibracao;
     protected ObservableList<PontoCalibracao> pontosCalibracao;
     protected ObservableBoolean selecionado;
+    protected ObservableField<Reta> ajuste;
 
     public Calibracao() {
         this(UUID.randomUUID().toString());
@@ -35,6 +36,7 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
         this.unidadeCalibracao.set(UnidadeEnum.kgf);
         this.pontosCalibracao = new ObservableArrayList<>();
         this.selecionado = new ObservableBoolean(false);
+        this.ajuste = new ObservableField<>(new Reta());
     }
 
     public final UUID getId() {
@@ -82,6 +84,14 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
         this.pontosCalibracao.addAll(pontos);
     }
 
+    public ObservableField<Reta> getAjuste() {
+        return ajuste;
+    }
+
+    public void setAjuste(Reta ajuste) {
+        this.ajuste.set(ajuste);
+    }
+
     public Calibracao clone() {
         try {
             Calibracao clone = (Calibracao)super.clone();
@@ -94,6 +104,7 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
                 clonePontos.add(this.getPontosCalibracao().get(i).clone());
             }
             clone.setPontosCalibracao(clonePontos);
+            clone.setAjuste((Reta) this.ajuste.get().clone());
             return clone;
         }
         catch (CloneNotSupportedException ex) {

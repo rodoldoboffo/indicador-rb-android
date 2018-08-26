@@ -25,6 +25,8 @@ import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Reta;
+import net.rodolfoboffo.indicadorrb.model.math.RegressaoLinear;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -190,6 +192,8 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
                 this.calibracao.setNome(this.nomeCalibracaoText.getText().toString());
                 this.calibracao.setGrandeza((GrandezaEnum) this.spinnerGrandeza.getSelectedItem());
                 this.calibracao.setUnidadeCalibracao((UnidadeEnum) this.spinnerUnidade.getSelectedItem());
+                Reta ajuste = RegressaoLinear.getAjuste(this.calibracao.getPontosCalibracao());
+                this.calibracao.setAjuste(ajuste);
                 this.service.getGerenciadorCalibracao().salvarCalibracao(this.calibracao);
                 this.setResult(RESULT_OK);
                 this.finish();
