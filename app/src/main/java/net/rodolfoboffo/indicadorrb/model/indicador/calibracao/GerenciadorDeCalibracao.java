@@ -1,19 +1,31 @@
 package net.rodolfoboffo.indicadorrb.model.indicador.calibracao;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableArrayMap;
 import android.databinding.ObservableField;
 import android.databinding.ObservableList;
 import android.databinding.ObservableMap;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
+import net.rodolfoboffo.indicadorrb.model.json.CalibracaoPOJO;
+import net.rodolfoboffo.indicadorrb.model.json.GsonUtil;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class GerenciadorDeCalibracao {
+
+    public static final String CALIBRACOES_KEY = "IndicadorService.Calibracoes";
+    public static final String CONJUNTO_CALIBRACOES_KEY = "ConjuntoCalibracoes";
 
     private IndicadorService servico;
 
@@ -51,10 +63,12 @@ public class GerenciadorDeCalibracao {
     }
 
     public void salvarCalibracao(Calibracao calibracao) {
-        if (!mapaCalibracoes.containsKey(calibracao.getId())) {
-            this.mapaCalibracoes.put(calibracao.getId(), calibracao);
-            this.selecionaCalibracao(calibracao);
-        }
+        this.adicionarCalibracao(calibracao);
+        this.salvarCalibracoes();
+    }
+
+    public void adicionarCalibracao(Calibracao calibracao) {
+        this.mapaCalibracoes.put(calibracao.getId(), calibracao);
     }
 
     public void selecionaCalibracao(Calibracao c) {
@@ -80,6 +94,44 @@ public class GerenciadorDeCalibracao {
     public void removerCalibracao(Calibracao c) {
         if (this.mapaCalibracoes.containsKey(c.getId())) {
             this.mapaCalibracoes.remove(c.getId());
+        }
+    }
+
+    public void salvarCalibracoes() {
+        try {
+            SharedPreferences preferences = this.servico.getSharedPreferences(CALIBRACOES_KEY, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            Gson gson = GsonUtil.getGsonInstance();
+            Set<String> conjuntoCalibracoes = new HashSet<>();
+            for (Calibracao c : this.getListaCalibracoes()) {
+                conjuntoCalibracoes.add(gson.toJson(new CalibracaoPOJO(c)));
+            }
+            editor.putStringSet(CONJUNTO_CALIBRACOES_KEY, conjuntoCalibracoes);
+            editor.commit();
+            Log.d(this.getClass().getName(), "Calibrações salvas.");
+        }
+        catch (Exception e) {
+            Log.e(this.getClass().getName(), "Não foi possível salvar calibrações");
+        }
+    }
+
+    public void carregarCalibracoes() {
+        try {
+            SharedPreferences preferences = this.servico.getSharedPreferences(CALIBRACOES_KEY, Context.MODE_PRIVATE);
+            Set<String> conjuntoCalibracoesJson = preferences.getStringSet(CONJUNTO_CALIBRACOES_KEY, null);
+            if (conjuntoCalibracoesJson != null) {
+                Gson gson = GsonUtil.getGsonInstance();
+                for (String calibracaoJson : conjuntoCalibracoesJson) {
+                    CalibracaoPOJO c = gson.fromJson(calibracaoJson, CalibracaoPOJO.class);
+                    Calibracao calibracao = c.convertToModel();
+                    this.adicionarCalibracao(calibracao);
+                }
+            }
+            Log.d(this.getClass().getName(), "Calibrações carregadas.");
+        }
+        catch (Exception e) {
+            Log.e(this.getClass().getName(), "Não foi possível carregar calibrações");
         }
     }
 }

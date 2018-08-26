@@ -42,4 +42,7 @@
     <string name="numeroHash">#</string>
     <string name="calibracao">Calibração</string>
     <string name="digital">Digital</string>
+    <string name="adicionarPonto">Adicionar Ponto</string>
+    <string name="valorDigitalEmbranco">Valor Digital não pode ser vazio.</string>
+    <string name="valorCalibracaoEmbranco">Valor da Calibração não pode ser vazio.</string>
 </resources>

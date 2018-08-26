@@ -1,14 +1,15 @@
 package net.rodolfoboffo.indicadorrb.model.indicador.calibracao;
 
 import android.databinding.ObservableDouble;
+import android.databinding.ObservableLong;
 
 import java.io.Serializable;
 
 public class PontoCalibracao implements Serializable, Cloneable {
-    private ObservableDouble valorNaoCalibrado;
+    private ObservableLong valorNaoCalibrado;
     private ObservableDouble valorCalibrado;
 
-    public ObservableDouble getValorNaoCalibrado() {
+    public ObservableLong getValorNaoCalibrado() {
         return valorNaoCalibrado;
     }
 
@@ -16,7 +17,7 @@ public class PontoCalibracao implements Serializable, Cloneable {
         return valorCalibrado;
     }
 
-    public void setValorNaoCalibrado(Double valorNaoCalibrado) {
+    public void setValorNaoCalibrado(Long valorNaoCalibrado) {
         this.valorNaoCalibrado.set(valorNaoCalibrado);
     }
 
@@ -24,13 +25,13 @@ public class PontoCalibracao implements Serializable, Cloneable {
         this.valorCalibrado.set(valorCalibrado);
     }
 
-    public PontoCalibracao(Double valorNaoCalibrado, Double valorCalibrado) {
+    public PontoCalibracao(Long valorNaoCalibrado, Double valorCalibrado) {
         this.valorCalibrado = new ObservableDouble(valorCalibrado);
-        this.valorNaoCalibrado = new ObservableDouble(valorNaoCalibrado);
+        this.valorNaoCalibrado = new ObservableLong(valorNaoCalibrado);
     }
 
     public PontoCalibracao() {
-        this(Double.NaN, Double.NaN);
+        this(Long.MAX_VALUE, Double.NaN);
     }
 
     @Override

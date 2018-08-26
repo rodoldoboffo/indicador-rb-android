@@ -11,6 +11,8 @@ import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Calibracao implements Cloneable, Serializable, Comparable<Calibracao> {
@@ -22,7 +24,11 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
     protected ObservableBoolean selecionado;
 
     public Calibracao() {
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID().toString());
+    }
+
+    public Calibracao(String id) {
+        this.id = UUID.fromString(id);
         this.nome = new ObservableField<>("");
         this.grandeza = new ObservableField<>(GrandezaEnum.forca);
         this.unidadeCalibracao = new ObservableField<>();
@@ -71,16 +77,23 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
         return pontosCalibracao;
     }
 
+    public void setPontosCalibracao(List<PontoCalibracao> pontos) {
+        this.pontosCalibracao.clear();
+        this.pontosCalibracao.addAll(pontos);
+    }
+
     public Calibracao clone() {
         try {
             Calibracao clone = (Calibracao)super.clone();
+            clone.id = this.getId();
             clone.setGrandeza(this.getGrandeza().get());
             clone.setNome(this.getNome().get());
             clone.setUnidadeCalibracao(this.getUnidadeCalibracao().get());
-            clone.getPontosCalibracao().clear();
+            List<PontoCalibracao> clonePontos = new ArrayList<>();
             for (int i = 0; i < this.getPontosCalibracao().size(); i++) {
-                clone.adicionaPontoCalibracao(this.getPontosCalibracao().get(i).clone());
+                clonePontos.add(this.getPontosCalibracao().get(i).clone());
             }
+            clone.setPontosCalibracao(clonePontos);
             return clone;
         }
         catch (CloneNotSupportedException ex) {

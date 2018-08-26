@@ -18,14 +18,21 @@
         android:id="@+id/editTextDigital"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4"
+        android:layout_weight="0.35"
         android:inputType="number"
         style="@style/RowTabela"/>
     <EditText
         android:id="@+id/editTextCalibracao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
+        android:layout_weight="0.45"
         android:inputType="numberDecimal"
         style="@style/RowTabela"/>
+    <ImageButton
+        android:id="@+id/removePontoButton"
+        style="@style/SmallButton"
+        android:layout_width="0dp"
+        android:layout_weight="0.1"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_delete_forever_24dp"/>
 </LinearLayout>

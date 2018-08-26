@@ -44,6 +44,13 @@ public abstract class AbstractEnumeration implements Serializable {
     }
 
     public static <T extends AbstractEnumeration> List<T> getAll(Class<T> clss) {
+        Map<String, AbstractEnumeration> mapEnum = getMapEnumByClass(clss);
+        List<T> lista = new ArrayList<>();
+        lista.addAll((Collection<? extends T>) mapEnum.values());
+        return lista;
+    }
+
+    private static <T extends AbstractEnumeration> Map<String, AbstractEnumeration> getMapEnumByClass(Class<T> clss) {
         Map<String, AbstractEnumeration> mapEnum = map.get(clss);
         if (mapEnum == null) {
             try {
@@ -51,13 +58,11 @@ public abstract class AbstractEnumeration implements Serializable {
             }
             catch (ClassNotFoundException e) {
                 Log.d(AbstractEnumeration.class.getName(), String.format("Impossível encontrar enum %s", clss.getName()));
-                return new ArrayList<>();
+                return new HashMap<>();
             }
             mapEnum = map.get(clss);
         }
-        List<T> lista = new ArrayList<>();
-        lista.addAll((Collection<? extends T>) mapEnum.values());
-        return lista;
+        return mapEnum;
     }
 
     private static <T extends AbstractEnumeration> void initializeEnum(final Class<T> enumClass) throws ClassNotFoundException {
@@ -65,11 +70,17 @@ public abstract class AbstractEnumeration implements Serializable {
     }
 
     public static <T extends AbstractEnumeration> T getByKey(Class<T> clss, String codigo) {
-        return (T)map.get(clss).get(codigo);
+        Map<String, AbstractEnumeration> mapEnum = getMapEnumByClass(clss);
+        return (T)mapEnum.get(codigo);
     }
 
     @Override
     public boolean equals(Object obj) {
         return this.codigo.equals(((AbstractEnumeration)obj).getCodigo());
+    }
+
+    @Override
+    public String toString() {
+        return this.getCodigo();
     }
 }

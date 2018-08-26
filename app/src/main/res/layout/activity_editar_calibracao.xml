@@ -94,84 +94,69 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pontosDeCalibracao" />
 
-                <RelativeLayout
+                <Button
+                    android:id="@+id/adicionarPontoButton"
+                    style="@style/SmallButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:text="@string/adicionarPonto"
+                    android:layout_margin="4dp"
                     android:layout_below="@id/pontosDeCalibracaoSeparador"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    >
+                    android:onClick="onAdicionarPontoButtonClick"/>
 
-                    <RelativeLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:layout_toLeftOf="@id/layoutPontosBotoes">
-
-                        <LinearLayout
-                            android:id="@+id/layoutHeaderPontos"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.1"
-                                style="@style/HeaderTabela"
-                                android:text="@string/numeroHash"/>
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.4"
-                                style="@style/HeaderTabela"
-                                android:text="@string/digital"/>
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
-                                style="@style/HeaderTabela"
-                                android:text="@string/calibracao"/>
-                        </LinearLayout>
-
-                        <ListView
-                            android:id="@+id/listViewPontosCalibracao"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@id/layoutHeaderPontos">
-                        </ListView>
-
-                        <TextView
-                            android:id="@+id/textViewSemPontosCalibracao"
-                            style="@style/TextSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/naoExistemPontosCalibracao"
-                            android:textAlignment="center"
-                            android:gravity="center"
-                            android:layout_below="@id/layoutHeaderPontos"
-                            />
-
-                    </RelativeLayout>
+                <RelativeLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_margin="4dp"
+                    android:layout_height="160dp"
+                    android:layout_below="@id/adicionarPontoButton">
 
                     <LinearLayout
-                        android:id="@+id/layoutPontosBotoes"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/layoutHeaderPontos"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_alignParentRight="true">
-
-                        <ImageButton
-                            style="@style/SmallButton"
-                            android:layout_margin="4dp"
-                            android:src="@drawable/ic_add_24dp"
-                            android:onClick="onAdicionarPontoButtonClick"/>
-
-                        <ImageButton
-                            style="@style/SmallButton"
-                            android:layout_margin="4dp"
-                            android:src="@drawable/ic_remove_24dp" />
-
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            style="@style/HeaderTabela"
+                            android:text="@string/numeroHash"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.35"
+                            style="@style/HeaderTabela"
+                            android:text="@string/digital"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.45"
+                            style="@style/HeaderTabela"
+                            android:text="@string/calibracao"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            style="@style/HeaderTabela" />
                     </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/listViewPontosCalibracao"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/layoutHeaderPontos">
+                    </ListView>
+
+                    <TextView
+                        android:id="@+id/textViewSemPontosCalibracao"
+                        style="@style/TextSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/naoExistemPontosCalibracao"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        android:layout_below="@id/layoutHeaderPontos"
+                        />
 
                 </RelativeLayout>
 

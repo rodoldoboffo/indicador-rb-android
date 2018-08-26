@@ -9,14 +9,20 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
 import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.GerenciadorDeCalibracao;
 import net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb.IndicadorRB;
+import net.rodolfoboffo.indicadorrb.model.json.CalibracaoPOJO;
+import net.rodolfoboffo.indicadorrb.model.json.GsonUtil;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class IndicadorService extends Service {
@@ -45,6 +51,7 @@ public class IndicadorService extends Service {
         this.gerenciadorDispositivos = new GerenciadorDeDispositivos(this);
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
+        this.gerenciadorCalibracao.carregarCalibracoes();
         this.indicador = new ObservableField<>();
         this.carregarPreferencias();
     }
@@ -52,6 +59,7 @@ public class IndicadorService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         this.salvarPreferencias();
+        this.gerenciadorCalibracao.salvarCalibracoes();
         return super.onUnbind(intent);
     }
 

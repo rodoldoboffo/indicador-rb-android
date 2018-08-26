@@ -55,11 +55,11 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.calibracao = (Calibracao) this.getIntent().getSerializableExtra(CALIBRACAO_EXTRA);
         if (this.calibracao == null) {
             this.calibracao = new Calibracao();
-            this.setTitle(R.string.nova_calibracao_activity_label);
+            this.getSupportActionBar().setTitle(R.string.nova_calibracao_activity_label);
         }
         else {
             this.calibracao = this.calibracao.clone();
-            this.setTitle(R.string.editar_calibracao_activity_label);
+            this.getSupportActionBar().setTitle(R.string.editar_calibracao_activity_label);
         }
 
         this.nomeCalibracaoText = this.findViewById(R.id.nomeCalibracaoText);
@@ -72,14 +72,20 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
 
         this.spinnerUnidade = this.findViewById(R.id.unidadeCalibracaoSpinner);
         this.atualizaSpinnerUnidades(this.calibracao.getGrandeza().get());
-        this.spinnerUnidade.setSelection(this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.calibracao.getUnidadeCalibracao().get()));
+        this.spinnerUnidade.setSelection(
+                this.spinnerUnidadeAdapter.getListaEnums().indexOf(
+                        this.calibracao.getUnidadeCalibracao().get()));
 
         this.pontosAdapter = new ArrayPontosCalibracaoAdapter(this, this.calibracao.getPontosCalibracao());
         this.textViewSemPontosCalibracao = this.findViewById(R.id.textViewSemPontosCalibracao);
         this.listViewPontosCalibracao = this.findViewById(R.id.listViewPontosCalibracao);
         this.listViewPontosCalibracao.setEmptyView(this.textViewSemPontosCalibracao);
         this.listViewPontosCalibracao.setAdapter(this.pontosAdapter);
+    }
 
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        super.onServiceConnected(name, service);
         this.inicializaObservadores();
     }
 
@@ -158,6 +164,19 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         if (!this.service.getGerenciadorCalibracao().validarNomeCalibracao(this.nomeCalibracaoText.getText().toString(), this.calibracao)) {
             this.nomeCalibracaoText.setError(this.getString(R.string.calibracaoComMesmoNome));
             return false;
+        }
+        for (int i = 0; i < this.pontosAdapter.getCount(); i++) {
+            View v = this.listViewPontosCalibracao.getChildAt(i);
+            EditText editTextDigital = (EditText) v.findViewById(R.id.editTextDigital);
+            EditText editTextCalibracao = (EditText) v.findViewById(R.id.editTextCalibracao);
+            if (editTextDigital.getText().toString().isEmpty()) {
+                editTextDigital.setError(this.getString(R.string.valorDigitalEmbranco));
+                return false;
+            }
+            if (editTextCalibracao.getText().toString().isEmpty()) {
+                editTextCalibracao.setError(this.getString(R.string.valorCalibracaoEmbranco));
+                return false;
+            }
         }
         return true;
     }

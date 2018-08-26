@@ -3,6 +3,7 @@ package net.rodolfoboffo.indicadorrb.activities;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.databinding.Observable;
 import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -41,11 +42,29 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
         super.onServiceConnected(name, service);
         if (this.service != null) {
             this.arrayCalibracoesAdapter.setCalibracoes(this.service.getGerenciadorCalibracao().getListaCalibracoes());
+            this.arrayCalibracoesAdapter.notifyDataSetChanged();
             this.inicializaObservadoresDoServico();
         }
     }
 
-    public void inicializaObservadoresDoServico() {
+    public void inicializaObservadorCalibracoes() {
+        if (this.service != null) {
+            for (Calibracao c : this.service.getGerenciadorCalibracao().getListaCalibracoes()) {
+                this.inicializaObservadorCalibracao(c);
+            }
+        }
+    }
+
+    public void inicializaObservadorCalibracao(Calibracao c) {
+        c.getSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void inicializaObservadorListaCalibracoes() {
         if (this.service != null) {
             this.service.getGerenciadorCalibracao().getListaCalibracoes().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Calibracao>>() {
                 @Override
@@ -61,6 +80,10 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
                 @Override
                 public void onItemRangeInserted(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
                     CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                    if (CalibracaoActivity.this.service != null) {
+                        Calibracao c = CalibracaoActivity.this.service.getGerenciadorCalibracao().getListaCalibracoes().get(positionStart);
+                        CalibracaoActivity.this.inicializaObservadorCalibracao(c);
+                    }
                 }
 
                 @Override
@@ -74,6 +97,11 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
                 }
             });
         }
+    }
+
+    public void inicializaObservadoresDoServico() {
+        this.inicializaObservadorListaCalibracoes();
+        this.inicializaObservadorCalibracoes();
     }
 
     @Override
