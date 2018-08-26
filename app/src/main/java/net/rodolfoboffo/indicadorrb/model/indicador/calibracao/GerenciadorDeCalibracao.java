@@ -63,12 +63,19 @@ public class GerenciadorDeCalibracao {
     }
 
     public void salvarCalibracao(Calibracao calibracao) {
-        this.adicionarCalibracao(calibracao);
+        this.adicionarCalibracao(calibracao, true);
         this.salvarCalibracoes();
     }
 
     public void adicionarCalibracao(Calibracao calibracao) {
+        this.adicionarCalibracao(calibracao, false);
+    }
+
+    public void adicionarCalibracao(Calibracao calibracao, boolean selecionada) {
         this.mapaCalibracoes.put(calibracao.getId(), calibracao);
+        if (selecionada) {
+            this.selecionaCalibracao(calibracao);
+        }
     }
 
     public void selecionaCalibracao(Calibracao c) {

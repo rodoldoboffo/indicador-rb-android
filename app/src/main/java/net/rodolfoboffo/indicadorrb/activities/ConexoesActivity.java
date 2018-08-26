@@ -65,10 +65,12 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
 
             @Override
             public void onItemRangeInserted(ObservableList<DispositivoBLE> sender, int positionStart, int itemCount) {
-                Log.d(ConexoesActivity.this.getClass().getSimpleName(), "Dispositivo inserido na lista de dispositivos.");
-                DispositivoBLE dispositivo = ConexoesActivity.this.service.getGerenciadorConexoes().getListaConexoes().get(positionStart);
-                ConexoesActivity.this.inicializaObservadorDispositivo(dispositivo);
-                ConexoesActivity.this.adapterConexoes.notifyDataSetChanged();
+                if (ConexoesActivity.this.service != null) {
+                    Log.d(ConexoesActivity.this.getClass().getSimpleName(), "Dispositivo inserido na lista de dispositivos.");
+                    DispositivoBLE dispositivo = ConexoesActivity.this.service.getGerenciadorConexoes().getListaConexoes().get(positionStart);
+                    ConexoesActivity.this.inicializaObservadorDispositivo(dispositivo);
+                    ConexoesActivity.this.adapterConexoes.notifyDataSetChanged();
+                }
             }
 
             @Override
