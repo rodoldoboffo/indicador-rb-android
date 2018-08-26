@@ -174,10 +174,10 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
             DispositivoBLE dispositivo = this.service.getGerenciadorConexoes().getListaConexoes().get(position);
             switch (item.getItemId()) {
                 case R.id.conectarDispositivo:
-                    if (this.service.getIndicador().get() != null) {
-                        this.service.getIndicador().get().finalizar();
+                    if (this.service.getCondicionadorSinais().get() != null) {
+                        this.service.getCondicionadorSinais().get().finalizar();
                     }
-                    this.service.criaIndicador(dispositivo);
+                    this.service.criaCondicionadorSinais(dispositivo);
                     dispositivo.conectar();
                     break;
                 case R.id.desconectarDispositivo:

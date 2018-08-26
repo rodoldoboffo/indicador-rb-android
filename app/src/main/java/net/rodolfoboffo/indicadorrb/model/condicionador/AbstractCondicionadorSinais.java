@@ -1,4 +1,4 @@
-package net.rodolfoboffo.indicadorrb.model.indicador;
+package net.rodolfoboffo.indicadorrb.model.condicionador;
 
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableDouble;
@@ -7,17 +7,17 @@ import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
-public abstract class AbstractIndicador extends AbstractServiceRelatedObject {
+public abstract class AbstractCondicionadorSinais extends AbstractServiceRelatedObject {
 
     protected DispositivoBLE conexao;
     protected ObservableDouble ultimoValorLido;
     protected ObservableBoolean aquisicaoAutomatica;
 
-    protected AbstractIndicador(IndicadorService service) {
+    protected AbstractCondicionadorSinais(IndicadorService service) {
         super(service);
     }
 
-    public AbstractIndicador(DispositivoBLE conexao, IndicadorService service) {
+    public AbstractCondicionadorSinais(DispositivoBLE conexao, IndicadorService service) {
         super(service);
         this.conexao = conexao;
         this.ultimoValorLido = new ObservableDouble(Double.NaN);

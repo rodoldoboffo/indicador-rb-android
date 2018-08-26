@@ -1,15 +1,12 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
 import android.bluetooth.BluetoothProfile;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.databinding.Observable;
 import android.databinding.ObservableField;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
+import net.rodolfoboffo.indicadorrb.model.condicionador.AbstractCondicionadorSinais;
 
 import java.text.NumberFormat;
 
@@ -70,20 +67,20 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void inicializarObservadorConexao() {
-        if (this.service != null && this.service.getIndicador().get() != null) {
-            this.service.getIndicador().get().getConexao().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
+            this.service.getCondicionadorSinais().get().getConexao().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     IndicadorActivity.this.habilitaComponentes();
                 }
             });
-            this.service.getIndicador().get().getConexao().getEstadoBluetooth().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            this.service.getCondicionadorSinais().get().getConexao().getEstadoBluetooth().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     IndicadorActivity.this.habilitaConectarMenuItem();
                 }
             });
-            this.service.getIndicador().get().getConexao().getConectando().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            this.service.getCondicionadorSinais().get().getConexao().getConectando().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     IndicadorActivity.this.habilitaConectarMenuItem();
@@ -95,10 +92,10 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void inicializarObservadorIndicador() {
-        this.service.getIndicador().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.service.getCondicionadorSinais().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                ObservableField<AbstractIndicador> indicador = (ObservableField<AbstractIndicador>)sender;
+                ObservableField<AbstractCondicionadorSinais> indicador = (ObservableField<AbstractCondicionadorSinais>)sender;
                 IndicadorActivity.this.inicializarObservadorConexao();
                 IndicadorActivity.this.habilitaComponentes();
             }
@@ -112,17 +109,17 @@ public class IndicadorActivity extends AbstractBaseActivity {
             @Override
             public void run() {
                 if (IndicadorActivity.this.conectarMenuItem != null) {
-                    if (IndicadorActivity.this.service == null || (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() == null)) {
+                    if (IndicadorActivity.this.service == null || (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() == null)) {
                         IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.conectar));
                         IndicadorActivity.this.conectarMenuItem.setEnabled(false);
                         IndicadorActivity.this.conectarMenuItem.setVisible(false);
                     } else {
-                        if (IndicadorActivity.this.service.getIndicador().get().getConexao().getEstadoBluetooth().get() == BluetoothProfile.STATE_CONNECTED) {
+                        if (IndicadorActivity.this.service.getCondicionadorSinais().get().getConexao().getEstadoBluetooth().get() == BluetoothProfile.STATE_CONNECTED) {
                             IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.desconectar));
                         } else {
                             IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.conectar));
                         }
-                        if (IndicadorActivity.this.service.getIndicador().get().getConexao().getConectando().get()) {
+                        if (IndicadorActivity.this.service.getCondicionadorSinais().get().getConexao().getConectando().get()) {
                             IndicadorActivity.this.conectarMenuItem.setEnabled(false);
                         } else {
                             IndicadorActivity.this.conectarMenuItem.setEnabled(true);
@@ -134,7 +131,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void habilitaComponentes() {
-        if (this.service != null && this.service.getIndicador().get() != null && this.service.getIndicador().get().getConexao().getPronto().get()) {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null && this.service.getCondicionadorSinais().get().getConexao().getPronto().get()) {
             this.habilitaComponentes(true);
         }
         else {
@@ -152,8 +149,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void inicializaObservadorIndicacaoPrincipal() {
-        if (this.service != null && this.service.getIndicador().get() != null) {
-            this.service.getIndicador().get().getUltimoValorLido().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
+            this.service.getCondicionadorSinais().get().getUltimoValorLido().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                         IndicadorActivity.this.setIndicacao();
@@ -164,8 +161,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void inicializarObservadorAquisicaoAutomatica() {
-        if (this.service != null && this.service.getIndicador().get() != null) {
-            this.service.getIndicador().get().getAquisicaoAutomatica().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
+            this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     IndicadorActivity.this.setAquisicaoAutomatica();
@@ -192,8 +189,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() != null) {
-                    IndicadorActivity.this.setAquisicaoAutomatica(IndicadorActivity.this.service.getIndicador().get().getAquisicaoAutomatica().get());
+                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() != null) {
+                    IndicadorActivity.this.setAquisicaoAutomatica(IndicadorActivity.this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get());
                 }
             }
         });
@@ -207,8 +204,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getIndicador().get() != null) {
-                    Double valorDigital = IndicadorActivity.this.service.getIndicador().get().getUltimoValorLido().get();
+                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() != null) {
+                    Double valorDigital = IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoValorLido().get();
                     Double valorAJustado = IndicadorActivity.this.service.getGerenciadorCalibracao().getValorAjustado(valorDigital);
                     IndicadorActivity.this.setIndicacao(valorAJustado);
                 }
@@ -224,15 +221,15 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void alternaAquisicaoAutomatica() {
-        if (this.service != null && this.service.getIndicador().get() != null) {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
             this.switchIndicacaoAutomatica.setEnabled(false);
-            Boolean ligado = IndicadorActivity.this.service.getIndicador().get().getAquisicaoAutomatica().get();
-            this.service.getIndicador().get().iniciarAquisicaoAutomatica(!ligado);
+            Boolean ligado = IndicadorActivity.this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get();
+            this.service.getCondicionadorSinais().get().iniciarAquisicaoAutomatica(!ligado);
             this.handler.postDelayed(
                     new Runnable() {
                         @Override
                         public void run() {
-                            IndicadorActivity.this.switchIndicacaoAutomatica.setChecked(IndicadorActivity.this.service.getIndicador().get().getAquisicaoAutomatica().get());
+                            IndicadorActivity.this.switchIndicacaoAutomatica.setChecked(IndicadorActivity.this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get());
                             IndicadorActivity.this.switchIndicacaoAutomatica.setEnabled(true);
                         }
                     },
@@ -242,12 +239,12 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     public void conectarDesconectarClick(MenuItem item) {
-        if (this.service != null && this.service.getIndicador().get() != null) {
-            if (this.service.getIndicador().get().getConexao().getPronto().get()) {
-                this.service.getIndicador().get().getConexao().desconectar();
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
+            if (this.service.getCondicionadorSinais().get().getConexao().getPronto().get()) {
+                this.service.getCondicionadorSinais().get().getConexao().desconectar();
             }
             else {
-                this.service.getIndicador().get().getConexao().conectar();
+                this.service.getCondicionadorSinais().get().getConexao().conectar();
             }
         }
     }

@@ -3,8 +3,8 @@ package net.rodolfoboffo.indicadorrb.model.json;
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractEnumeration;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,19 +3,14 @@ package net.rodolfoboffo.indicadorrb.activities;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.databinding.Observable;
 import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
@@ -23,13 +18,12 @@ import net.rodolfoboffo.indicadorrb.adapter.ArrayPontosCalibracaoAdapter;
 import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Reta;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Reta;
 import net.rodolfoboffo.indicadorrb.model.math.RegressaoLinear;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class EditarCalibracaoActivity extends AbstractBaseActivity {
 
@@ -202,6 +196,14 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     }
 
     public void onAdicionarPontoButtonClick(View view) {
-        this.calibracao.adicionaPontoCalibracao(new PontoCalibracao());
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null &&
+                this.service.getCondicionadorSinais().get().getConexao().getPronto().get() &&
+                this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get() &&
+                !Double.isNaN(this.service.getCondicionadorSinais().get().getUltimoValorLido().get())) {
+            this.calibracao.adicionaPontoCalibracao(new PontoCalibracao(this.service.getCondicionadorSinais().get().getUltimoValorLido().get(), Double.NaN));
+        }
+        else {
+            this.calibracao.adicionaPontoCalibracao(new PontoCalibracao());
+        }
     }
 }

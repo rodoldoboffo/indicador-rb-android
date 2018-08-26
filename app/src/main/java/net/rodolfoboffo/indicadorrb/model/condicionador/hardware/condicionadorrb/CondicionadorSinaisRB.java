@@ -1,19 +1,19 @@
-package net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb;
+package net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb;
 
 import android.databinding.Observable;
 import android.databinding.ObservableField;
 
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.Mensagem;
-import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
+import net.rodolfoboffo.indicadorrb.model.condicionador.AbstractCondicionadorSinais;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
-public class IndicadorRB extends AbstractIndicador {
+public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
 
     private StringBuffer buffer;
     private ObservableField<String> ultimoComandoRecebido;
 
-    public IndicadorRB(DispositivoBLE dispositivo, IndicadorService service) {
+    public CondicionadorSinaisRB(DispositivoBLE dispositivo, IndicadorService service) {
         super(dispositivo, service);
         this.buffer = new StringBuffer();
         this.ultimoComandoRecebido = new ObservableField<>();
@@ -29,9 +29,9 @@ public class IndicadorRB extends AbstractIndicador {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Mensagem m = ((ObservableField<Mensagem>) sender).get();
-                synchronized (IndicadorRB.this.buffer) {
-                    IndicadorRB.this.buffer.append(m.getTexto());
-                    IndicadorRB.this.processaBuffer();
+                synchronized (CondicionadorSinaisRB.this.buffer) {
+                    CondicionadorSinaisRB.this.buffer.append(m.getTexto());
+                    CondicionadorSinaisRB.this.processaBuffer();
                 }
             }
         });
@@ -40,7 +40,7 @@ public class IndicadorRB extends AbstractIndicador {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 String comando = ((ObservableField<String>)sender).get();
-                ComandosRecepcao.processaComando(IndicadorRB.this,  comando);
+                ComandosRecepcao.processaComando(CondicionadorSinaisRB.this,  comando);
             }
         });
     }

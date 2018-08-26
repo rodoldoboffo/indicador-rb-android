@@ -103,7 +103,7 @@
                     android:layout_below="@id/pontosDeCalibracaoSeparador"
                     android:onClick="onAdicionarPontoButtonClick"/>
 
-                <RelativeLayout
+                <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_margin="4dp"
@@ -143,8 +143,7 @@
                     <ListView
                         android:id="@+id/listViewPontosCalibracao"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/layoutHeaderPontos">
+                        android:layout_height="match_parent">
                     </ListView>
 
                     <TextView
@@ -158,24 +157,12 @@
                         android:layout_below="@id/layoutHeaderPontos"
                         />
 
-                </RelativeLayout>
+                </LinearLayout>
 
             </RelativeLayout>
 
         </RelativeLayout>
 
     </ScrollView>
-
-    <!--<Button
-        style="@style/Button"
-        android:id="@+id/buttonSalvar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="8dp"
-        android:text="@string/salvar"
-        android:onClick="onSalvarCalibracaoButtonClick"/>-->
 
 </RelativeLayout>

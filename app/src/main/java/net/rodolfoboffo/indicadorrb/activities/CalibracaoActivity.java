@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.ArrayCalibracoesAdapter;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
 
 public class CalibracaoActivity extends AbstractBaseActivity implements View.OnCreateContextMenuListener, AdapterView.OnItemClickListener {
 

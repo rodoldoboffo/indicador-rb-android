@@ -5,22 +5,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayPontosCalibracaoAdapter extends BaseAdapter {

@@ -1,6 +1,6 @@
 package net.rodolfoboffo.indicadorrb.model.json;
 
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Reta;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Reta;
 
 public class RetaPOJO extends POJO<Reta> {
 

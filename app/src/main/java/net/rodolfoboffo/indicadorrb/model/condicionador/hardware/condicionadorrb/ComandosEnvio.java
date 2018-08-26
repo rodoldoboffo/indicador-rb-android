@@ -1,4 +1,4 @@
-package net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb;
+package net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb;
 
 public class ComandosEnvio {
 

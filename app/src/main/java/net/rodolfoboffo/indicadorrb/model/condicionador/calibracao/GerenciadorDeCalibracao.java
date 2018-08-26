@@ -1,4 +1,4 @@
-package net.rodolfoboffo.indicadorrb.model.indicador.calibracao;
+package net.rodolfoboffo.indicadorrb.model.condicionador.calibracao;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,14 +11,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.model.json.CalibracaoPOJO;
 import net.rodolfoboffo.indicadorrb.model.json.GsonUtil;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -99,6 +96,9 @@ public class GerenciadorDeCalibracao {
     }
 
     public void removerCalibracao(Calibracao c) {
+        if (this.calibracaoSelecionada.get().equals(c)){
+            this.calibracaoSelecionada.set(null);
+        }
         if (this.mapaCalibracoes.containsKey(c.getId())) {
             this.mapaCalibracoes.remove(c.getId());
         }

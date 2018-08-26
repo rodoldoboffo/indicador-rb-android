@@ -1,6 +1,6 @@
 package net.rodolfoboffo.indicadorrb.model.json;
 
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
 
 public class PontoCalibracaoPOJO extends POJO<PontoCalibracao> {
 

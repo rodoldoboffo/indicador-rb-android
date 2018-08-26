@@ -1,7 +1,6 @@
-package net.rodolfoboffo.indicadorrb.model.indicador.calibracao;
+package net.rodolfoboffo.indicadorrb.model.condicionador.calibracao;
 
 import android.databinding.ObservableDouble;
-import android.databinding.ObservableLong;
 
 import java.io.Serializable;
 

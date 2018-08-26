@@ -1,4 +1,4 @@
-package net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb;
+package net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb;
 
 public class ComandosRecepcao {
 
@@ -6,7 +6,7 @@ public class ComandosRecepcao {
     public static final String STOPPED = "stopped";
     public static final String AD_VALUE = "adval=";
 
-    public static void processaComando(IndicadorRB indicador, String comando) {
+    public static void processaComando(CondicionadorSinaisRB indicador, String comando) {
         if (comando.startsWith(ComandosRecepcao.AD_VALUE)) {
             String adValueString = comando.substring(ComandosRecepcao.AD_VALUE.length());
             try {

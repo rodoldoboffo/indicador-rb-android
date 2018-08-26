@@ -8,14 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayCalibracoesAdapter extends BaseAdapter {

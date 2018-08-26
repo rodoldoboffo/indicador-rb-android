@@ -9,20 +9,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
-import net.rodolfoboffo.indicadorrb.model.indicador.AbstractIndicador;
+import net.rodolfoboffo.indicadorrb.model.condicionador.AbstractCondicionadorSinais;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Calibracao;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.GerenciadorDeCalibracao;
-import net.rodolfoboffo.indicadorrb.model.indicador.hardware.indicadorrb.IndicadorRB;
-import net.rodolfoboffo.indicadorrb.model.json.CalibracaoPOJO;
-import net.rodolfoboffo.indicadorrb.model.json.GsonUtil;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.GerenciadorDeCalibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb.CondicionadorSinaisRB;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class IndicadorService extends Service {
@@ -35,7 +28,7 @@ public class IndicadorService extends Service {
     private GerenciadorDeDispositivos gerenciadorDispositivos;
     private GerenciadorDePermissoes gerenciadoPermissoes;
     private GerenciadorDeCalibracao gerenciadorCalibracao;
-    private ObservableField<AbstractIndicador> indicador;
+    private ObservableField<AbstractCondicionadorSinais> condicionadorSinais;
 
     @Nullable
     @Override
@@ -52,7 +45,7 @@ public class IndicadorService extends Service {
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarCalibracoes();
-        this.indicador = new ObservableField<>();
+        this.condicionadorSinais = new ObservableField<>();
         this.carregarPreferencias();
     }
 
@@ -66,8 +59,8 @@ public class IndicadorService extends Service {
     public void salvarPreferencias() {
         SharedPreferences preferences = this.getSharedPreferences(MAIN_PREFERENCES_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        if (this.indicador.get() != null) {
-            String enderecoBLE = this.indicador.get().getConexao().getEndereco().get();
+        if (this.condicionadorSinais.get() != null) {
+            String enderecoBLE = this.condicionadorSinais.get().getConexao().getEndereco().get();
             editor.putString(BLE_ADDRESS_KEY, enderecoBLE);
         }
         if (this.gerenciadorCalibracao.getCalibracaoSelecionada().get() != null) {
@@ -84,8 +77,8 @@ public class IndicadorService extends Service {
         String idCalibracaoString = preferences.getString(ID_CALIBRACAO_KEY, null);
         if (enderecoBLE != null) {
             DispositivoBLE conexao = new DispositivoBLE(null, enderecoBLE, this);
-            AbstractIndicador indicador = new IndicadorRB(conexao, this);
-            this.indicador.set(indicador);
+            AbstractCondicionadorSinais indicador = new CondicionadorSinaisRB(conexao, this);
+            this.condicionadorSinais.set(indicador);
         }
         if (idCalibracaoString != null) {
             this.gerenciadorCalibracao.getCalibracaoSelecionada().set(this.gerenciadorCalibracao.getCalibracao(idCalibracaoString));
@@ -111,16 +104,16 @@ public class IndicadorService extends Service {
         return this.gerenciadoPermissoes;
     }
 
-    public final ObservableField<AbstractIndicador> getIndicador() {
-        return this.indicador;
+    public final ObservableField<AbstractCondicionadorSinais> getCondicionadorSinais() {
+        return this.condicionadorSinais;
     }
 
     public final GerenciadorDeCalibracao getGerenciadorCalibracao() {
         return this.gerenciadorCalibracao;
     }
 
-    public ObservableField<AbstractIndicador> criaIndicador(DispositivoBLE dispositivo) {
-        this.indicador.set(new IndicadorRB(dispositivo, this));
-        return this.indicador;
+    public ObservableField<AbstractCondicionadorSinais> criaCondicionadorSinais(DispositivoBLE dispositivo) {
+        this.condicionadorSinais.set(new CondicionadorSinaisRB(dispositivo, this));
+        return this.condicionadorSinais;
     }
 }

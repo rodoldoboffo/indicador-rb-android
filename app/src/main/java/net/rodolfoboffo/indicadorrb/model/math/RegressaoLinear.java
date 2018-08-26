@@ -1,7 +1,7 @@
 package net.rodolfoboffo.indicadorrb.model.math;
 
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.PontoCalibracao;
-import net.rodolfoboffo.indicadorrb.model.indicador.calibracao.Reta;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Reta;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
