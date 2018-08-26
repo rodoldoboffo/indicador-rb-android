@@ -14,6 +14,7 @@ import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.GerenciadorDeCalibracao;
 import net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb.CondicionadorSinaisRB;
+import net.rodolfoboffo.indicadorrb.model.indicador.IndicadorBase;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class IndicadorService extends Service {
     private GerenciadorDePermissoes gerenciadoPermissoes;
     private GerenciadorDeCalibracao gerenciadorCalibracao;
     private ObservableField<AbstractCondicionadorSinais> condicionadorSinais;
+    private IndicadorBase indicador;
 
     @Nullable
     @Override
@@ -45,6 +47,7 @@ public class IndicadorService extends Service {
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarCalibracoes();
+        this.indicador = new IndicadorBase(this);
         this.condicionadorSinais = new ObservableField<>();
         this.carregarPreferencias();
     }
@@ -110,6 +113,10 @@ public class IndicadorService extends Service {
 
     public final GerenciadorDeCalibracao getGerenciadorCalibracao() {
         return this.gerenciadorCalibracao;
+    }
+
+    public final IndicadorBase getIndicador() {
+        return this.indicador;
     }
 
     public ObservableField<AbstractCondicionadorSinais> criaCondicionadorSinais(DispositivoBLE dispositivo) {

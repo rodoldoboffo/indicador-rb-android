@@ -62,7 +62,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
     public void inicializaObservadoresDoServico() {
         this.inicializaObservadorIndicacaoPrincipal();
         this.inicializarObservadorAquisicaoAutomatica();
-        this.inicializarObservadorIndicador();
+        this.inicializarObservadorCondicionador();
         this.inicializarObservadorConexao();
     }
 
@@ -91,11 +91,11 @@ public class IndicadorActivity extends AbstractBaseActivity {
         IndicadorActivity.this.habilitaConectarMenuItem();
     }
 
-    private void inicializarObservadorIndicador() {
+    private void inicializarObservadorCondicionador() {
         this.service.getCondicionadorSinais().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                ObservableField<AbstractCondicionadorSinais> indicador = (ObservableField<AbstractCondicionadorSinais>)sender;
+                ObservableField<AbstractCondicionadorSinais> condicionador = (ObservableField<AbstractCondicionadorSinais>)sender;
                 IndicadorActivity.this.inicializarObservadorConexao();
                 IndicadorActivity.this.habilitaComponentes();
             }
@@ -172,17 +172,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.setAquisicaoAutomatica();
     }
 
-    private void setIndicacao(Double indicacao) {
-        if (indicacao.isNaN()) {
-            this.indicacaoPrincipalText.setText("Sem indicação");
-        }
-        else {
-            NumberFormat format = NumberFormat.getNumberInstance();
-            format.setMaximumFractionDigits(4);
-            format.setMinimumFractionDigits(4);
-            String stringValue = format.format(indicacao);
-            this.indicacaoPrincipalText.setText(stringValue);
-        }
+    private void setIndicacao(String indicacao) {
+        this.indicacaoPrincipalText.setText(indicacao);
     }
 
     private void setAquisicaoAutomatica() {
@@ -204,13 +195,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() != null) {
-                    Double valorDigital = IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoValorLido().get();
-                    Double valorAJustado = IndicadorActivity.this.service.getGerenciadorCalibracao().getValorAjustado(valorDigital);
-                    IndicadorActivity.this.setIndicacao(valorAJustado);
-                }
-                else {
-                    IndicadorActivity.this.setIndicacao(Double.NaN);
+                if (IndicadorActivity.this.service != null) {
+                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().getIndicacao());
                 }
             }
         });
@@ -247,5 +233,15 @@ public class IndicadorActivity extends AbstractBaseActivity {
                 this.service.getCondicionadorSinais().get().getConexao().conectar();
             }
         }
+    }
+
+    private void zerar() {
+        if (this.service != null) {
+            this.service.getIndicador().tara();
+        }
+    }
+
+    public void zeroButtonOnClick(View view) {
+        this.zerar();
     }
 }

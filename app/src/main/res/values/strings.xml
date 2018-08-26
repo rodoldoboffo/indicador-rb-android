@@ -47,4 +47,6 @@
     <string name="valorCalibracaoEmbranco">Valor da Calibração não pode ser vazio.</string>
     <string name="tf">tf</string>
     <string name="farenheit">ºF</string>
+    <string name="semIndicacao">Sem indicação</string>
+    <string name="zero">Zero</string>
 </resources>
