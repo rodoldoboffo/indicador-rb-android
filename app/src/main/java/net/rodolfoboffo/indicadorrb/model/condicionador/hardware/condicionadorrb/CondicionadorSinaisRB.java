@@ -1,6 +1,7 @@
 package net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb;
 
 import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
@@ -12,11 +13,13 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
 
     private StringBuffer buffer;
     private ObservableField<String> ultimoComandoRecebido;
+    private ObservableBoolean estadoRelay;
 
     public CondicionadorSinaisRB(DispositivoBLE dispositivo, IndicadorService service) {
         super(dispositivo, service);
         this.buffer = new StringBuffer();
         this.ultimoComandoRecebido = new ObservableField<>();
+        this.estadoRelay = new ObservableBoolean(false);
 
         this.conexao.getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -63,6 +66,14 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
         }
     }
 
+    public ObservableBoolean getEstadoRelay() {
+        return estadoRelay;
+    }
+
+    public void setEstadoRelay(Boolean estado) {
+        this.estadoRelay.set(estado);
+    }
+
     @Override
     public void finalizar() {
         this.conexao.desconectar();
@@ -79,11 +90,7 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
     }
 
     @Override
-    public void iniciarAquisicaoAutomatica(Boolean iniciar) {
-        if (iniciar) {
-            this.enviaComando(ComandosEnvio.START);
-        }else {
-            this.enviaComando(ComandosEnvio.STOP);
-        }
+    public void solicitarLeitura() {
+        this.enviaComando(ComandosEnvio.REQUEST_AD_VALUE);
     }
 }
