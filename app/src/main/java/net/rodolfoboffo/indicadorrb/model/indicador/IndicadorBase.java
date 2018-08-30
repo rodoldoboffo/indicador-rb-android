@@ -116,7 +116,8 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     public String getIndicacao() {
         Double valorIndicador = this.getValorIndicador();
         if (valorIndicador.isNaN()) {
-            return this.service.getString(R.string.semIndicacao);
+//            return this.service.getString(R.string.semIndicacao);
+            return "--";
         }
         else {
             NumberFormat format = NumberFormat.getNumberInstance();

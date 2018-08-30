@@ -35,6 +35,10 @@
         <item name="android:textSize">26sp</item>
     </style>
 
+    <style name="BigTextBlack" parent="@style/BigText">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="TextSpinnerLabel" parent="@style/Text">
         <item name="android:textSize">18sp</item>
         <item name="android:padding">4dp</item>

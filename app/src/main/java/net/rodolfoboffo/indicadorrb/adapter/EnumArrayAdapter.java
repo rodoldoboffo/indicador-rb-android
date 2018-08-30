@@ -17,14 +17,16 @@ import java.util.List;
 
 public class EnumArrayAdapter<T extends AbstractEnumeration> extends BaseAdapter {
 
+    private int listItemLayoutResource;
     private Context context;
     List<T> list;
 
-    public EnumArrayAdapter(Context context, Class<T> enumClass) {
-        this(context, AbstractEnumeration.getAll(enumClass));
+    public EnumArrayAdapter(Context context, Class<T> enumClass, int layoutResource) {
+        this(context, AbstractEnumeration.getAll(enumClass), layoutResource);
     }
 
-    public EnumArrayAdapter(Context context, List<T> listEnums) {
+    public EnumArrayAdapter(Context context, List<T> listEnums, int layoutResource) {
+        this.listItemLayoutResource = layoutResource;
         this.context = context;
         this.list = listEnums;
     }
@@ -47,7 +49,7 @@ public class EnumArrayAdapter<T extends AbstractEnumeration> extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) this.context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        View view = inflater.inflate(R.layout.list_item_enum, parent, false);
+        View view = inflater.inflate(this.listItemLayoutResource, parent, false);
 
         AbstractEnumeration enumObject = getItem(position);
         TextView textViewEnum = view.findViewById(R.id.textViewEnum);

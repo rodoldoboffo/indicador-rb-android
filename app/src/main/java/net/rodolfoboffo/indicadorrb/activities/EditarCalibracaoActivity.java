@@ -64,7 +64,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         this.nomeCalibracaoText = this.findViewById(R.id.nomeCalibracaoText);
         this.nomeCalibracaoText.setText(this.calibracao.getNome().get());
 
-        this.spinnerGrandezaAdapter = new EnumArrayAdapter(this, Arrays.asList(new GrandezaEnum[] {GrandezaEnum.forca, GrandezaEnum.temperatura}));
+        this.spinnerGrandezaAdapter = new EnumArrayAdapter(this, Arrays.asList(new GrandezaEnum[] {GrandezaEnum.forca, GrandezaEnum.temperatura}), R.layout.list_item_enum_small_red);
         this.spinnerGrandeza = this.findViewById(R.id.grandezaSpinner);
         this.spinnerGrandeza.setAdapter(spinnerGrandezaAdapter);
         this.spinnerGrandeza.setSelection(this.spinnerGrandezaAdapter.getListaEnums().indexOf(this.calibracao.getGrandeza().get()));
@@ -138,7 +138,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     }
 
     public void atualizaSpinnerUnidades(GrandezaEnum grandeza) {
-        this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, UnidadeEnum.getAllByGrandeza(grandeza));
+        this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, UnidadeEnum.getAllByGrandeza(grandeza), R.layout.list_item_enum_small_red);
         this.spinnerUnidade.setAdapter(this.spinnerUnidadeAdapter);
     }
 
