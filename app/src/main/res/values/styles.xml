@@ -45,7 +45,7 @@
     </style>
 
     <style name="HugeText" parent="@style/Text">
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">40sp</item>
     </style>
 
     <style name="HugeBlackText" parent="@style/HugeText">

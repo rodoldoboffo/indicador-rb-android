@@ -94,13 +94,21 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void atualizaSpinnerUnidadeExibicao() {
         if (this.service != null) {
-            this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, UnidadeEnum.getAllByGrandeza(
-                    this.service.getIndicador().getGrandezaExibicao().get()
-            ), R.layout.list_item_enum_big_black);
-            this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
-            this.unidadeExibicaoSpinner.setSelection(
-                    this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.service.getIndicador().getUnidadeExibicao().get())
-            );
+            if (this.service.getIndicador().getGrandezaExibicao().get() != null) {
+                this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, UnidadeEnum.getAllByGrandeza(
+                        this.service.getIndicador().getGrandezaExibicao().get()
+                ), R.layout.list_item_enum_big_black);
+                this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
+                this.unidadeExibicaoSpinner.setSelection(
+                        this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.service.getIndicador().getUnidadeExibicao().get())
+                );
+                this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
+            }
+            else {
+                this.unidadeExibicaoSpinner.setVisibility(View.GONE);
+                this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, Collections.emptyList(), R.layout.list_item_enum_big_black);
+                this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
+            }
         }
     }
 
