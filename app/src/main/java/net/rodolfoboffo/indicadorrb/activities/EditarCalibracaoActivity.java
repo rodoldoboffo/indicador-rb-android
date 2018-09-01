@@ -199,8 +199,8 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         if (this.service != null && this.service.getCondicionadorSinais().get() != null &&
                 this.service.getCondicionadorSinais().get().getConexao().getPronto().get() &&
                 this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get() &&
-                !Double.isNaN(this.service.getCondicionadorSinais().get().getUltimoValorLido().get())) {
-            this.calibracao.adicionaPontoCalibracao(new PontoCalibracao(this.service.getCondicionadorSinais().get().getUltimoValorLido().get(), Double.NaN));
+                this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
+            this.calibracao.adicionaPontoCalibracao(new PontoCalibracao(this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get(), Double.NaN));
         }
         else {
             this.calibracao.adicionaPontoCalibracao(new PontoCalibracao());

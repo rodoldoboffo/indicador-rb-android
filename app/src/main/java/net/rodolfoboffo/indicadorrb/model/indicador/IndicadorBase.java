@@ -94,9 +94,9 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     public void tara() {
         if (this.service.getCondicionadorSinais().get() != null &&
                 this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
-                !Double.isNaN(this.service.getCondicionadorSinais().get().getUltimoValorLido().get())) {
+                this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
             Double tara = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
-                    this.service.getCondicionadorSinais().get().getUltimoValorLido().get()
+                    this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get()
             );
             this.setTara(tara);
         }
@@ -108,9 +108,9 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     public Double getValorIndicador() {
         if (this.service.getCondicionadorSinais().get() != null &&
                 this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
-                !Double.isNaN(this.service.getCondicionadorSinais().get().getUltimoValorLido().get())) {
+                this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
             Double valorPronto = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
-                    this.service.getCondicionadorSinais().get().getUltimoValorLido().get());
+                    this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get());
             valorPronto = valorPronto - this.getTara().get();
             valorPronto = ConversorUnidades.converte(this.service,
                     valorPronto,

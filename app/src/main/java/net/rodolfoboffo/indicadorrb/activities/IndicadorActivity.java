@@ -127,11 +127,11 @@ public class IndicadorActivity extends AbstractBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (IndicadorActivity.this.service != null) {
-                    if (!Double.isNaN(IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoValorLido().get()) &&
+                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() != null) {
+                    if (IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() != null &&
                             IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
                         IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
-                    } else if (Double.isNaN(IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoValorLido().get()) &&
+                    } else if (IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() == null &&
                             IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.GONE) {
                         IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
                     }
@@ -245,7 +245,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void inicializaObservadorIndicacaoPrincipal() {
         if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
-            this.service.getCondicionadorSinais().get().getUltimoValorLido().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            this.service.getCondicionadorSinais().get().getUltimoLeitura().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                         IndicadorActivity.this.setIndicacao();

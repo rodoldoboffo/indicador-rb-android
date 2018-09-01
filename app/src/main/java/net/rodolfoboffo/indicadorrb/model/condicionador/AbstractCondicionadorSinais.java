@@ -1,7 +1,6 @@
 package net.rodolfoboffo.indicadorrb.model.condicionador;
 
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableDouble;
 import android.databinding.ObservableField;
 
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
@@ -17,7 +16,7 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
     private Timer timerAquisicaoAutomatica;
     private TimerTask timerTask;
     private DispositivoBLE conexao;
-    private ObservableField<Leitura> ultimoValorLido;
+    private ObservableField<Leitura> ultimaLeitura;
     private ObservableBoolean aquisicaoAutomatica;
 
     protected AbstractCondicionadorSinais(IndicadorService service) {
@@ -28,7 +27,7 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         super(service);
         this.timerAquisicaoAutomatica = new Timer("timerAquisicaoAutomaticaThread", true);
         this.conexao = conexao;
-        this.ultimoValorLido = new ObservableField<>();
+        this.ultimaLeitura = new ObservableField<>();
         this.aquisicaoAutomatica = new ObservableBoolean(false);
     }
 
@@ -36,8 +35,8 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         return conexao;
     }
 
-    public ObservableField<Leitura> getUltimoValorLido() {
-        return this.ultimoValorLido;
+    public ObservableField<Leitura> getUltimoLeitura() {
+        return this.ultimaLeitura;
     }
 
     public ObservableBoolean getAquisicaoAutomatica() {
@@ -91,8 +90,8 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         }
     }
 
-    public void setUltimoValorLido(Leitura ultimoValorLido) {
-        this.ultimoValorLido.set(ultimoValorLido);
+    public void setUltimaLeitura(Leitura ultimaLeitura) {
+        this.ultimaLeitura.set(ultimaLeitura);
     }
 
 
