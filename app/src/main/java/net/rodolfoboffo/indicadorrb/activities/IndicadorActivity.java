@@ -80,12 +80,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             this.service.getIndicador().getGrandezaExibicao().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
-                        }
-                    });
+                IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
                 }
             });
             this.atualizaSpinnerUnidadeExibicao();
@@ -93,23 +88,27 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     private void atualizaSpinnerUnidadeExibicao() {
-        if (this.service != null) {
-            if (this.service.getIndicador().getGrandezaExibicao().get() != null) {
-                this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, UnidadeEnum.getAllByGrandeza(
-                        this.service.getIndicador().getGrandezaExibicao().get()
-                ), R.layout.list_item_enum_big_black);
-                this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
-                this.unidadeExibicaoSpinner.setSelection(
-                        this.spinnerUnidadeAdapter.getListaEnums().indexOf(this.service.getIndicador().getUnidadeExibicao().get())
-                );
-                this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    if (IndicadorActivity.this.service.getIndicador().getGrandezaExibicao().get() != null) {
+                        IndicadorActivity.this.spinnerUnidadeAdapter = new EnumArrayAdapter(IndicadorActivity.this, UnidadeEnum.getAllByGrandeza(
+                                IndicadorActivity.this.service.getIndicador().getGrandezaExibicao().get()
+                        ), R.layout.list_item_enum_big_black);
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setAdapter(IndicadorActivity.this.spinnerUnidadeAdapter);
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setSelection(
+                                IndicadorActivity.this.spinnerUnidadeAdapter.getListaEnums().indexOf(IndicadorActivity.this.service.getIndicador().getUnidadeExibicao().get())
+                        );
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
+                    } else {
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
+                        IndicadorActivity.this.spinnerUnidadeAdapter = new EnumArrayAdapter(IndicadorActivity.this, Collections.emptyList(), R.layout.list_item_enum_big_black);
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setAdapter(IndicadorActivity.this.spinnerUnidadeAdapter);
+                    }
+                }
             }
-            else {
-                this.unidadeExibicaoSpinner.setVisibility(View.GONE);
-                this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, Collections.emptyList(), R.layout.list_item_enum_big_black);
-                this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
-            }
-        }
+        });
     }
 
     private void inicializarObservadorConexao() {
@@ -141,13 +140,12 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.service.getCondicionadorSinais().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                ObservableField<AbstractCondicionadorSinais> condicionador = (ObservableField<AbstractCondicionadorSinais>)sender;
                 IndicadorActivity.this.inicializarObservadorConexao();
                 IndicadorActivity.this.habilitaComponentes();
             }
         });
-        IndicadorActivity.this.habilitaComponentes();
-        IndicadorActivity.this.habilitaConectarMenuItem();
+        this.habilitaComponentes();
+        this.habilitaConectarMenuItem();
     }
 
     private void habilitaConectarMenuItem() {
@@ -200,10 +198,12 @@ public class IndicadorActivity extends AbstractBaseActivity {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                         IndicadorActivity.this.setIndicacao();
+                        IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
                 }
             });
         }
         this.setIndicacao();
+        this.atualizaSpinnerUnidadeExibicao();
     }
 
     private void inicializarObservadorAquisicaoAutomatica() {
