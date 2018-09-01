@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.model.json.CalibracaoPOJO;
 import net.rodolfoboffo.indicadorrb.model.json.GsonUtil;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
@@ -19,12 +20,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class GerenciadorDeCalibracao {
+public class GerenciadorDeCalibracao extends AbstractServiceRelatedObject {
 
     public static final String CALIBRACOES_KEY = "IndicadorService.Calibracoes";
     public static final String CONJUNTO_CALIBRACOES_KEY = "ConjuntoCalibracoes";
-
-    private IndicadorService servico;
 
     private ObservableArrayMap<UUID, Calibracao> mapaCalibracoes;
 
@@ -33,7 +32,7 @@ public class GerenciadorDeCalibracao {
     private ObservableField<Calibracao> calibracaoSelecionada;
 
     public GerenciadorDeCalibracao(IndicadorService servico) {
-        this.servico = servico;
+        super(servico);
         this.calibracaoSelecionada = new ObservableField<>();
         this.mapaCalibracoes = new ObservableArrayMap<>();
         this.listaCalibracoes = new ObservableArrayList<>();
@@ -81,6 +80,7 @@ public class GerenciadorDeCalibracao {
         }
         c.setSelecionado(true);
         this.calibracaoSelecionada.set(c);
+        this.service.salvarPreferencias();
     }
 
     public Calibracao getCalibracao(String idCalibracao) {
@@ -106,7 +106,7 @@ public class GerenciadorDeCalibracao {
 
     public void salvarCalibracoes() {
         try {
-            SharedPreferences preferences = this.servico.getSharedPreferences(CALIBRACOES_KEY, Context.MODE_PRIVATE);
+            SharedPreferences preferences = this.service.getSharedPreferences(CALIBRACOES_KEY, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
 
             Gson gson = GsonUtil.getGsonInstance();
@@ -125,7 +125,7 @@ public class GerenciadorDeCalibracao {
 
     public void carregarCalibracoes() {
         try {
-            SharedPreferences preferences = this.servico.getSharedPreferences(CALIBRACOES_KEY, Context.MODE_PRIVATE);
+            SharedPreferences preferences = this.service.getSharedPreferences(CALIBRACOES_KEY, Context.MODE_PRIVATE);
             Set<String> conjuntoCalibracoesJson = preferences.getStringSet(CONJUNTO_CALIBRACOES_KEY, null);
             if (conjuntoCalibracoesJson != null) {
                 Gson gson = GsonUtil.getGsonInstance();

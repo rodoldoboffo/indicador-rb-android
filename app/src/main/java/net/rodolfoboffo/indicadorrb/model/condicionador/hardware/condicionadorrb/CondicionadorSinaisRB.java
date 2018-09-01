@@ -21,14 +21,14 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
         this.ultimoComandoRecebido = new ObservableField<>();
         this.estadoRelay = new ObservableBoolean(false);
 
-        this.conexao.getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.getConexao().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
 
             }
         });
 
-        this.conexao.getMensagemRecebida().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.getConexao().getMensagemRecebida().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Mensagem m = ((ObservableField<Mensagem>) sender).get();
@@ -48,12 +48,8 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
         });
     }
 
-    public void setUltimoValorLido(Double ultimoValorLido) {
-        this.ultimoValorLido.set(ultimoValorLido);
-    }
-
     public void setAquisicaoAutomatica(Boolean value) {
-        this.aquisicaoAutomatica.set(value);
+        this.setAquisicaoAutomatica(value);
     }
 
     private synchronized void processaBuffer() {
@@ -76,17 +72,17 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
 
     @Override
     public void finalizar() {
-        this.conexao.desconectar();
+        this.getConexao().desconectar();
     }
 
     @Override
     public void inicializar() {
-        this.conexao.conectar();
+        this.getConexao().conectar();
     }
 
     private void enviaComando(String comando) {
         String comandoComSeparador = String.format("%s%s%s", Comandos.SEPARADOR, comando, Comandos.SEPARADOR);
-        this.conexao.enviarDados(comandoComSeparador);
+        this.getConexao().enviarDados(comandoComSeparador);
     }
 
     @Override

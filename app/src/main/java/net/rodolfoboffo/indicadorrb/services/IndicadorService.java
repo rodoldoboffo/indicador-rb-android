@@ -121,6 +121,7 @@ public class IndicadorService extends Service {
 
     public ObservableField<AbstractCondicionadorSinais> criaCondicionadorSinais(DispositivoBLE dispositivo) {
         this.condicionadorSinais.set(new CondicionadorSinaisRB(dispositivo, this));
+        this.salvarPreferencias();
         return this.condicionadorSinais;
     }
 }

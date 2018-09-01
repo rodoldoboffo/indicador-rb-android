@@ -3,26 +3,32 @@ package net.rodolfoboffo.indicadorrb.model.indicador;
 import android.databinding.Observable;
 import android.databinding.ObservableDouble;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.math.ConversorUnidades;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
 import java.text.NumberFormat;
 
 public class IndicadorBase extends AbstractServiceRelatedObject {
 
+    public static final int MAXIMO_CASAS_DECIMAIS = 8;
+
     private ObservableField<GrandezaEnum> grandezaExibicao;
     private ObservableField<UnidadeEnum> unidadeExibicao;
+    private ObservableInt casasDecimais;
     private ObservableDouble tara;
 
     public IndicadorBase(IndicadorService service) {
         super(service);
         this.grandezaExibicao = new ObservableField<>();
         this.unidadeExibicao = new ObservableField<>();
+        this.casasDecimais = new ObservableInt(4);
         this.tara = new ObservableDouble(0.0);
         this.inicializaObservadores();
     }
@@ -103,10 +109,14 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         if (this.service.getCondicionadorSinais().get() != null &&
                 this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
                 !Double.isNaN(this.service.getCondicionadorSinais().get().getUltimoValorLido().get())) {
-            Double valorAjustado = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
+            Double valorPronto = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
                     this.service.getCondicionadorSinais().get().getUltimoValorLido().get());
-            valorAjustado = valorAjustado - this.getTara().get();
-            return valorAjustado;
+            valorPronto = valorPronto - this.getTara().get();
+            valorPronto = ConversorUnidades.converte(this.service,
+                    valorPronto,
+                    this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getUnidadeCalibracao().get(),
+                    this.unidadeExibicao.get());
+            return valorPronto;
         }
         else {
             return Double.NaN;
@@ -120,10 +130,24 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         }
         else {
             NumberFormat format = NumberFormat.getNumberInstance();
-            format.setMaximumFractionDigits(4);
-            format.setMinimumFractionDigits(4);
+            format.setMaximumFractionDigits(this.casasDecimais.get());
+            format.setMinimumFractionDigits(this.casasDecimais.get());
             String stringValue = format.format(valorIndicador);
             return stringValue;
         }
+    }
+
+    public void aumentaCasasDecimais() {
+        this.setCasasDecimais((this.casasDecimais.get()+1) % (MAXIMO_CASAS_DECIMAIS + 1));
+    }
+
+    public void setCasasDecimais(Integer casasDecimais) {
+        if (casasDecimais >= 0 && casasDecimais <= MAXIMO_CASAS_DECIMAIS) {
+            this.casasDecimais.set(casasDecimais);
+        }
+    }
+
+    public ObservableInt getCasasDecimais() {
+        return casasDecimais;
     }
 }

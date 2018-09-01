@@ -3,20 +3,19 @@ package net.rodolfoboffo.indicadorrb.activities;
 import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.databinding.Observable;
-import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
-import net.rodolfoboffo.indicadorrb.model.condicionador.AbstractCondicionadorSinais;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 
 import java.util.Collections;
@@ -49,6 +48,18 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, Collections.emptyList(), R.layout.list_item_enum_big_black);
         this.unidadeExibicaoSpinner = this.findViewById(R.id.unidadeExibicaoSpinner);
         this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
+        this.unidadeExibicaoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UnidadeEnum unidade = (UnidadeEnum) IndicadorActivity.this.spinnerUnidadeAdapter.getItem(position);
+                IndicadorActivity.this.service.getIndicador().setUnidadeExibicao(unidade);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -70,9 +81,22 @@ public class IndicadorActivity extends AbstractBaseActivity {
     public void inicializaObservadoresDoServico() {
         this.inicializaObservadorIndicacaoPrincipal();
         this.inicializaObservadorGrandezaExibicao();
+        this.inicializaObservadorUnidadeExibicao();
+        this.inicializaObservadorCasasDecimais();
         this.inicializarObservadorAquisicaoAutomatica();
         this.inicializarObservadorCondicionador();
         this.inicializarObservadorConexao();
+    }
+
+    private void inicializaObservadorCasasDecimais() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().getCasasDecimais().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.setIndicacao();
+                }
+            });
+        }
     }
 
     private void inicializaObservadorGrandezaExibicao() {
@@ -80,14 +104,43 @@ public class IndicadorActivity extends AbstractBaseActivity {
             this.service.getIndicador().getGrandezaExibicao().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
-                IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
+                IndicadorActivity.this.atualizaOpcoesSpinnerUnidadeExibicao();
                 }
             });
-            this.atualizaSpinnerUnidadeExibicao();
+            this.atualizaOpcoesSpinnerUnidadeExibicao();
         }
     }
 
-    private void atualizaSpinnerUnidadeExibicao() {
+    private void inicializaObservadorUnidadeExibicao() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().getUnidadeExibicao().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.setIndicacao();
+                }
+            });
+            this.setIndicacao();
+        }
+    }
+
+    private void atualizaVisibilidadeSpinnerUnidadeExibicao() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    if (!Double.isNaN(IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoValorLido().get()) &&
+                            IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
+                    } else if (Double.isNaN(IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoValorLido().get()) &&
+                            IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.GONE) {
+                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+    }
+
+    private void atualizaOpcoesSpinnerUnidadeExibicao() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -100,9 +153,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
                         IndicadorActivity.this.unidadeExibicaoSpinner.setSelection(
                                 IndicadorActivity.this.spinnerUnidadeAdapter.getListaEnums().indexOf(IndicadorActivity.this.service.getIndicador().getUnidadeExibicao().get())
                         );
-                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
                     } else {
-                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
                         IndicadorActivity.this.spinnerUnidadeAdapter = new EnumArrayAdapter(IndicadorActivity.this, Collections.emptyList(), R.layout.list_item_enum_big_black);
                         IndicadorActivity.this.unidadeExibicaoSpinner.setAdapter(IndicadorActivity.this.spinnerUnidadeAdapter);
                     }
@@ -198,12 +249,12 @@ public class IndicadorActivity extends AbstractBaseActivity {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                         IndicadorActivity.this.setIndicacao();
-                        IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
+                        IndicadorActivity.this.atualizaVisibilidadeSpinnerUnidadeExibicao();
                 }
             });
         }
         this.setIndicacao();
-        this.atualizaSpinnerUnidadeExibicao();
+        this.atualizaVisibilidadeSpinnerUnidadeExibicao();
     }
 
     private void inicializarObservadorAquisicaoAutomatica() {
@@ -289,5 +340,15 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     public void zeroButtonOnClick(View view) {
         this.zerar();
+    }
+
+    public void indicacaoPrincipalOnClick(View view) {
+        this.aumentaCasasDecimais();
+    }
+
+    private void aumentaCasasDecimais() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().aumentaCasasDecimais();
+        }
     }
 }

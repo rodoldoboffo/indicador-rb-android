@@ -137,13 +137,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
+                            style="@style/HeaderTabela"
                             />
                     </LinearLayout>
 
                     <ListView
                         android:id="@+id/listViewPontosCalibracao"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="true">
                     </ListView>
 
                     <TextView
