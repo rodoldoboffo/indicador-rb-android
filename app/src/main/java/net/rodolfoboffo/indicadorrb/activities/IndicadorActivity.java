@@ -127,13 +127,17 @@ public class IndicadorActivity extends AbstractBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() != null) {
-                    if (IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() != null &&
-                            IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
-                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
-                    } else if (IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() == null &&
-                            IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.GONE) {
-                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
+                if (IndicadorActivity.this.service != null) {
+                    if (IndicadorActivity.this.service.getCondicionadorSinais() != null &&
+                            IndicadorActivity.this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                            IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() != null) {
+                        if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
+                            IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.GONE) {
+                            IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
