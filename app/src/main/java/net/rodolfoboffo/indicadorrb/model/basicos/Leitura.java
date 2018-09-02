@@ -2,11 +2,12 @@ package net.rodolfoboffo.indicadorrb.model.basicos;
 
 import android.databinding.ObservableDouble;
 import android.databinding.ObservableField;
+import android.support.annotation.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Leitura {
+public class Leitura implements Comparable<Leitura> {
 
     private ObservableDouble valor;
     private ObservableField<Date> hora;
@@ -30,5 +31,10 @@ public class Leitura {
 
     public void setHora(Date hora) {
         this.hora.set(hora);
+    }
+
+    @Override
+    public int compareTo(@NonNull Leitura o) {
+        return this.getHora().get().compareTo(o.getHora().get());
     }
 }

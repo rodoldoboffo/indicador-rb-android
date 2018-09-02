@@ -47,8 +47,8 @@ public class IndicadorService extends Service {
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarCalibracoes();
-        this.indicador = new IndicadorBase(this);
         this.condicionadorSinais = new ObservableField<>();
+        this.indicador = new IndicadorBase(this);
         this.carregarPreferencias();
     }
 

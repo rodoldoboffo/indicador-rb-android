@@ -4,28 +4,38 @@ import android.databinding.Observable;
 import android.databinding.ObservableDouble;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.util.Log;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
+import net.rodolfoboffo.indicadorrb.model.basicos.Leitura;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
 import net.rodolfoboffo.indicadorrb.model.math.ConversorUnidades;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public static final int MAXIMO_CASAS_DECIMAIS = 8;
+    public static final int NUMERO_LEITURAS_VELOCIDADE = 5;
 
     private ObservableField<GrandezaEnum> grandezaExibicao;
     private ObservableField<UnidadeEnum> unidadeExibicao;
+    private ObservableDouble velocidadeEnsaio;
+    private ObservableField<List<Leitura>> ultimasLeituras;
     private ObservableInt casasDecimais;
     private ObservableDouble tara;
 
     public IndicadorBase(IndicadorService service) {
         super(service);
+        this.velocidadeEnsaio = new ObservableDouble();
+        this.ultimasLeituras = new ObservableField<>((List<Leitura>)new ArrayList<Leitura>());
         this.grandezaExibicao = new ObservableField<>();
         this.unidadeExibicao = new ObservableField<>();
         this.casasDecimais = new ObservableInt(4);
@@ -33,14 +43,98 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         this.inicializaObservadores();
     }
 
-    private void reset() {
+    private void resetTudo() {
         this.grandezaExibicao.set(null);
         this.unidadeExibicao.set(null);
         this.tara.set(0.0);
+        this.resetUltimasLeituras();
+    }
+
+    private void resetUltimasLeituras() {
+        this.ultimasLeituras.get().clear();
+        this.ultimasLeituras.set(this.ultimasLeituras.get());
     }
 
     private void inicializaObservadores() {
         this.inicializaObservadorCalibracaoSelecionada();
+        this.inicializaObservadorCondicionadorSinais();
+        this.inicializaObservadorUltimasLeituras();
+        this.inicializaObservaorUnidadeExibicao();
+    }
+
+    private void inicializaObservaorUnidadeExibicao() {
+        this.unidadeExibicao.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorBase.this.atualizaVelocidadeEnsaio();
+            }
+        });
+        IndicadorBase.this.atualizaVelocidadeEnsaio();
+    }
+
+    private void inicializaObservadorUltimasLeituras() {
+        this.ultimasLeituras.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorBase.this.atualizaVelocidadeEnsaio();
+            }
+        });
+    }
+
+    private void inicializaObservadorCondicionadorSinais() {
+        this.service.getCondicionadorSinais().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorBase.this.resetUltimasLeituras();
+                IndicadorBase.this.inicializaObservadorUltimaLeitura();
+            }
+        });
+        IndicadorBase.this.resetUltimasLeituras();
+        IndicadorBase.this.inicializaObservadorUltimaLeitura();
+    }
+
+    private void inicializaObservadorUltimaLeitura() {
+        this.service.getCondicionadorSinais().get().getUltimoLeitura().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorBase.this.adicionaUltimaLeitura();
+            }
+        });
+    }
+
+    private void adicionaUltimaLeitura() {
+        synchronized (this.ultimasLeituras.get()) {
+            Leitura l = this.service.getCondicionadorSinais().get().getUltimoLeitura().get();
+            this.ultimasLeituras.get().add(l);
+            Collections.sort(this.ultimasLeituras.get());
+            if (this.ultimasLeituras.get().size() > NUMERO_LEITURAS_VELOCIDADE) {
+                this.ultimasLeituras.get().remove(0);
+            }
+            this.ultimasLeituras.set(this.ultimasLeituras.get());
+        }
+    }
+
+    private synchronized void atualizaVelocidadeEnsaio() {
+        synchronized (this.ultimasLeituras.get()) {
+            this.velocidadeEnsaio.set(this.calculaVelocidadeEnsaio(this.ultimasLeituras.get()));
+            Log.d(this.getClass().getName(), "Velocidade: " + String.valueOf(this.velocidadeEnsaio.get()) + this.service.getString(unidadeExibicao.get().getResourceString()) + "/s");
+        }
+    }
+
+    private Double calculaVelocidadeEnsaio(List<Leitura> ultimasLeituras) {
+        if (ultimasLeituras.size() < 2 ||
+                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() == null) {
+            return Double.NaN;
+        }
+        Leitura ultimaLeitura = ultimasLeituras.get(ultimasLeituras.size()-1);
+        Leitura primeira = ultimasLeituras.get(0);
+        Long milis = ultimaLeitura.getHora().get().getTime() - primeira.getHora().get().getTime();
+        final Calibracao c = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get();
+        final UnidadeEnum unidadeExibicao = this.unidadeExibicao.get();
+        Double ultimaIndicacao = this.getValorIndicador(ultimaLeitura.getValor().get(), c, unidadeExibicao);
+        Double primeiraIndicacao = this.getValorIndicador(primeira.getValor().get(), c, unidadeExibicao);
+        Double velocidade = (ultimaIndicacao - primeiraIndicacao) / (milis / 1000.0);
+        return velocidade;
     }
 
     private void inicializaObservadorCalibracaoSelecionada() {
@@ -59,7 +153,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public void usaCalibracao(Calibracao calibracao) {
         if (calibracao == null) {
-            this.reset();
+            this.resetTudo();
         }
         else {
             this.setGrandezaExibicao(calibracao.getGrandeza().get());
@@ -116,6 +210,21 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
                     valorPronto,
                     this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getUnidadeCalibracao().get(),
                     this.unidadeExibicao.get());
+            return valorPronto;
+        }
+        else {
+            return Double.NaN;
+        }
+    }
+
+    public Double getValorIndicador(Double valorLido, Calibracao calibracao, UnidadeEnum unidadeExibicao) {
+        if (calibracao != null) {
+            Double valorPronto = calibracao.getAjuste().get().getValorAjustado(valorLido);
+            valorPronto = valorPronto - this.getTara().get();
+            valorPronto = ConversorUnidades.converte(this.service,
+                    valorPronto,
+                    calibracao.getUnidadeCalibracao().get(),
+                    unidadeExibicao);
             return valorPronto;
         }
         else {
