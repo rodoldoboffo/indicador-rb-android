@@ -150,7 +150,7 @@
 
                     <TextView
                         android:id="@+id/textViewSemPontosCalibracao"
-                        style="@style/TextSmall"
+                        style="@style/SmallText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/naoExistemPontosCalibracao"

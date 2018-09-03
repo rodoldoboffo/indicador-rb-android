@@ -27,8 +27,20 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="TextSmall" parent="@style/Text">
+    <style name="SmallText" parent="@style/Text">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="SmallBlackText" parent="@style/SmallText">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="MediumText" parent="@style/Text">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="MediumBlackText" parent="@style/MediumText">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="BigText" parent="@style/Text">

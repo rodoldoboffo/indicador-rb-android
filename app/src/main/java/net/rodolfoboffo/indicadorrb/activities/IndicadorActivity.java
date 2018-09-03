@@ -23,6 +23,8 @@ import java.util.Collections;
 public class IndicadorActivity extends AbstractBaseActivity {
 
     private TextView indicacaoPrincipalText;
+    private TextView velocidadeEnsaioText;
+    private TextView picoText;
     private Switch switchIndicacaoAutomatica;
     private MenuItem conectarMenuItem;
     private Handler handler;
@@ -44,6 +46,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
         super.onCreate(savedInstanceState);
         this.handler = new Handler();
         this.indicacaoPrincipalText = this.findViewById(R.id.indicacao_principal_text);
+        this.velocidadeEnsaioText = this.findViewById(R.id.velocidadeEnsaioText);
+        this.picoText = this.findViewById(R.id.picoText);
         this.switchIndicacaoAutomatica = this.findViewById(R.id.switchAquisicaoAutomatica);
         this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, Collections.emptyList(), R.layout.list_item_enum_big_black);
         this.unidadeExibicaoSpinner = this.findViewById(R.id.unidadeExibicaoSpinner);
@@ -86,6 +90,56 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.inicializarObservadorAquisicaoAutomatica();
         this.inicializarObservadorCondicionador();
         this.inicializarObservadorConexao();
+        this.inicializarObservadorVelocidade();
+        this.inicializarObservadorPico();
+    }
+
+    private void inicializarObservadorVelocidade() {
+        if (this.service != null) {
+            this.service.getIndicador().getVelocidade().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.atualizaVelocidade();
+                }
+            });
+            IndicadorActivity.this.atualizaVelocidade();
+        }
+    }
+
+    private void inicializarObservadorPico() {
+        if (this.service != null) {
+            this.service.getIndicador().getPico().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.atualizaPico();
+                }
+            });
+            IndicadorActivity.this.atualizaPico();
+        }
+    }
+
+    private void atualizaVelocidade() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    String velocidade = IndicadorActivity.this.service.getIndicador().getIndicacaoVelocidadeEnsaio();
+                    IndicadorActivity.this.setVelocidade(velocidade);
+                }
+            }
+        });
+    }
+
+    private void atualizaPico() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    String pico = IndicadorActivity.this.service.getIndicador().getIndicacaoPico();
+                    IndicadorActivity.this.setPico(pico);
+                }
+            }
+        });
     }
 
     private void inicializaObservadorCasasDecimais() {
@@ -277,6 +331,14 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.indicacaoPrincipalText.setText(indicacao);
     }
 
+    private void setVelocidade(String indicacao) {
+        this.velocidadeEnsaioText.setText(indicacao);
+    }
+
+    private void setPico(String indicacao) {
+        this.picoText.setText(indicacao);
+    }
+
     private void setAquisicaoAutomatica() {
         runOnUiThread(new Runnable() {
             @Override
@@ -297,7 +359,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             @Override
             public void run() {
                 if (IndicadorActivity.this.service != null) {
-                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().getIndicacao());
+                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().getIndicacaoPrincipal());
                 }
             }
         });
