@@ -49,4 +49,7 @@
     <string name="farenheit">ºF</string>
     <string name="semIndicacao">Sem indicação</string>
     <string name="zero">Zero</string>
+    <string name="conversaoGrandezasIncompativeis">Conversão entre grandezas incompatíveis</string>
+    <string name="velocidade">Velocidade</string>
+    <string name="pico">Pico</string>
 </resources>

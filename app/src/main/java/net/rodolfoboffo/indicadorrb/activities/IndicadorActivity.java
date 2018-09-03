@@ -3,20 +3,19 @@ package net.rodolfoboffo.indicadorrb.activities;
 import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.databinding.Observable;
-import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
-import net.rodolfoboffo.indicadorrb.model.condicionador.AbstractCondicionadorSinais;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 
 import java.util.Collections;
@@ -24,6 +23,8 @@ import java.util.Collections;
 public class IndicadorActivity extends AbstractBaseActivity {
 
     private TextView indicacaoPrincipalText;
+    private TextView velocidadeEnsaioText;
+    private TextView picoText;
     private Switch switchIndicacaoAutomatica;
     private MenuItem conectarMenuItem;
     private Handler handler;
@@ -45,10 +46,24 @@ public class IndicadorActivity extends AbstractBaseActivity {
         super.onCreate(savedInstanceState);
         this.handler = new Handler();
         this.indicacaoPrincipalText = this.findViewById(R.id.indicacao_principal_text);
+        this.velocidadeEnsaioText = this.findViewById(R.id.velocidadeEnsaioText);
+        this.picoText = this.findViewById(R.id.picoText);
         this.switchIndicacaoAutomatica = this.findViewById(R.id.switchAquisicaoAutomatica);
         this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, Collections.emptyList(), R.layout.list_item_enum_big_black);
         this.unidadeExibicaoSpinner = this.findViewById(R.id.unidadeExibicaoSpinner);
         this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
+        this.unidadeExibicaoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UnidadeEnum unidade = (UnidadeEnum) IndicadorActivity.this.spinnerUnidadeAdapter.getItem(position);
+                IndicadorActivity.this.service.getIndicador().setUnidadeExibicao(unidade);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -70,9 +85,72 @@ public class IndicadorActivity extends AbstractBaseActivity {
     public void inicializaObservadoresDoServico() {
         this.inicializaObservadorIndicacaoPrincipal();
         this.inicializaObservadorGrandezaExibicao();
+        this.inicializaObservadorUnidadeExibicao();
+        this.inicializaObservadorCasasDecimais();
         this.inicializarObservadorAquisicaoAutomatica();
         this.inicializarObservadorCondicionador();
         this.inicializarObservadorConexao();
+        this.inicializarObservadorVelocidade();
+        this.inicializarObservadorPico();
+    }
+
+    private void inicializarObservadorVelocidade() {
+        if (this.service != null) {
+            this.service.getIndicador().getVelocidade().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.atualizaVelocidade();
+                }
+            });
+            IndicadorActivity.this.atualizaVelocidade();
+        }
+    }
+
+    private void inicializarObservadorPico() {
+        if (this.service != null) {
+            this.service.getIndicador().getPico().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.atualizaPico();
+                }
+            });
+            IndicadorActivity.this.atualizaPico();
+        }
+    }
+
+    private void atualizaVelocidade() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    String velocidade = IndicadorActivity.this.service.getIndicador().getIndicacaoVelocidadeEnsaio();
+                    IndicadorActivity.this.setVelocidade(velocidade);
+                }
+            }
+        });
+    }
+
+    private void atualizaPico() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    String pico = IndicadorActivity.this.service.getIndicador().getIndicacaoPico();
+                    IndicadorActivity.this.setPico(pico);
+                }
+            }
+        });
+    }
+
+    private void inicializaObservadorCasasDecimais() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().getCasasDecimais().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.setIndicacao();
+                }
+            });
+        }
     }
 
     private void inicializaObservadorGrandezaExibicao() {
@@ -80,14 +158,47 @@ public class IndicadorActivity extends AbstractBaseActivity {
             this.service.getIndicador().getGrandezaExibicao().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
-                IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
+                IndicadorActivity.this.atualizaOpcoesSpinnerUnidadeExibicao();
                 }
             });
-            this.atualizaSpinnerUnidadeExibicao();
+            this.atualizaOpcoesSpinnerUnidadeExibicao();
         }
     }
 
-    private void atualizaSpinnerUnidadeExibicao() {
+    private void inicializaObservadorUnidadeExibicao() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().getUnidadeExibicao().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.setIndicacao();
+                }
+            });
+            this.setIndicacao();
+        }
+    }
+
+    private void atualizaVisibilidadeSpinnerUnidadeExibicao() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    if (IndicadorActivity.this.service.getCondicionadorSinais() != null &&
+                            IndicadorActivity.this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                            IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() != null) {
+                        if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
+                            IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.GONE) {
+                            IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void atualizaOpcoesSpinnerUnidadeExibicao() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -100,9 +211,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
                         IndicadorActivity.this.unidadeExibicaoSpinner.setSelection(
                                 IndicadorActivity.this.spinnerUnidadeAdapter.getListaEnums().indexOf(IndicadorActivity.this.service.getIndicador().getUnidadeExibicao().get())
                         );
-                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
                     } else {
-                        IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.GONE);
                         IndicadorActivity.this.spinnerUnidadeAdapter = new EnumArrayAdapter(IndicadorActivity.this, Collections.emptyList(), R.layout.list_item_enum_big_black);
                         IndicadorActivity.this.unidadeExibicaoSpinner.setAdapter(IndicadorActivity.this.spinnerUnidadeAdapter);
                     }
@@ -194,16 +303,16 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void inicializaObservadorIndicacaoPrincipal() {
         if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
-            this.service.getCondicionadorSinais().get().getUltimoValorLido().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            this.service.getCondicionadorSinais().get().getUltimoLeitura().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                         IndicadorActivity.this.setIndicacao();
-                        IndicadorActivity.this.atualizaSpinnerUnidadeExibicao();
+                        IndicadorActivity.this.atualizaVisibilidadeSpinnerUnidadeExibicao();
                 }
             });
         }
         this.setIndicacao();
-        this.atualizaSpinnerUnidadeExibicao();
+        this.atualizaVisibilidadeSpinnerUnidadeExibicao();
     }
 
     private void inicializarObservadorAquisicaoAutomatica() {
@@ -220,6 +329,14 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void setIndicacao(String indicacao) {
         this.indicacaoPrincipalText.setText(indicacao);
+    }
+
+    private void setVelocidade(String indicacao) {
+        this.velocidadeEnsaioText.setText(indicacao);
+    }
+
+    private void setPico(String indicacao) {
+        this.picoText.setText(indicacao);
     }
 
     private void setAquisicaoAutomatica() {
@@ -242,7 +359,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             @Override
             public void run() {
                 if (IndicadorActivity.this.service != null) {
-                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().getIndicacao());
+                    IndicadorActivity.this.setIndicacao(IndicadorActivity.this.service.getIndicador().getIndicacaoPrincipal());
                 }
             }
         });
@@ -289,5 +406,15 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     public void zeroButtonOnClick(View view) {
         this.zerar();
+    }
+
+    public void indicacaoPrincipalOnClick(View view) {
+        this.aumentaCasasDecimais();
+    }
+
+    private void aumentaCasasDecimais() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().aumentaCasasDecimais();
+        }
     }
 }

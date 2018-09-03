@@ -24,7 +24,7 @@
             android:id="@+id/itemDispositivoNomeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:theme="@style/TextSmall"
+            android:theme="@style/SmallText"
             android:textStyle="bold"
             tools:text="Nome do dispositivo"
             />
@@ -51,7 +51,7 @@
             android:text="@string/item_conectado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:theme="@style/TextSmall"
+            android:theme="@style/SmallText"
             android:textStyle="bold"
             android:visibility="gone"
             />

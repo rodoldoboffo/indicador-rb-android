@@ -1,9 +1,10 @@
 package net.rodolfoboffo.indicadorrb.model.condicionador;
 
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableDouble;
+import android.databinding.ObservableField;
 
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
+import net.rodolfoboffo.indicadorrb.model.basicos.Leitura;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
@@ -14,9 +15,9 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
 
     private Timer timerAquisicaoAutomatica;
     private TimerTask timerTask;
-    protected DispositivoBLE conexao;
-    protected ObservableDouble ultimoValorLido;
-    protected ObservableBoolean aquisicaoAutomatica;
+    private DispositivoBLE conexao;
+    private ObservableField<Leitura> ultimaLeitura;
+    private ObservableBoolean aquisicaoAutomatica;
 
     protected AbstractCondicionadorSinais(IndicadorService service) {
         super(service);
@@ -26,7 +27,7 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         super(service);
         this.timerAquisicaoAutomatica = new Timer("timerAquisicaoAutomaticaThread", true);
         this.conexao = conexao;
-        this.ultimoValorLido = new ObservableDouble(Double.NaN);
+        this.ultimaLeitura = new ObservableField<>();
         this.aquisicaoAutomatica = new ObservableBoolean(false);
     }
 
@@ -34,8 +35,8 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         return conexao;
     }
 
-    public ObservableDouble getUltimoValorLido() {
-        return this.ultimoValorLido;
+    public ObservableField<Leitura> getUltimoLeitura() {
+        return this.ultimaLeitura;
     }
 
     public ObservableBoolean getAquisicaoAutomatica() {
@@ -88,4 +89,10 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
             this.condicionador.solicitarLeitura();
         }
     }
+
+    public void setUltimaLeitura(Leitura ultimaLeitura) {
+        this.ultimaLeitura.set(ultimaLeitura);
+    }
+
+
 }

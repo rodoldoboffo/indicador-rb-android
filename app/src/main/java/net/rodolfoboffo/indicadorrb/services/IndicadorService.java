@@ -47,8 +47,8 @@ public class IndicadorService extends Service {
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarCalibracoes();
-        this.indicador = new IndicadorBase(this);
         this.condicionadorSinais = new ObservableField<>();
+        this.indicador = new IndicadorBase(this);
         this.carregarPreferencias();
     }
 
@@ -121,6 +121,7 @@ public class IndicadorService extends Service {
 
     public ObservableField<AbstractCondicionadorSinais> criaCondicionadorSinais(DispositivoBLE dispositivo) {
         this.condicionadorSinais.set(new CondicionadorSinaisRB(dispositivo, this));
+        this.salvarPreferencias();
         return this.condicionadorSinais;
     }
 }
