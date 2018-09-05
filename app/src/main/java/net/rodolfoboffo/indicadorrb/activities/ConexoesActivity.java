@@ -178,7 +178,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
                         this.service.getCondicionadorSinais().get().finalizar();
                     }
                     this.service.criaCondicionadorSinais(dispositivo);
-                    dispositivo.conectar();
+                    this.service.getCondicionadorSinais().get().inicializar();
                     break;
                 case R.id.desconectarDispositivo:
                     dispositivo.desconectar();

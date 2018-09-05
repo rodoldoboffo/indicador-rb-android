@@ -25,7 +25,6 @@ public class IndicadorActivity extends AbstractBaseActivity {
     private TextView indicacaoPrincipalText;
     private TextView velocidadeEnsaioText;
     private TextView picoText;
-    private Switch switchIndicacaoAutomatica;
     private MenuItem conectarMenuItem;
     private Handler handler;
     private Spinner unidadeExibicaoSpinner;
@@ -48,7 +47,6 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.indicacaoPrincipalText = this.findViewById(R.id.indicacao_principal_text);
         this.velocidadeEnsaioText = this.findViewById(R.id.velocidadeEnsaioText);
         this.picoText = this.findViewById(R.id.picoText);
-        this.switchIndicacaoAutomatica = this.findViewById(R.id.switchAquisicaoAutomatica);
         this.spinnerUnidadeAdapter = new EnumArrayAdapter(this, Collections.emptyList(), R.layout.list_item_enum_big_black);
         this.unidadeExibicaoSpinner = this.findViewById(R.id.unidadeExibicaoSpinner);
         this.unidadeExibicaoSpinner.setAdapter(this.spinnerUnidadeAdapter);
@@ -87,7 +85,6 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.inicializaObservadorGrandezaExibicao();
         this.inicializaObservadorUnidadeExibicao();
         this.inicializaObservadorCasasDecimais();
-        this.inicializarObservadorAquisicaoAutomatica();
         this.inicializarObservadorCondicionador();
         this.inicializarObservadorConexao();
         this.inicializarObservadorVelocidade();
@@ -184,7 +181,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
                 if (IndicadorActivity.this.service != null) {
                     if (IndicadorActivity.this.service.getCondicionadorSinais() != null &&
                             IndicadorActivity.this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
-                            IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura() != null) {
+                            IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
                         if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
                             IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);
                         }
@@ -296,7 +293,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                IndicadorActivity.this.switchIndicacaoAutomatica.setEnabled(habilita);
+
             }
         });
     }
@@ -315,18 +312,6 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.atualizaVisibilidadeSpinnerUnidadeExibicao();
     }
 
-    private void inicializarObservadorAquisicaoAutomatica() {
-        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
-            this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-                @Override
-                public void onPropertyChanged(Observable sender, int propertyId) {
-                    IndicadorActivity.this.setAquisicaoAutomatica();
-                }
-            });
-        }
-        this.setAquisicaoAutomatica();
-    }
-
     private void setIndicacao(String indicacao) {
         this.indicacaoPrincipalText.setText(indicacao);
     }
@@ -337,21 +322,6 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
     private void setPico(String indicacao) {
         this.picoText.setText(indicacao);
-    }
-
-    private void setAquisicaoAutomatica() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (IndicadorActivity.this.service != null && IndicadorActivity.this.service.getCondicionadorSinais().get() != null) {
-                    IndicadorActivity.this.setAquisicaoAutomatica(IndicadorActivity.this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get());
-                }
-            }
-        });
-    }
-
-    private void setAquisicaoAutomatica(Boolean ativado) {
-        this.switchIndicacaoAutomatica.setChecked(ativado);
     }
 
     private void setIndicacao() {
@@ -365,35 +335,13 @@ public class IndicadorActivity extends AbstractBaseActivity {
         });
     }
 
-    public void aquisicaoAutomaticaOnClick(View view) {
-        this.alternaAquisicaoAutomatica();
-    }
-
-    private void alternaAquisicaoAutomatica() {
-        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
-            this.switchIndicacaoAutomatica.setEnabled(false);
-            Boolean ligado = IndicadorActivity.this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get();
-            this.service.getCondicionadorSinais().get().iniciarAquisicaoAutomatica(!ligado);
-            this.handler.postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            IndicadorActivity.this.switchIndicacaoAutomatica.setChecked(IndicadorActivity.this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get());
-                            IndicadorActivity.this.switchIndicacaoAutomatica.setEnabled(true);
-                        }
-                    },
-                    500
-            );
-        }
-    }
-
     public void conectarDesconectarClick(MenuItem item) {
         if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
             if (this.service.getCondicionadorSinais().get().getConexao().getPronto().get()) {
-                this.service.getCondicionadorSinais().get().getConexao().desconectar();
+                this.service.getCondicionadorSinais().get().finalizar();
             }
             else {
-                this.service.getCondicionadorSinais().get().getConexao().conectar();
+                this.service.getCondicionadorSinais().get().inicializar();
             }
         }
     }

@@ -70,16 +70,6 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
         this.estadoRelay.set(estado);
     }
 
-    @Override
-    public void finalizar() {
-        this.getConexao().desconectar();
-    }
-
-    @Override
-    public void inicializar() {
-        this.getConexao().conectar();
-    }
-
     private void enviaComando(String comando) {
         String comandoComSeparador = String.format("%s%s%s", Comandos.SEPARADOR, comando, Comandos.SEPARADOR);
         this.getConexao().enviarDados(comandoComSeparador);

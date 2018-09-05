@@ -7,6 +7,10 @@ import android.support.annotation.NonNull;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * Representa uma leitura Digital do condicionador de sinais, junto com a data/hora
+ * de aquisicao da leitura
+ */
 public class Leitura implements Comparable<Leitura> {
 
     private ObservableDouble valor;

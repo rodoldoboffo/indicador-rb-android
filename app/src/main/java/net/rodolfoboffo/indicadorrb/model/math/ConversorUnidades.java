@@ -5,21 +5,22 @@ import android.content.Context;
 import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
+import net.rodolfoboffo.indicadorrb.model.exceptions.GrandezaIncompativelException;
 
 public class ConversorUnidades {
 
-    public static Double converte(Context context, Double valor, UnidadeEnum deUnidade, UnidadeEnum paraUnidade) {
+    public static Double converte(Double valor, UnidadeEnum deUnidade, UnidadeEnum paraUnidade) {
         if (!deUnidade.getGrandeza().equals(paraUnidade.getGrandeza())) {
-            throw new RuntimeException(context.getString(R.string.conversaoGrandezasIncompativeis));
+            throw new GrandezaIncompativelException();
         }
         if (deUnidade.getGrandeza().equals(GrandezaEnum.forca)) {
-            return converteForca(context, valor, deUnidade, paraUnidade);
+            return converteForca(valor, deUnidade, paraUnidade);
         } else {
-            return converteTemperatura(context, valor, deUnidade, paraUnidade);
+            return converteTemperatura(valor, deUnidade, paraUnidade);
         }
     }
 
-    public static Double converteForca(Context context, Double valor, UnidadeEnum deUnidade, UnidadeEnum paraUnidade) {
+    public static Double converteForca(Double valor, UnidadeEnum deUnidade, UnidadeEnum paraUnidade) {
         if (deUnidade.equals(paraUnidade)) {
             return  valor;
         }
@@ -39,11 +40,11 @@ public class ConversorUnidades {
             return valor / 1000;
         }
         else {
-            return converteForca(context, converteForca(context, valor, deUnidade, UnidadeEnum.kgf), UnidadeEnum.kgf, paraUnidade);
+            return converteForca(converteForca(valor, deUnidade, UnidadeEnum.kgf), UnidadeEnum.kgf, paraUnidade);
         }
     }
 
-    public static Double converteTemperatura(Context context, Double valor, UnidadeEnum deUnidade, UnidadeEnum paraUnidade) {
+    public static Double converteTemperatura(Double valor, UnidadeEnum deUnidade, UnidadeEnum paraUnidade) {
         if (deUnidade.equals(paraUnidade)) {
             return  valor;
         }
@@ -57,7 +58,7 @@ public class ConversorUnidades {
             return  5.0 * (valor - 32.0) / 9.0;
         }
         else {
-            return converteTemperatura(context, converteTemperatura(context, valor, deUnidade, UnidadeEnum.celsius), UnidadeEnum.celsius, paraUnidade);
+            return converteTemperatura(converteTemperatura(valor, deUnidade, UnidadeEnum.celsius), UnidadeEnum.celsius, paraUnidade);
         }
     }
 }

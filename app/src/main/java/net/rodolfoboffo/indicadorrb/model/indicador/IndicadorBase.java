@@ -10,6 +10,7 @@ import net.rodolfoboffo.indicadorrb.R;
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractServiceRelatedObject;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.Leitura;
+import net.rodolfoboffo.indicadorrb.model.basicos.Medicao;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
 import net.rodolfoboffo.indicadorrb.model.math.ConversorUnidades;
@@ -28,15 +29,15 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     private ObservableField<GrandezaEnum> grandezaExibicao;
     private ObservableField<UnidadeEnum> unidadeExibicao;
     private ObservableDouble velocidade;
-    private ObservableDouble pico;
+    private ObservableField<Medicao> pico;
     private ObservableField<List<Leitura>> ultimasLeituras;
     private ObservableInt casasDecimais;
     private ObservableDouble tara;
 
     public IndicadorBase(IndicadorService service) {
         super(service);
-        this.velocidade = new ObservableDouble(Double.NaN);
-        this.pico = new ObservableDouble(Double.NaN);
+        this.velocidade = new ObservableDouble(0.0);
+        this.pico = new ObservableField<>();
         this.ultimasLeituras = new ObservableField<>((List<Leitura>)new ArrayList<Leitura>());
         this.grandezaExibicao = new ObservableField<>();
         this.unidadeExibicao = new ObservableField<>();
@@ -61,17 +62,31 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         this.inicializaObservadorCalibracaoSelecionada();
         this.inicializaObservadorCondicionadorSinais();
         this.inicializaObservadorUltimasLeituras();
-//        this.inicializaObservaorUnidadeExibicao();
+        this.inicializaObservaorUnidadeExibicao();
+        this.inicializaObservaorCasasDecimais();
+    }
+
+    private void inicializaObservaorCasasDecimais() {
+        this.casasDecimais.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorBase.this.velocidade.notifyChange();
+                IndicadorBase.this.pico.notifyChange();
+            }
+        });
     }
 
     private void inicializaObservaorUnidadeExibicao() {
         this.unidadeExibicao.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
+                UnidadeEnum unidade = ((ObservableField<UnidadeEnum>)sender).get();
                 IndicadorBase.this.atualizaVelocidadeEnsaio();
+                IndicadorBase.this.atualizaPico(IndicadorBase.this.pico.get().converte(unidade));
             }
         });
         IndicadorBase.this.atualizaVelocidadeEnsaio();
+        IndicadorBase.this.atualizaPico();
     }
 
     private void inicializaObservadorUltimasLeituras() {
@@ -107,13 +122,27 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         }
     }
 
+    private void zeraPico() {
+        if (this.unidadeExibicao.get() != null) {
+            this.pico.set(new Medicao(0.0, this.unidadeExibicao.get()));
+        }
+    }
+
     private void atualizaPico() {
-        Double valorAtual = this.getValorIndicador();
-        if (!Double.isNaN(valorAtual)) {
-            if (Double.isNaN(this.pico.get()) || valorAtual > this.pico.get()) {
-                this.pico.set(valorAtual);
+        Medicao medicaoAtual = this.getMedicaoIndicador();
+        if (medicaoAtual != null) {
+            Medicao medicaoConvertida = medicaoAtual.converte(this.pico.get().getUnidade().get());
+            if (this.pico.get() == null ||  medicaoConvertida.getValor().get() > this.pico.get().getValor().get()) {
+                this.atualizaPico(medicaoConvertida);
             }
         }
+        else if (this.pico.get() == null) {
+            this.atualizaPico(new Medicao(0.0, this.unidadeExibicao.get()));
+        }
+    }
+
+    private void atualizaPico(Medicao medicao) {
+        this.pico.set(medicao);
     }
 
     private void adicionaUltimaLeitura() {
@@ -138,15 +167,15 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     private Double calculaVelocidadeEnsaio(List<Leitura> ultimasLeituras) {
         if (ultimasLeituras.size() < 2 ||
                 this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() == null) {
-            return Double.NaN;
+            return 0.0;
         }
         Leitura ultimaLeitura = ultimasLeituras.get(ultimasLeituras.size()-1);
         Leitura primeira = ultimasLeituras.get(0);
         Long milis = ultimaLeitura.getHora().get().getTime() - primeira.getHora().get().getTime();
         final Calibracao c = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get();
         final UnidadeEnum unidadeExibicao = this.unidadeExibicao.get();
-        Double ultimaIndicacao = this.getValorIndicador(ultimaLeitura.getValor().get(), c, unidadeExibicao);
-        Double primeiraIndicacao = this.getValorIndicador(primeira.getValor().get(), c, unidadeExibicao);
+        Double ultimaIndicacao = this.getMedicaoIndicador(ultimaLeitura.getValor().get(), c, unidadeExibicao);
+        Double primeiraIndicacao = this.getMedicaoIndicador(primeira.getValor().get(), c, unidadeExibicao);
         Double velocidade = (ultimaIndicacao - primeiraIndicacao) / (milis / 1000.0);
         return velocidade;
     }
@@ -213,32 +242,30 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         }
     }
 
-    public Double getValorIndicador() {
+    public Medicao getMedicaoIndicador() {
         if (this.service.getCondicionadorSinais().get() != null &&
                 this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
                 this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
             Double valorPronto = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
                     this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get());
             valorPronto = valorPronto - this.getTara().get();
-            valorPronto = ConversorUnidades.converte(this.service,
-                    valorPronto,
-                    this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getUnidadeCalibracao().get(),
-                    this.unidadeExibicao.get());
-            return valorPronto;
+            valorPronto = ConversorUnidades.converte(valorPronto,
+                                                    this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getUnidadeCalibracao().get(),
+                                                    this.unidadeExibicao.get());
+            return new Medicao(valorPronto, this.unidadeExibicao.get());
         }
         else {
-            return Double.NaN;
+            return null;
         }
     }
 
-    private Double getValorIndicador(Double valorLido, Calibracao calibracao, UnidadeEnum unidadeExibicao) {
+    private Double getMedicaoIndicador(Double valorLido, Calibracao calibracao, UnidadeEnum unidadeExibicao) {
         if (calibracao != null) {
             Double valorPronto = calibracao.getAjuste().get().getValorAjustado(valorLido);
             valorPronto = valorPronto - this.getTara().get();
-            valorPronto = ConversorUnidades.converte(this.service,
-                    valorPronto,
-                    calibracao.getUnidadeCalibracao().get(),
-                    unidadeExibicao);
+            valorPronto = ConversorUnidades.converte(valorPronto,
+                                                    calibracao.getUnidadeCalibracao().get(),
+                                                    unidadeExibicao);
             return valorPronto;
         }
         else {
@@ -259,11 +286,11 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     }
 
     public String getIndicacaoPico() {
-        Double valorIndicador = this.getPico().get();
-        if (!Double.isNaN(valorIndicador)) {
+        Medicao medicaoIndicador = this.getPico().get();
+        if (medicaoIndicador != null) {
             String indicacao = String.format("%s %s",
-                    this.getIndicao(valorIndicador),
-                    this.service.getString(this.unidadeExibicao.get().getResourceString())
+                    this.getIndicao(medicaoIndicador.getValor().get()),
+                    this.service.getString(medicaoIndicador.getUnidade().get().getResourceString())
             );
             return indicacao;
         }
@@ -271,19 +298,19 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     }
 
     public String getIndicacaoPrincipal() {
-        Double valorIndicador = this.getValorIndicador();
-        if (!Double.isNaN(valorIndicador)) {
-            String valorString = this.getIndicao(valorIndicador);
+        Medicao medicaoIndicador = this.getMedicaoIndicador();
+        if (medicaoIndicador != null) {
+            String valorString = this.getIndicao(medicaoIndicador.getValor().get());
             return valorString;
         }
         return this.service.getString(R.string.semIndicacao);
     }
 
-    private String getIndicao(Double valor) {
+    private String getIndicao(Double medicao) {
         NumberFormat format = NumberFormat.getNumberInstance();
         format.setMaximumFractionDigits(this.casasDecimais.get());
         format.setMinimumFractionDigits(this.casasDecimais.get());
-        String stringValue = format.format(valor);
+        String stringValue = format.format(medicao);
         return stringValue;
     }
 
@@ -305,7 +332,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         return velocidade;
     }
 
-    public ObservableDouble getPico() {
+    public ObservableField<Medicao> getPico() {
         return pico;
     }
 }

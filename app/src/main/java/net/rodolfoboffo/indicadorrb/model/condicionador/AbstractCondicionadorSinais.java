@@ -47,9 +47,15 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         this.aquisicaoAutomatica.set(aquisicaoAutomatica);
     }
 
-    public abstract void finalizar();
+    public void finalizar() {
+        this.pararAquisicaoAutomatica();
+        this.getConexao().desconectar();
+    }
 
-    public abstract void inicializar();
+    public void inicializar() {
+        this.getConexao().conectar();
+        this.iniciarAquisicaoAutomatica();
+    }
 
     public abstract void solicitarLeitura();
 
