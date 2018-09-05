@@ -39,16 +39,16 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         this.velocidade = new ObservableDouble(0.0);
         this.pico = new ObservableField<>();
         this.ultimasLeituras = new ObservableField<>((List<Leitura>)new ArrayList<Leitura>());
-        this.grandezaExibicao = new ObservableField<>();
-        this.unidadeExibicao = new ObservableField<>();
+        this.grandezaExibicao = new ObservableField<>(GrandezaEnum.forca);
+        this.unidadeExibicao = new ObservableField<>(UnidadeEnum.kgf);
         this.casasDecimais = new ObservableInt(4);
         this.tara = new ObservableDouble(0.0);
         this.inicializaObservadores();
     }
 
     private void resetTudo() {
-        this.grandezaExibicao.set(null);
-        this.unidadeExibicao.set(null);
+        this.grandezaExibicao.set(GrandezaEnum.forca);
+        this.unidadeExibicao.set(UnidadeEnum.kgf);
         this.tara.set(0.0);
         this.resetUltimasLeituras();
     }
@@ -275,7 +275,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public String getIndicacaoVelocidadeEnsaio() {
         Double valorIndicador = this.getVelocidade().get();
-        if (!Double.isNaN(valorIndicador)) {
+        if (this.unidadeExibicao.get() != null && !Double.isNaN(valorIndicador)) {
             String indicacao = String.format("%s %s/s",
                     this.getIndicao(valorIndicador),
                     this.service.getString(this.unidadeExibicao.get().getResourceString())
@@ -287,7 +287,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public String getIndicacaoPico() {
         Medicao medicaoIndicador = this.getPico().get();
-        if (medicaoIndicador != null) {
+        if (medicaoIndicador != null && this.unidadeExibicao.get() != null) {
             String indicacao = String.format("%s %s",
                     this.getIndicao(medicaoIndicador.getValor().get()),
                     this.service.getString(medicaoIndicador.getUnidade().get().getResourceString())

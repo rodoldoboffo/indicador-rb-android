@@ -179,7 +179,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             @Override
             public void run() {
                 if (IndicadorActivity.this.service != null) {
-                    if (IndicadorActivity.this.service.getCondicionadorSinais() != null &&
+                    if (IndicadorActivity.this.service.getCondicionadorSinais().get() != null &&
                             IndicadorActivity.this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
                             IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
                         if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {

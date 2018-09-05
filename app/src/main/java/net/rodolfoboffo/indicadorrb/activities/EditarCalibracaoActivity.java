@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -41,6 +42,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     private ListView listViewPontosCalibracao;
     private TextView textViewSemPontosCalibracao;
     private ArrayPontosCalibracaoAdapter pontosAdapter;
+    private Button adicionarPontoButton;
 
     @Override
     protected int getLayoutResourceId() {
@@ -60,6 +62,8 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
             this.calibracao = this.calibracao.clone();
             this.getSupportActionBar().setTitle(R.string.editar_calibracao_activity_label);
         }
+
+        this.adicionarPontoButton = this.findViewById(R.id.adicionarPontoButton);
 
         this.nomeCalibracaoText = this.findViewById(R.id.nomeCalibracaoText);
         this.nomeCalibracaoText.setText(this.calibracao.getNome().get());
@@ -162,6 +166,10 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
         }
         if (!this.service.getGerenciadorCalibracao().validarNomeCalibracao(this.nomeCalibracaoText.getText().toString(), this.calibracao)) {
             this.nomeCalibracaoText.setError(this.getString(R.string.calibracaoComMesmoNome));
+            return false;
+        }
+        if (this.pontosAdapter.getCount() < 2) {
+            this.mostrarAlerta(R.string.calibracaoSemPontos);
             return false;
         }
         for (int i = 0; i < this.pontosAdapter.getCount(); i++) {

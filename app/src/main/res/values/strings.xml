@@ -53,4 +53,7 @@
     <string name="velocidade">Velocidade</string>
     <string name="pico">Pico</string>
     <string name="limpar">Limpar</string>
+    <string name="calibracaoSemPontos">Ao menos dois pontos de calibração são necessários.</string>
+    <string name="ok">OK</string>
+    <string name="naoExistemEquipamentos">Ainda não existem equipamentos salvos.</string>
 </resources>

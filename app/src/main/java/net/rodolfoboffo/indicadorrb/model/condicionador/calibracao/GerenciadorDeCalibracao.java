@@ -102,6 +102,7 @@ public class GerenciadorDeCalibracao extends AbstractServiceRelatedObject {
         if (this.mapaCalibracoes.containsKey(c.getId())) {
             this.mapaCalibracoes.remove(c.getId());
         }
+        this.service.salvarPreferencias();
     }
 
     public void salvarCalibracoes() {

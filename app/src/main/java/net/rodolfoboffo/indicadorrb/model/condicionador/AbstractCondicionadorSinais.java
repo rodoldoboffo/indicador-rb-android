@@ -8,6 +8,7 @@ import net.rodolfoboffo.indicadorrb.model.basicos.Leitura;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,7 +28,7 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         super(service);
         this.timerAquisicaoAutomatica = new Timer("timerAquisicaoAutomaticaThread", true);
         this.conexao = conexao;
-        this.ultimaLeitura = new ObservableField<>();
+        this.ultimaLeitura = new ObservableField<>(new Leitura(0.0, new Date()));
         this.aquisicaoAutomatica = new ObservableBoolean(false);
     }
 
