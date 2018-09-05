@@ -360,6 +360,16 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.aumentaCasasDecimais();
     }
 
+    public void limparPicoButtonOnClick(View view) {
+        this.limparPico();
+    }
+
+    private void limparPico() {
+        if (this.service != null && this.service.getIndicador() != null) {
+            this.service.getIndicador().limparPico();
+        }
+    }
+
     private void aumentaCasasDecimais() {
         if (this.service != null && this.service.getIndicador() != null) {
             this.service.getIndicador().aumentaCasasDecimais();

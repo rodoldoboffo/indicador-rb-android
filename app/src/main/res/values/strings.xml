@@ -52,4 +52,5 @@
     <string name="conversaoGrandezasIncompativeis">Conversão entre grandezas incompatíveis</string>
     <string name="velocidade">Velocidade</string>
     <string name="pico">Pico</string>
+    <string name="limpar">Limpar</string>
 </resources>

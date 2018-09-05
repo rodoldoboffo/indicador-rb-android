@@ -122,7 +122,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         }
     }
 
-    private void zeraPico() {
+    public void limparPico() {
         if (this.unidadeExibicao.get() != null) {
             this.pico.set(new Medicao(0.0, this.unidadeExibicao.get()));
         }
@@ -335,4 +335,5 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     public ObservableField<Medicao> getPico() {
         return pico;
     }
+
 }
