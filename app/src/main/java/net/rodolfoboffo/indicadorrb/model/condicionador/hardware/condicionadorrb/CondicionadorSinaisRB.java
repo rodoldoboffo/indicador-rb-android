@@ -79,4 +79,22 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
     public void solicitarLeitura() {
         this.enviaComando(ComandosEnvio.REQUEST_AD_VALUE);
     }
+
+    public void ligaRele() {
+        this.enviaComando(ComandosEnvio.TURN_RELAY_ON);
+    }
+
+    public void desligaRele() {
+        this.enviaComando(ComandosEnvio.TURN_RELAY_OFF);
+    }
+
+    @Override
+    public void ligaDesligaReleSobrecarga(Boolean liga) {
+        if (liga) {
+            this.ligaRele();
+        }
+        else {
+            this.desligaRele();
+        }
+    }
 }

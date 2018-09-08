@@ -101,5 +101,5 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         this.ultimaLeitura.set(ultimaLeitura);
     }
 
-
+    public void ligaDesligaReleSobrecarga(Boolean liga) {}
 }
