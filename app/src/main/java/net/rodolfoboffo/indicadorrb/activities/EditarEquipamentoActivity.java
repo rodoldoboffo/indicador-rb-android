@@ -3,25 +3,24 @@ package net.rodolfoboffo.indicadorrb.activities;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.adapter.ArrayPontosCalibracaoAdapter;
 import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
-import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
-import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
-import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Reta;
 import net.rodolfoboffo.indicadorrb.model.equipamento.Equipamento;
-import net.rodolfoboffo.indicadorrb.model.math.RegressaoLinear;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class EditarEquipamentoActivity extends AbstractBaseActivity {
@@ -30,14 +29,21 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
     public static final int NOVO_EQUIPAMENTO = 0;
     public static final int EDITAR_EQUIPAMENTO = 1;
 
+    private static final int MAX_SEEKBAR_VALUE = 10000;
+
     private Equipamento equipamento;
 
     private Spinner spinnerGrandeza;
-    private EditText capacidadeText;
+    private EditText capacidadeEditText;
     private EnumArrayAdapter spinnerGrandezaAdapter;
     private Spinner spinnerUnidade;
     private EnumArrayAdapter spinnerUnidadeAdapter;
-    private EditText nomeEquipamentoText;
+    private EditText nomeEquipamentoEditText;
+    private CheckBox habilitarAvisoCheckbox;
+    private RadioButton normalmenteLigadoRadioButton;
+    private RadioButton normalmenteDesligadoRadioButton;
+    private SeekBar limiarSeekBar;
+    private TextView limiarSobrecargaTextView;
 
     @Override
     protected int getLayoutResourceId() {
@@ -58,11 +64,11 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
             this.getSupportActionBar().setTitle(R.string.editar_equipamento_activity_label);
         }
 
-        this.nomeEquipamentoText = this.findViewById(R.id.nomeEquipamentoText);
-        this.nomeEquipamentoText.setText(this.equipamento.getNome().get());
+        this.nomeEquipamentoEditText = this.findViewById(R.id.nomeEquipamentoText);
+        this.nomeEquipamentoEditText.setText(this.equipamento.getNome().get());
 
-        this.capacidadeText = this.findViewById(R.id.capacidadeText);
-        this.capacidadeText.setText(String.valueOf(this.equipamento.getCapacidade().get()));
+        this.capacidadeEditText = this.findViewById(R.id.capacidadeText);
+        this.capacidadeEditText.setText(String.valueOf(this.equipamento.getCapacidade().get()));
 
         this.spinnerGrandezaAdapter = new EnumArrayAdapter(this, Arrays.asList(new GrandezaEnum[] {GrandezaEnum.forca, GrandezaEnum.temperatura}), R.layout.list_item_enum_small_red);
         this.spinnerGrandeza = this.findViewById(R.id.grandezaSpinner);
@@ -74,6 +80,29 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
         this.spinnerUnidade.setSelection(
                 this.spinnerUnidadeAdapter.getListaEnums().indexOf(
                         this.equipamento.getUnidade().get()));
+
+        this.habilitarAvisoCheckbox = this.findViewById(R.id.habilitarAvisoCheckbox);
+        this.normalmenteLigadoRadioButton = this.findViewById(R.id.releLigadoRadioButton);
+        this.normalmenteDesligadoRadioButton = this.findViewById(R.id.releDesligadoRadioButton);
+        this.limiarSeekBar = this.findViewById(R.id.limiarSobrecargaSeekbar);
+        this.limiarSobrecargaTextView = this.findViewById(R.id.percentualSobrecargaText);
+
+        this.habilitarAvisoCheckbox.setChecked(this.equipamento.getAvisoSobrecarga().get());
+        this.normalmenteLigadoRadioButton.setChecked(this.equipamento.getReleNormalmenteLigado().get());
+        this.normalmenteDesligadoRadioButton.setChecked(!this.equipamento.getReleNormalmenteLigado().get());
+        this.limiarSeekBar.setMax(MAX_SEEKBAR_VALUE);
+        int seekBarValue = new Double(this.equipamento.getLimiarSobrecarga().get() * MAX_SEEKBAR_VALUE).intValue();
+        this.limiarSeekBar.setProgress(seekBarValue);
+        this.atualizaIndicacaoPercentalSobrecarga(seekBarValue);
+    }
+
+    private void atualizaIndicacaoPercentalSobrecarga(int value) {
+        Double percentualSobrecarga = (double)value / MAX_SEEKBAR_VALUE;
+        this.equipamento.setLimiarSobrecarga(percentualSobrecarga);
+        NumberFormat format = NumberFormat.getInstance();
+        format.setMinimumFractionDigits(2);
+        format.setMaximumFractionDigits(2);
+        this.limiarSobrecargaTextView.setText(format.format(percentualSobrecarga*100.0) + "%");
     }
 
     @Override
@@ -84,6 +113,26 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
 
     public void inicializaObservadores() {
         this.iniciaObservadorSpinnerGrandeza();
+        this.iniciaObservadorSeekBar();
+    }
+
+    private void iniciaObservadorSeekBar() {
+        this.limiarSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                EditarEquipamentoActivity.this.atualizaIndicacaoPercentalSobrecarga(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void iniciaObservadorSpinnerGrandeza() {
@@ -120,28 +169,28 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
     }
 
     public Boolean validar() {
-        if (this.nomeEquipamentoText.getText().toString().isEmpty()) {
-            this.nomeEquipamentoText.setError(this.getString(R.string.nomeEquipamentoVazioError));
+        if (this.nomeEquipamentoEditText.getText().toString().isEmpty()) {
+            this.nomeEquipamentoEditText.setError(this.getString(R.string.nomeEquipamentoVazioError));
             return false;
         }
-        if (!this.service.getGerenciadorEquipamento().validarNomeObjeto(this.nomeEquipamentoText.getText().toString(), this.equipamento)) {
-            this.nomeEquipamentoText.setError(this.getString(R.string.equipamentoComMesmoNome));
+        if (!this.service.getGerenciadorEquipamento().validarNomeObjeto(this.nomeEquipamentoEditText.getText().toString(), this.equipamento)) {
+            this.nomeEquipamentoEditText.setError(this.getString(R.string.equipamentoComMesmoNome));
             return false;
         }
 
         Double capacidade = Double.NaN;
         try {
-            capacidade = Double.valueOf(this.capacidadeText.getText().toString());
+            capacidade = Double.valueOf(this.capacidadeEditText.getText().toString());
         }
         catch (Exception e) {
 
         }
         if (capacidade.isNaN()) {
-            this.capacidadeText.setError(this.getString(R.string.capacidadeNaoEhNumero));
+            this.capacidadeEditText.setError(this.getString(R.string.capacidadeNaoEhNumero));
             return false;
         }
         else if (capacidade <= 0.0) {
-            this.capacidadeText.setError(this.getString(R.string.capacidadeNaoPositivo));
+            this.capacidadeEditText.setError(this.getString(R.string.capacidadeNaoPositivo));
             return false;
         }
         return true;
@@ -150,10 +199,12 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
     public void onSalvarEquipamentoButtonClick(View view) {
         if (this.validar()) {
             if (this.service != null) {
-                this.equipamento.setNome(this.nomeEquipamentoText.getText().toString());
+                this.equipamento.setNome(this.nomeEquipamentoEditText.getText().toString());
                 this.equipamento.setGrandeza((GrandezaEnum) this.spinnerGrandeza.getSelectedItem());
                 this.equipamento.setUnidade((UnidadeEnum) this.spinnerUnidade.getSelectedItem());
-                this.equipamento.setCapacidade(Double.valueOf(this.capacidadeText.getText().toString()));
+                this.equipamento.setCapacidade(Double.valueOf(this.capacidadeEditText.getText().toString()));
+                this.equipamento.setAvisoSobrecarga(this.habilitarAvisoCheckbox.isChecked());
+                this.equipamento.setReleNormalmenteLigado(this.normalmenteLigadoRadioButton.isChecked());
                 this.service.getGerenciadorEquipamento().salvarObjeto(this.equipamento);
                 this.setResult(RESULT_OK);
                 this.finish();

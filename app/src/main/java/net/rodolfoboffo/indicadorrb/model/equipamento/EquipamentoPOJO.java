@@ -13,6 +13,9 @@ public class EquipamentoPOJO extends POJO<Equipamento> {
     private String unidade;
     private Double capacidade;
     private Boolean selecionado;
+    private Boolean avisoSobrecarga;
+    private Boolean releNormalmenteLigado;
+    private Double limiarSobrecarga;
 
     public EquipamentoPOJO(Equipamento o) {
         this.id = o.getId().toString();
@@ -21,6 +24,9 @@ public class EquipamentoPOJO extends POJO<Equipamento> {
         this.unidade = o.getUnidade().get().getCodigo();
         this.capacidade = o.getCapacidade().get();
         this.selecionado = o.getSelecionado().get();
+        this.avisoSobrecarga = o.getAvisoSobrecarga().get();
+        this.releNormalmenteLigado = o.getReleNormalmenteLigado().get();
+        this.limiarSobrecarga = o.getLimiarSobrecarga().get();
     }
 
     @Override
@@ -31,6 +37,9 @@ public class EquipamentoPOJO extends POJO<Equipamento> {
         o.setUnidade(AbstractEnumeration.getByKey(UnidadeEnum.class, this.unidade));
         o.setCapacidade(this.capacidade);
         o.setSelecionado(this.selecionado);
+        o.setAvisoSobrecarga(this.avisoSobrecarga);
+        o.setReleNormalmenteLigado(this.releNormalmenteLigado);
+        o.setLimiarSobrecarga(this.limiarSobrecarga);
         return o;
     }
 }

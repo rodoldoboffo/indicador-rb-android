@@ -22,6 +22,9 @@ public class Equipamento implements Cloneable, Serializable, Comparable<Equipame
     private ObservableField<UnidadeEnum> unidade;
     private ObservableDouble capacidade;
     private ObservableBoolean selecionado;
+    private ObservableBoolean avisoSobrecarga;
+    private ObservableBoolean releNormalmenteLigado;
+    private ObservableDouble limiarSobrecarga;
 
     public Equipamento() {
         this(UUID.randomUUID());
@@ -38,6 +41,9 @@ public class Equipamento implements Cloneable, Serializable, Comparable<Equipame
         this.unidade = new ObservableField<>(UnidadeEnum.kgf);
         this.capacidade = new ObservableDouble(100.0);
         this.selecionado = new ObservableBoolean(false);
+        this.avisoSobrecarga = new ObservableBoolean(false);
+        this.releNormalmenteLigado = new ObservableBoolean(true);
+        this.limiarSobrecarga = new ObservableDouble(0.8);
     }
 
     public ObservableField<String> getNome() {
@@ -78,6 +84,30 @@ public class Equipamento implements Cloneable, Serializable, Comparable<Equipame
 
     public void setSelecionado(Boolean selecionado) {
         this.selecionado.set(selecionado);
+    }
+
+    public ObservableBoolean getAvisoSobrecarga() {
+        return avisoSobrecarga;
+    }
+
+    public void setAvisoSobrecarga(Boolean avisoSobrecarga) {
+        this.avisoSobrecarga.set(avisoSobrecarga);
+    }
+
+    public ObservableBoolean getReleNormalmenteLigado() {
+        return releNormalmenteLigado;
+    }
+
+    public void setReleNormalmenteLigado(Boolean releNormalmenteLigado) {
+        this.releNormalmenteLigado.set(releNormalmenteLigado);
+    }
+
+    public ObservableDouble getLimiarSobrecarga() {
+        return limiarSobrecarga;
+    }
+
+    public void setLimiarSobrecarga(Double limiarSobrecarga) {
+        this.limiarSobrecarga.set(limiarSobrecarga);
     }
 
     @Override
@@ -125,6 +155,9 @@ public class Equipamento implements Cloneable, Serializable, Comparable<Equipame
             e.setUnidade(this.getUnidade().get());
             e.setSelecionado(this.getSelecionado().get());
             e.setCapacidade(this.getCapacidade().get());
+            e.setAvisoSobrecarga(this.getAvisoSobrecarga().get());
+            e.setReleNormalmenteLigado(this.getReleNormalmenteLigado().get());
+            e.setLimiarSobrecarga(this.getLimiarSobrecarga().get());
             return e;
         }
         catch (CloneNotSupportedException ex) {

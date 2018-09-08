@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:id="@+id/layoutDetalhesEnsaio"
+        android:id="@+id/layoutSuperior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -83,10 +83,13 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/layoutCentral"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerInParent="true">
+        android:layout_below="@id/layoutSuperior"
+        android:layout_above="@id/layoutInferior"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/indicacao_principal_text"
@@ -106,8 +109,13 @@
             style="@style/BigTextBlack">
         </Spinner>
 
-
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutInferior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <Button
             style="@style/Button"
@@ -115,7 +123,8 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/zero"
-            android:layout_alignParentBottom="true"
             android:onClick="zeroButtonOnClick"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -66,4 +66,8 @@
     <string name="editar_equipamento_activity_label">Editar Equipamento</string>
     <string name="capacidadeNaoEhNumero">Capacidade precisa ser um número decimal.</string>
     <string name="capacidadeNaoPositivo">Capacidade precisa ser maior que zero.</string>
+    <string name="avisoDeSobrecarga">Aviso de Sobrecarga</string>
+    <string name="habilitarAviso">Habilitar Aviso de Sobrecarga</string>
+    <string name="normalmenteLigado">Normalmente Ligado</string>
+    <string name="normalmenteDesligado">Normalmente Desligado</string>
 </resources>
