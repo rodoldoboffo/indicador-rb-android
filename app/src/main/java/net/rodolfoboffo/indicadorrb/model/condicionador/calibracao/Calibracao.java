@@ -27,11 +27,11 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
     protected ObservableField<Reta> ajuste;
 
     public Calibracao() {
-        this(UUID.randomUUID().toString());
+        this(UUID.randomUUID());
     }
 
-    public Calibracao(String id) {
-        this.id = UUID.fromString(id);
+    public Calibracao(UUID id) {
+        this.id = id;
         this.nome = new ObservableField<>("");
         this.grandeza = new ObservableField<>(GrandezaEnum.forca);
         this.unidadeCalibracao = new ObservableField<>();
@@ -39,6 +39,10 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
         this.pontosCalibracao = new ObservableArrayList<>();
         this.selecionado = new ObservableBoolean(false);
         this.ajuste = new ObservableField<>(new Reta());
+    }
+
+    public Calibracao(String id) {
+        this(UUID.fromString(id));
     }
 
     @Override

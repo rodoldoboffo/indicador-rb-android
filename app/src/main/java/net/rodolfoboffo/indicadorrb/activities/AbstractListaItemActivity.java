@@ -1,6 +1,8 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
 import android.content.ComponentName;
+import android.databinding.Observable;
+import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.ContextMenu;
@@ -40,7 +42,7 @@ public abstract class AbstractListaItemActivity<T extends IListaItem> extends Ab
         return R.string.naoExistemItens;
     }
 
-    public abstract List<T> getListaItens();
+    public abstract ObservableList<T> getListaItens();
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
@@ -48,6 +50,64 @@ public abstract class AbstractListaItemActivity<T extends IListaItem> extends Ab
         if (this.service != null) {
             this.arrayListaItemAdapter.setLista(this.getListaItens());
             this.arrayListaItemAdapter.notifyDataSetChanged();
+            this.inicializaObservadoresDoServico();
+        }
+    }
+
+    public void inicializaObservadoresDoServico() {
+        this.inicializaObservadorListaObjetos();
+        this.inicializaObservadorObjeto();
+    }
+
+    public void inicializaObservadorObjeto() {
+        if (this.service != null) {
+            for (T o : this.getListaItens()) {
+                this.inicializaObservadorObjeto(o);
+            }
+        }
+    }
+
+    public void inicializaObservadorObjeto(T o) {
+        o.getSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                AbstractListaItemActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void inicializaObservadorListaObjetos() {
+        if (this.service != null) {
+            this.getListaItens().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<T>>() {
+                @Override
+                public void onChanged(ObservableList<T> sender) {
+                    AbstractListaItemActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
+                }
+
+                @Override
+                public void onItemRangeChanged(ObservableList<T> sender, int positionStart, int itemCount) {
+                    AbstractListaItemActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
+                }
+
+                @Override
+                public void onItemRangeInserted(ObservableList<T> sender, int positionStart, int itemCount) {
+                    AbstractListaItemActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
+                    if (AbstractListaItemActivity.this.service != null) {
+                        T o = AbstractListaItemActivity.this.getListaItens().get(positionStart);
+                        AbstractListaItemActivity.this.inicializaObservadorObjeto(o);
+                    }
+                }
+
+                @Override
+                public void onItemRangeMoved(ObservableList<T> sender, int fromPosition, int toPosition, int itemCount) {
+                    AbstractListaItemActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
+                }
+
+                @Override
+                public void onItemRangeRemoved(ObservableList<T> sender, int positionStart, int itemCount) {
+                    AbstractListaItemActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
+                }
+            });
         }
     }
 

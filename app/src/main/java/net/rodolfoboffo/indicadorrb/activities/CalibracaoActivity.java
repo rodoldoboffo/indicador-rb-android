@@ -36,68 +36,11 @@ public class CalibracaoActivity extends AbstractListaItemActivity<Calibracao> {
     }
 
     @Override
-    public List<Calibracao> getListaItens() {
+    public ObservableList<Calibracao> getListaItens() {
         if (this.service != null) {
             return this.service.getGerenciadorCalibracao().getListaObjetos();
         }
         return null;
-    }
-
-    public void inicializaObservadorCalibracoes() {
-        if (this.service != null) {
-            for (Calibracao c : this.service.getGerenciadorCalibracao().getListaObjetos()) {
-                this.inicializaObservadorCalibracao(c);
-            }
-        }
-    }
-
-    public void inicializaObservadorCalibracao(Calibracao c) {
-        c.getSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
-            }
-        });
-    }
-
-    public void inicializaObservadorListaCalibracoes() {
-        if (this.service != null) {
-            this.service.getGerenciadorCalibracao().getListaObjetos().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Calibracao>>() {
-                @Override
-                public void onChanged(ObservableList<Calibracao> sender) {
-                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeChanged(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
-                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeInserted(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
-                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
-                    if (CalibracaoActivity.this.service != null) {
-                        Calibracao c = CalibracaoActivity.this.service.getGerenciadorCalibracao().getListaObjetos().get(positionStart);
-                        CalibracaoActivity.this.inicializaObservadorCalibracao(c);
-                    }
-                }
-
-                @Override
-                public void onItemRangeMoved(ObservableList<Calibracao> sender, int fromPosition, int toPosition, int itemCount) {
-                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeRemoved(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
-                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
-                }
-            });
-        }
-    }
-
-    public void inicializaObservadoresDoServico() {
-        this.inicializaObservadorListaCalibracoes();
-        this.inicializaObservadorCalibracoes();
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.GerenciadorDeCalibracao;
 import net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb.CondicionadorSinaisRB;
+import net.rodolfoboffo.indicadorrb.model.equipamento.GerenciadorDeEquipamento;
 import net.rodolfoboffo.indicadorrb.model.indicador.IndicadorBase;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
 
@@ -29,6 +30,7 @@ public class IndicadorService extends Service {
     private GerenciadorDeDispositivos gerenciadorDispositivos;
     private GerenciadorDePermissoes gerenciadoPermissoes;
     private GerenciadorDeCalibracao gerenciadorCalibracao;
+    private GerenciadorDeEquipamento gerenciadorEquipamento;
     private ObservableField<AbstractCondicionadorSinais> condicionadorSinais;
     private IndicadorBase indicador;
 
@@ -47,6 +49,8 @@ public class IndicadorService extends Service {
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarObjetos();
+        this.gerenciadorEquipamento = new GerenciadorDeEquipamento(this);
+        this.gerenciadorEquipamento.carregarObjetos();
         this.condicionadorSinais = new ObservableField<>();
         this.indicador = new IndicadorBase(this);
         this.carregarPreferencias();
@@ -113,6 +117,10 @@ public class IndicadorService extends Service {
 
     public final GerenciadorDeCalibracao getGerenciadorCalibracao() {
         return this.gerenciadorCalibracao;
+    }
+
+    public final GerenciadorDeEquipamento getGerenciadorEquipamento() {
+        return this.gerenciadorEquipamento;
     }
 
     public final IndicadorBase getIndicador() {
