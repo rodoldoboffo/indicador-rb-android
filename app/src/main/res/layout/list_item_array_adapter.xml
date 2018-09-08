@@ -15,12 +15,12 @@
         android:layout_centerVertical="true">
 
         <TextView
-            android:id="@+id/itemNomeCalibracaoText"
+            android:id="@+id/itemNomeExibicaoItemText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:theme="@style/SmallText"
             android:textStyle="bold"
-            tools:text="Nome da calibracao"
+            tools:text="Nome do Item"
             />
 
     </LinearLayout>
@@ -33,7 +33,7 @@
         android:layout_centerVertical="true">
 
         <ImageView
-            android:id="@+id/imageCalibracaoSelecionado"
+            android:id="@+id/imageItemSelecionado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_done_24dp"

@@ -166,13 +166,13 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     private Double calculaVelocidadeEnsaio(List<Leitura> ultimasLeituras) {
         if (ultimasLeituras.size() < 2 ||
-                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() == null) {
+                this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() == null) {
             return 0.0;
         }
         Leitura ultimaLeitura = ultimasLeituras.get(ultimasLeituras.size()-1);
         Leitura primeira = ultimasLeituras.get(0);
         Long milis = ultimaLeitura.getHora().get().getTime() - primeira.getHora().get().getTime();
-        final Calibracao c = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get();
+        final Calibracao c = this.service.getGerenciadorCalibracao().getObjetoSelecionado().get();
         final UnidadeEnum unidadeExibicao = this.unidadeExibicao.get();
         Double ultimaIndicacao = this.getMedicaoIndicador(ultimaLeitura.getValor().get(), c, unidadeExibicao);
         Double primeiraIndicacao = this.getMedicaoIndicador(primeira.getValor().get(), c, unidadeExibicao);
@@ -181,7 +181,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     }
 
     private void inicializaObservadorCalibracaoSelecionada() {
-        this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.service.getGerenciadorCalibracao().getObjetoSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 IndicadorBase.this.usaCalibracaoSelecionada();
@@ -191,7 +191,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     }
 
     public void usaCalibracaoSelecionada() {
-        this.usaCalibracao(this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get());
+        this.usaCalibracao(this.service.getGerenciadorCalibracao().getObjetoSelecionado().get());
     }
 
     public void usaCalibracao(Calibracao calibracao) {
@@ -230,9 +230,9 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public void tara() {
         if (this.service.getCondicionadorSinais().get() != null &&
-                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() != null &&
                 this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
-            Double tara = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
+            Double tara = this.service.getGerenciadorCalibracao().getObjetoSelecionado().get().getAjuste().get().getValorAjustado(
                     this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get()
             );
             this.setTara(tara);
@@ -244,13 +244,13 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public Medicao getMedicaoIndicador() {
         if (this.service.getCondicionadorSinais().get() != null &&
-                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() != null &&
                 this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
-            Double valorPronto = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
+            Double valorPronto = this.service.getGerenciadorCalibracao().getObjetoSelecionado().get().getAjuste().get().getValorAjustado(
                     this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get());
             valorPronto = valorPronto - this.getTara().get();
             valorPronto = ConversorUnidades.converte(valorPronto,
-                                                    this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getUnidadeCalibracao().get(),
+                                                    this.service.getGerenciadorCalibracao().getObjetoSelecionado().get().getUnidadeCalibracao().get(),
                                                     this.unidadeExibicao.get());
             return new Medicao(valorPronto, this.unidadeExibicao.get());
         }

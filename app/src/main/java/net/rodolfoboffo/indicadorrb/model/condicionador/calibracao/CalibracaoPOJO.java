@@ -1,10 +1,9 @@
-package net.rodolfoboffo.indicadorrb.model.json;
+package net.rodolfoboffo.indicadorrb.model.condicionador.calibracao;
 
 import net.rodolfoboffo.indicadorrb.model.basicos.AbstractEnumeration;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
-import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
-import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
+import net.rodolfoboffo.indicadorrb.model.json.POJO;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -56,4 +56,5 @@
     <string name="calibracaoSemPontos">Ao menos dois pontos de calibração são necessários.</string>
     <string name="ok">OK</string>
     <string name="naoExistemEquipamentos">Ainda não existem equipamentos salvos.</string>
+    <string name="naoExistemItens">Ainda não existem itens salvos.</string>
 </resources>

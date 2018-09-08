@@ -8,49 +8,44 @@ import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.adapter.ArrayCalibracoesAdapter;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
 
-public class CalibracaoActivity extends AbstractBaseActivity implements View.OnCreateContextMenuListener, AdapterView.OnItemClickListener {
+import java.util.List;
 
-    private ArrayCalibracoesAdapter arrayCalibracoesAdapter;
-    private ListView listaCalibracoes;
-    private TextView textViewSemCalibracao;
+public class CalibracaoActivity extends AbstractListaItemActivity<Calibracao> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.listaCalibracoes = this.findViewById(R.id.listViewCalibracoes);
-        this.textViewSemCalibracao = this.findViewById(R.id.textViewSemCalibracao);
-        this.listaCalibracoes.setEmptyView(this.textViewSemCalibracao);
-        this.arrayCalibracoesAdapter = new ArrayCalibracoesAdapter(this);
-        this.listaCalibracoes.setAdapter(this.arrayCalibracoesAdapter);
-        this.listaCalibracoes.setOnCreateContextMenuListener(this);
-        this.listaCalibracoes.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected int getSemItensStringResource() {
+        return R.string.naoExistemCalibracoes;
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         super.onServiceConnected(name, service);
         if (this.service != null) {
-            this.arrayCalibracoesAdapter.setCalibracoes(this.service.getGerenciadorCalibracao().getListaCalibracoes());
-            this.arrayCalibracoesAdapter.notifyDataSetChanged();
             this.inicializaObservadoresDoServico();
         }
     }
 
+    @Override
+    public List<Calibracao> getListaItens() {
+        if (this.service != null) {
+            return this.service.getGerenciadorCalibracao().getListaObjetos();
+        }
+        return null;
+    }
+
     public void inicializaObservadorCalibracoes() {
         if (this.service != null) {
-            for (Calibracao c : this.service.getGerenciadorCalibracao().getListaCalibracoes()) {
+            for (Calibracao c : this.service.getGerenciadorCalibracao().getListaObjetos()) {
                 this.inicializaObservadorCalibracao(c);
             }
         }
@@ -60,41 +55,41 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
         c.getSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
             }
         });
     }
 
     public void inicializaObservadorListaCalibracoes() {
         if (this.service != null) {
-            this.service.getGerenciadorCalibracao().getListaCalibracoes().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Calibracao>>() {
+            this.service.getGerenciadorCalibracao().getListaObjetos().addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Calibracao>>() {
                 @Override
                 public void onChanged(ObservableList<Calibracao> sender) {
-                    CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
                 }
 
                 @Override
                 public void onItemRangeChanged(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
-                    CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
                 }
 
                 @Override
                 public void onItemRangeInserted(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
-                    CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
                     if (CalibracaoActivity.this.service != null) {
-                        Calibracao c = CalibracaoActivity.this.service.getGerenciadorCalibracao().getListaCalibracoes().get(positionStart);
+                        Calibracao c = CalibracaoActivity.this.service.getGerenciadorCalibracao().getListaObjetos().get(positionStart);
                         CalibracaoActivity.this.inicializaObservadorCalibracao(c);
                     }
                 }
 
                 @Override
                 public void onItemRangeMoved(ObservableList<Calibracao> sender, int fromPosition, int toPosition, int itemCount) {
-                    CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
                 }
 
                 @Override
                 public void onItemRangeRemoved(ObservableList<Calibracao> sender, int positionStart, int itemCount) {
-                    CalibracaoActivity.this.arrayCalibracoesAdapter.notifyDataSetChanged();
+                    CalibracaoActivity.this.getArrayListaItemAdapter().notifyDataSetChanged();
                 }
             });
         }
@@ -106,11 +101,7 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
     }
 
     @Override
-    protected int getLayoutResourceId() {
-        return R.layout.activity_calibracao;
-    }
-
-    public void onNovaCalibracaoButtonClick(View view) {
+    public void onNovoItemButtonClick(View view) {
         EditarCalibracaoActivity.novaCalibracao(this);
     }
 
@@ -129,38 +120,27 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = this.getMenuInflater();
-        inflater.inflate(R.menu.context_menu_calibracoes, menu);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void selecionarItem(Calibracao item) {
+        super.selecionarItem(item);
         if (this.service != null) {
-            this.service.getGerenciadorCalibracao().selecionaCalibracao(this.service.getGerenciadorCalibracao().getListaCalibracoes().get(position));
+            this.service.getGerenciadorCalibracao().selecionaObjeto(item);
         }
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int position = contextMenuInfo.position;
+    public void editarItem(Calibracao item) {
+        super.editarItem(item);
         if (this.service != null) {
-            Calibracao calibracao = this.service.getGerenciadorCalibracao().getListaCalibracoes().get(position);
-            switch (item.getItemId()) {
-                case R.id.editarCalibracao:
-                    EditarCalibracaoActivity.editarCalibracao(this, calibracao);
-                    break;
-                case R.id.selecionarCalibracao:
-                    this.service.getGerenciadorCalibracao().selecionaCalibracao(calibracao);
-                    break;
-                case R.id.removerCalibracao:
-                    this.confirmaExclusaoCalibracaoDialog(calibracao);
-                    break;
-            }
+            EditarCalibracaoActivity.editarCalibracao(this, item);
         }
-        return true;
+    }
+
+    @Override
+    public void removerItem(Calibracao item) {
+        super.removerItem(item);
+        if (this.service != null) {
+            this.confirmaExclusaoCalibracaoDialog(item);
+        }
     }
 
     private void confirmaExclusaoCalibracaoDialog(final Calibracao calibracao) {
@@ -170,7 +150,7 @@ public class CalibracaoActivity extends AbstractBaseActivity implements View.OnC
                 .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        CalibracaoActivity.this.service.getGerenciadorCalibracao().removerCalibracao(calibracao);
+                        CalibracaoActivity.this.service.getGerenciadorCalibracao().removerObjeto(calibracao);
                     }
                 })
                 .setNegativeButton(this.getString(R.string.nao), new DialogInterface.OnClickListener() {
