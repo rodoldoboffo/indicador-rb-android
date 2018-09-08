@@ -86,28 +86,46 @@
         android:id="@+id/layoutCentral"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@id/layoutSuperior"
-        android:layout_above="@id/layoutInferior"
-        android:gravity="center">
+        android:layout_above="@id/layoutInferior">
 
         <TextView
-            android:id="@+id/indicacao_principal_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/sobrecargaTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="indicacaoPrincipalOnClick"
             android:textStyle="bold"
-            android:layout_gravity="center_vertical"
-            android:theme="@style/HugeBlackText"
-            tools:text="1300000" />
-        <Spinner
-            android:id="@+id/unidadeExibicaoSpinner"
+            android:text="@string/sobrecarga"
+            android:padding="6dp"
+            android:gravity="center_horizontal"
+            android:layout_marginVertical="10dp"
+            android:layout_above="@id/layoutIndicacaoPrincipal"
+            android:theme="@style/HugeBlackText" />
+
+        <RelativeLayout
+            android:id="@+id/layoutIndicacaoPrincipal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/indicacao_principal_text"
-            android:layout_gravity="center_vertical"
-            style="@style/BigTextBlack">
-        </Spinner>
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/indicacao_principal_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="indicacaoPrincipalOnClick"
+                android:textStyle="bold"
+                android:theme="@style/HugeBlackText"
+                tools:text="1300000" />
+
+            <Spinner
+                android:id="@+id/unidadeExibicaoSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/indicacao_principal_text"
+                android:layout_gravity="center_vertical"
+                style="@style/BigTextBlack">
+            </Spinner>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
