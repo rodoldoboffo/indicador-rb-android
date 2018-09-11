@@ -99,7 +99,7 @@
             android:gravity="center_horizontal"
             android:layout_marginVertical="10dp"
             android:layout_above="@id/layoutIndicacaoPrincipal"
-            android:theme="@style/HugeBlackText" />
+            android:theme="@style/IndicacaoSobrecarga" />
 
         <RelativeLayout
             android:id="@+id/layoutIndicacaoPrincipal"

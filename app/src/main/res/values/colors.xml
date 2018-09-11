@@ -9,4 +9,5 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="lightRed">#f9f1f1</color>
+    <color name="yellow">#ffe100</color>
 </resources>

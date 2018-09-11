@@ -460,4 +460,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         return pico;
     }
 
+    public ObservableBoolean getSobrecarga() {
+        return sobrecarga;
+    }
 }
