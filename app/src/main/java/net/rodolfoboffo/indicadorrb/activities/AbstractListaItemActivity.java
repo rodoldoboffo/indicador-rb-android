@@ -120,11 +120,14 @@ public abstract class AbstractListaItemActivity<T extends IListaItem> extends Ab
         return arrayListaItemAdapter;
     }
 
-    public void onNovoItemButtonClick(View view) {}
+    public void onNovoItemButtonClick(View view) {
+        this.vibrarCurto();
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        this.vibrarCurto();
         MenuInflater inflater = this.getMenuInflater();
         inflater.inflate(R.menu.context_menu_lista_itens, menu);
     }
@@ -137,14 +140,21 @@ public abstract class AbstractListaItemActivity<T extends IListaItem> extends Ab
         }
     }
 
-    public void selecionarItem(T item) {}
+    public void selecionarItem(T item) {
+        this.vibrarCurto();
+    }
 
-    public void editarItem(T item) {}
+    public void editarItem(T item) {
+        this.vibrarCurto();
+    }
 
-    public void removerItem(T item) {}
+    public void removerItem(T item) {
+        this.vibrarCurto();
+    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        this.vibrarCurto();
         AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = contextMenuInfo.position;
         if (this.service != null) {

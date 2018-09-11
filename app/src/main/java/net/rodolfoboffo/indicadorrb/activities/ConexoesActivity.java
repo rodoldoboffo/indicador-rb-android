@@ -149,6 +149,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        this.vibrarCurto();
         MenuInflater inflater = this.getMenuInflater();
         inflater.inflate(R.menu.context_menu_conexoes, menu);
         AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -168,6 +169,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        this.vibrarCurto();
         AdapterView.AdapterContextMenuInfo contextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = contextMenuInfo.position;
         if (this.service != null) {
@@ -190,6 +192,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        this.vibrarCurto();
         switch (item.getItemId()) {
             case R.id.scanDispositivos:
                 return this.verificarDispositivosButtonClick();
@@ -200,6 +203,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
     }
 
     private Boolean verificarDispositivosButtonClick() {
+        this.vibrarCurto();
         if (this.service != null) {
             int response = this.service.getGerenciadorConexoes().atualizarListaDispositivos();
             if (response == GerenciadorDeDispositivos.RESPONSE_BLUETOOTH_NAO_ATIVADO) {
@@ -213,6 +217,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
     }
 
     private Boolean limparDispositivosButtonClick() {
+        this.vibrarCurto();
         if (this.service != null) {
             this.service.getGerenciadorConexoes().limpaListaDispositivos();
         }

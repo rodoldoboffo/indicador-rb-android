@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
+import net.rodolfoboffo.indicadorrb.activities.AbstractBaseActivity;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.PontoCalibracao;
 
 import java.util.List;
@@ -120,6 +121,8 @@ public class ArrayPontosCalibracaoAdapter extends BaseAdapter {
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AbstractBaseActivity a = (AbstractBaseActivity)ArrayPontosCalibracaoAdapter.this.context;
+                a.vibrarCurto();
                 ArrayPontosCalibracaoAdapter.this.pontos.remove(position);
                 ArrayPontosCalibracaoAdapter.this.notifyDataSetChanged();
             }

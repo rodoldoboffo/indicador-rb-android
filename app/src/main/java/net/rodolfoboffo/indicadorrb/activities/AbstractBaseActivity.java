@@ -83,7 +83,14 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     }
 
     @Override
+    public void onBackPressed() {
+        this.vibrarCurto();
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        this.vibrarCurto();
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
@@ -95,7 +102,8 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        drawerLayout.closeDrawer(GravityCompat.START, false);
+        this.vibrarCurto();
+        drawerLayout.closeDrawer(GravityCompat.START, true);
         switch (item.getItemId()) {
             case R.id.navIndicador:
                 iniciaActivity(IndicadorActivity.class);
@@ -112,7 +120,7 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
             default:
                 break;
         }
-        return true;
+        return false;
     }
 
     protected boolean iniciaActivity(Class<? extends Activity> clss) {
@@ -206,6 +214,18 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
                 .setMessage(this.getString(stringResourceId))
                 .setPositiveButton(R.string.ok, null)
                 .show();
+    }
+
+    public void vibrarCurto() {
+        if (this.service != null) {
+            this.service.getVibe().vibrarCurto();
+        }
+    }
+
+    public void vibrarLongo() {
+        if (this.service != null) {
+            this.service.getVibe().vibrarLongo();
+        }
     }
 
 }

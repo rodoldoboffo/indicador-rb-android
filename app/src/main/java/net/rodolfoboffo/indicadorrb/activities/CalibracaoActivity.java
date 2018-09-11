@@ -45,6 +45,7 @@ public class CalibracaoActivity extends AbstractListaItemActivity<Calibracao> {
 
     @Override
     public void onNovoItemButtonClick(View view) {
+        super.onNovoItemButtonClick(view);
         EditarCalibracaoActivity.novaCalibracao(this);
     }
 
@@ -87,6 +88,7 @@ public class CalibracaoActivity extends AbstractListaItemActivity<Calibracao> {
     }
 
     private void confirmaExclusaoCalibracaoDialog(final Calibracao calibracao) {
+        this.vibrarCurto();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
                 .setMessage(this.getString(R.string.confirmacaoExlcuirCalibracao))

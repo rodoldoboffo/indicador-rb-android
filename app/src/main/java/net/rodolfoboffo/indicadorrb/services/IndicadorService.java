@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.databinding.Observable;
 import android.databinding.ObservableField;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import net.rodolfoboffo.indicadorrb.model.condicionador.hardware.condicionadorrb
 import net.rodolfoboffo.indicadorrb.model.equipamento.GerenciadorDeEquipamento;
 import net.rodolfoboffo.indicadorrb.model.indicador.IndicadorBase;
 import net.rodolfoboffo.indicadorrb.model.permissoes.GerenciadorDePermissoes;
+import net.rodolfoboffo.indicadorrb.ui.ToneUtil;
+import net.rodolfoboffo.indicadorrb.ui.VibeUtil;
 
 import java.util.UUID;
 
@@ -26,6 +29,8 @@ public class IndicadorService extends Service {
     public static final String BLE_ADDRESS_KEY = "BLEAddress";
     public static final String ID_CALIBRACAO_KEY = "NomeCalibracao";
 
+    private VibeUtil vibe;
+    private ToneUtil tone;
     private IndicadorServiceBinder binder;
     private GerenciadorDeDispositivos gerenciadorDispositivos;
     private GerenciadorDePermissoes gerenciadoPermissoes;
@@ -45,6 +50,8 @@ public class IndicadorService extends Service {
         Log.d(this.getClass().getSimpleName(), "Criando nova instancia do serviço");
         super.onCreate();
         this.binder = new IndicadorServiceBinder(this);
+        this.vibe = new VibeUtil(this);
+        this.tone = new ToneUtil(this);
         this.gerenciadorDispositivos = new GerenciadorDeDispositivos(this);
         this.gerenciadoPermissoes = new GerenciadorDePermissoes(this);
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
@@ -54,6 +61,31 @@ public class IndicadorService extends Service {
         this.condicionadorSinais = new ObservableField<>();
         this.indicador = new IndicadorBase(this);
         this.carregarPreferencias();
+        this.inicializaObservadores();
+    }
+
+    private void inicializaObservadores() {
+        this.inicializaObservadorSobrecarga();
+    }
+
+    private void inicializaObservadorSobrecarga() {
+        this.getIndicador().getSobrecarga().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorService.this.respostaTatilSobrecarga();
+                IndicadorService.this.respostaAudivelSobrecarga();
+            }
+        });
+    }
+
+    private void respostaTatilSobrecarga() {
+        if (this.getIndicador().getSobrecarga().get()) {
+            this.getVibe().vibrarLongo();
+        }
+    }
+
+    private void respostaAudivelSobrecarga() {
+        this.getTone().tocarBeep();
     }
 
     @Override
@@ -131,5 +163,13 @@ public class IndicadorService extends Service {
         this.condicionadorSinais.set(new CondicionadorSinaisRB(dispositivo, this));
         this.salvarPreferencias();
         return this.condicionadorSinais;
+    }
+
+    public VibeUtil getVibe() {
+        return vibe;
+    }
+
+    public ToneUtil getTone() {
+        return tone;
     }
 }

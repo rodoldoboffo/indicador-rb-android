@@ -189,6 +189,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     }
 
     public void onSalvarCalibracaoButtonClick(View view) {
+        this.vibrarCurto();
         if (this.validar()) {
             if (this.service != null) {
                 this.calibracao.setNome(this.nomeCalibracaoText.getText().toString());
@@ -204,6 +205,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
     }
 
     public void onAdicionarPontoButtonClick(View view) {
+        this.vibrarCurto();
         if (this.service != null && this.service.getCondicionadorSinais().get() != null &&
                 this.service.getCondicionadorSinais().get().getConexao().getPronto().get() &&
                 this.service.getCondicionadorSinais().get().getAquisicaoAutomatica().get() &&

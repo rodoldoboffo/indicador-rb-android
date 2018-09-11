@@ -367,6 +367,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     public void conectarDesconectarClick(MenuItem item) {
+        this.vibrarCurto();
         if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
             if (this.service.getCondicionadorSinais().get().getConexao().getPronto().get()) {
                 this.service.getCondicionadorSinais().get().finalizar();
@@ -384,14 +385,17 @@ public class IndicadorActivity extends AbstractBaseActivity {
     }
 
     public void zeroButtonOnClick(View view) {
+        this.vibrarCurto();
         this.zerar();
     }
 
     public void indicacaoPrincipalOnClick(View view) {
+        this.vibrarCurto();
         this.aumentaCasasDecimais();
     }
 
     public void limparPicoButtonOnClick(View view) {
+        this.vibrarCurto();
         this.limparPico();
     }
 

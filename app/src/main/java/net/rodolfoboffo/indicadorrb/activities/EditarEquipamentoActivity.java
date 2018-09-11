@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -82,8 +83,26 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
                         this.equipamento.getUnidade().get()));
 
         this.habilitarAvisoCheckbox = this.findViewById(R.id.habilitarAvisoCheckbox);
+        this.habilitarAvisoCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EditarEquipamentoActivity.this.vibrarCurto();
+            }
+        });
         this.normalmenteLigadoRadioButton = this.findViewById(R.id.releLigadoRadioButton);
+        this.normalmenteLigadoRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EditarEquipamentoActivity.this.vibrarCurto();
+            }
+        });
         this.normalmenteDesligadoRadioButton = this.findViewById(R.id.releDesligadoRadioButton);
+        this.normalmenteDesligadoRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EditarEquipamentoActivity.this.vibrarCurto();
+            }
+        });
         this.limiarSeekBar = this.findViewById(R.id.limiarSobrecargaSeekbar);
         this.limiarSobrecargaTextView = this.findViewById(R.id.percentualSobrecargaText);
 
@@ -125,7 +144,7 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                EditarEquipamentoActivity.this.vibrarCurto();
             }
 
             @Override
@@ -197,6 +216,7 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
     }
 
     public void onSalvarEquipamentoButtonClick(View view) {
+        this.vibrarCurto();
         if (this.validar()) {
             if (this.service != null) {
                 this.equipamento.setNome(this.nomeEquipamentoEditText.getText().toString());
