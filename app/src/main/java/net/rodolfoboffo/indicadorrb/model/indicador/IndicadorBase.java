@@ -1,6 +1,7 @@
 package net.rodolfoboffo.indicadorrb.model.indicador;
 
 import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableDouble;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -13,6 +14,7 @@ import net.rodolfoboffo.indicadorrb.model.basicos.Leitura;
 import net.rodolfoboffo.indicadorrb.model.basicos.Medicao;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
+import net.rodolfoboffo.indicadorrb.model.equipamento.Equipamento;
 import net.rodolfoboffo.indicadorrb.model.math.ConversorUnidades;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
@@ -33,6 +35,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     private ObservableField<List<Leitura>> ultimasLeituras;
     private ObservableInt casasDecimais;
     private ObservableDouble tara;
+    private ObservableBoolean sobrecarga;
 
     public IndicadorBase(IndicadorService service) {
         super(service);
@@ -43,6 +46,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         this.unidadeExibicao = new ObservableField<>(UnidadeEnum.kgf);
         this.casasDecimais = new ObservableInt(4);
         this.tara = new ObservableDouble(0.0);
+        this.sobrecarga = new ObservableBoolean(false);
         this.inicializaObservadores();
     }
 
@@ -62,11 +66,82 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         this.inicializaObservadorCalibracaoSelecionada();
         this.inicializaObservadorCondicionadorSinais();
         this.inicializaObservadorUltimasLeituras();
-        this.inicializaObservaorUnidadeExibicao();
-        this.inicializaObservaorCasasDecimais();
+        this.inicializaObservadorUnidadeExibicao();
+        this.inicializaObservadorCasasDecimais();
+        this.inicializaObservadorEquipamentoSelecionado();
+        this.inicializaObservadorSobrecarga();
     }
 
-    private void inicializaObservaorCasasDecimais() {
+    private void inicializaObservadorEquipamentoSelecionado() {
+        if (this.service != null) {
+            this.service.getGerenciadorEquipamento().getObjetoSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorBase.this.executaAcaoSobrecarga();
+                    Equipamento equipamento = IndicadorBase.this.service.getGerenciadorEquipamento().getObjetoSelecionado().get();
+                    if (equipamento != null) {
+                        IndicadorBase.this.inicializaObservadorEquipamento(equipamento);
+                    }
+                }
+            });
+            IndicadorBase.this.executaAcaoSobrecarga();
+        }
+    }
+
+    private void inicializaObservadorEquipamento(Equipamento equipamento) {
+        if (this.service != null && equipamento != null) {
+            equipamento.getReleNormalmenteLigado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorBase.this.verificaSobrecarga();
+                    IndicadorBase.this.executaAcaoSobrecarga();
+                }
+            });
+            equipamento.getLimiarSobrecarga().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorBase.this.verificaSobrecarga();
+                    IndicadorBase.this.executaAcaoSobrecarga();
+                }
+            });
+            equipamento.getAvisoSobrecarga().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorBase.this.verificaSobrecarga();
+                    IndicadorBase.this.executaAcaoSobrecarga();
+                }
+            });
+        }
+    }
+
+    private void inicializaObservadorSobrecarga() {
+        this.sobrecarga.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                IndicadorBase.this.executaAcaoSobrecarga();
+            }
+        });
+        IndicadorBase.this.executaAcaoSobrecarga();
+    }
+
+    private void executaAcaoSobrecarga() {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null && this.service.getCondicionadorSinais().get().getConexao().getPronto().get()) {
+            Equipamento equipamentoSelecionado = this.service.getGerenciadorEquipamento().getObjetoSelecionado().get();
+            if (equipamentoSelecionado == null) {
+                this.service.getCondicionadorSinais().get().ligaDesligaReleSobrecarga(false);
+                return;
+            }
+            if ((this.sobrecarga.get() && equipamentoSelecionado.getReleNormalmenteLigado().get()) ||
+                    (!this.sobrecarga.get() && !equipamentoSelecionado.getReleNormalmenteLigado().get())) {
+                this.service.getCondicionadorSinais().get().ligaDesligaReleSobrecarga(false);
+            }
+            else {
+                this.service.getCondicionadorSinais().get().ligaDesligaReleSobrecarga(true);
+            }
+        }
+    }
+
+    private void inicializaObservadorCasasDecimais() {
         this.casasDecimais.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -76,7 +151,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         });
     }
 
-    private void inicializaObservaorUnidadeExibicao() {
+    private void inicializaObservadorUnidadeExibicao() {
         this.unidadeExibicao.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -104,10 +179,26 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
             public void onPropertyChanged(Observable sender, int propertyId) {
                 IndicadorBase.this.resetUltimasLeituras();
                 IndicadorBase.this.inicializaObservadorUltimaLeitura();
+                IndicadorBase.this.inicializaObservadorCondicionadorPronto();
             }
         });
         IndicadorBase.this.resetUltimasLeituras();
         IndicadorBase.this.inicializaObservadorUltimaLeitura();
+        IndicadorBase.this.inicializaObservadorCondicionadorPronto();
+    }
+
+    private void inicializaObservadorCondicionadorPronto() {
+        if (this.service != null && this.service.getCondicionadorSinais().get() != null) {
+            this.service.getCondicionadorSinais().get().getConexao().getPronto().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorBase.this.verificaSobrecarga();
+                    IndicadorBase.this.executaAcaoSobrecarga();
+                }
+            });
+            IndicadorBase.this.verificaSobrecarga();
+            IndicadorBase.this.executaAcaoSobrecarga();
+        }
     }
 
     private void inicializaObservadorUltimaLeitura() {
@@ -117,9 +208,42 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     IndicadorBase.this.adicionaUltimaLeitura();
                     IndicadorBase.this.atualizaPico();
+                    IndicadorBase.this.verificaSobrecarga();
                 }
             });
         }
+    }
+
+    public void setSobrecarga(Boolean sobrecarga) {
+        this.sobrecarga.set(sobrecarga);
+    }
+
+    public void verificaSobrecarga() {
+        if (this.service != null) {
+            Equipamento equipamento = this.service.getGerenciadorEquipamento().getObjetoSelecionado().get();
+            if (equipamento == null) {
+                this.setSobrecarga(false);
+                return;
+            }
+            if (!equipamento.getAvisoSobrecarga().get()) {
+                this.setSobrecarga(false);
+                return;
+            }
+            Medicao medicao = this.getMedicaoIndicador();
+            if (medicao == null) {
+                this.setSobrecarga(false);
+                return;
+            }
+            this.verificaSobrecarga(equipamento, medicao);
+            return;
+        }
+    }
+
+    public void verificaSobrecarga(Equipamento equipamento, Medicao medicao) {
+        Double limiar = equipamento.getCapacidade().get() * equipamento.getLimiarSobrecarga().get();
+        UnidadeEnum unidadeEquipamento = equipamento.getUnidade().get();
+        Medicao limiarSobrecarga = new Medicao(limiar, unidadeEquipamento);
+        this.setSobrecarga(medicao.maiorQue(limiarSobrecarga));
     }
 
     public void limparPico() {
@@ -166,13 +290,13 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     private Double calculaVelocidadeEnsaio(List<Leitura> ultimasLeituras) {
         if (ultimasLeituras.size() < 2 ||
-                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() == null) {
+                this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() == null) {
             return 0.0;
         }
         Leitura ultimaLeitura = ultimasLeituras.get(ultimasLeituras.size()-1);
         Leitura primeira = ultimasLeituras.get(0);
         Long milis = ultimaLeitura.getHora().get().getTime() - primeira.getHora().get().getTime();
-        final Calibracao c = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get();
+        final Calibracao c = this.service.getGerenciadorCalibracao().getObjetoSelecionado().get();
         final UnidadeEnum unidadeExibicao = this.unidadeExibicao.get();
         Double ultimaIndicacao = this.getMedicaoIndicador(ultimaLeitura.getValor().get(), c, unidadeExibicao);
         Double primeiraIndicacao = this.getMedicaoIndicador(primeira.getValor().get(), c, unidadeExibicao);
@@ -181,7 +305,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     }
 
     private void inicializaObservadorCalibracaoSelecionada() {
-        this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        this.service.getGerenciadorCalibracao().getObjetoSelecionado().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 IndicadorBase.this.usaCalibracaoSelecionada();
@@ -191,7 +315,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
     }
 
     public void usaCalibracaoSelecionada() {
-        this.usaCalibracao(this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get());
+        this.usaCalibracao(this.service.getGerenciadorCalibracao().getObjetoSelecionado().get());
     }
 
     public void usaCalibracao(Calibracao calibracao) {
@@ -230,9 +354,9 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public void tara() {
         if (this.service.getCondicionadorSinais().get() != null &&
-                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() != null &&
                 this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
-            Double tara = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
+            Double tara = this.service.getGerenciadorCalibracao().getObjetoSelecionado().get().getAjuste().get().getValorAjustado(
                     this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get()
             );
             this.setTara(tara);
@@ -244,13 +368,13 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public Medicao getMedicaoIndicador() {
         if (this.service.getCondicionadorSinais().get() != null &&
-                this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() != null &&
                 this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
-            Double valorPronto = this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getAjuste().get().getValorAjustado(
+            Double valorPronto = this.service.getGerenciadorCalibracao().getObjetoSelecionado().get().getAjuste().get().getValorAjustado(
                     this.service.getCondicionadorSinais().get().getUltimoLeitura().get().getValor().get());
             valorPronto = valorPronto - this.getTara().get();
             valorPronto = ConversorUnidades.converte(valorPronto,
-                                                    this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get().getUnidadeCalibracao().get(),
+                                                    this.service.getGerenciadorCalibracao().getObjetoSelecionado().get().getUnidadeCalibracao().get(),
                                                     this.unidadeExibicao.get());
             return new Medicao(valorPronto, this.unidadeExibicao.get());
         }
@@ -336,4 +460,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
         return pico;
     }
 
+    public ObservableBoolean getSobrecarga() {
+        return sobrecarga;
+    }
 }

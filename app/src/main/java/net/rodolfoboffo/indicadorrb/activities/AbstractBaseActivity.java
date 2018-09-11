@@ -106,6 +106,9 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
             case R.id.navCalibracao:
                 iniciaActivity(CalibracaoActivity.class);
                 break;
+            case R.id.navEquipamento:
+                iniciaActivity(EquipamentoActivity.class);
+                break;
             default:
                 break;
         }

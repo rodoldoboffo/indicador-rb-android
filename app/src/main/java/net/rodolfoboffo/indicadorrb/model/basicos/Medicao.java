@@ -38,4 +38,9 @@ public class Medicao {
                                                     unidadeEnum),
                     unidadeEnum);
     }
+
+    public Boolean maiorQue(Medicao m) {
+        Medicao mConvertido = m.converte(this.getUnidade().get());
+        return this.getValor().get() > mConvertido.getValor().get();
+    }
 }

@@ -28,7 +28,7 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         super(service);
         this.timerAquisicaoAutomatica = new Timer("timerAquisicaoAutomaticaThread", true);
         this.conexao = conexao;
-        this.ultimaLeitura = new ObservableField<>(new Leitura(0.0, new Date()));
+        this.ultimaLeitura = new ObservableField<>();
         this.aquisicaoAutomatica = new ObservableBoolean(false);
     }
 
@@ -101,5 +101,5 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         this.ultimaLeitura.set(ultimaLeitura);
     }
 
-
+    public void ligaDesligaReleSobrecarga(Boolean liga) {}
 }

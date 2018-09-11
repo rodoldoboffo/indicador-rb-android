@@ -6,31 +6,31 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewSemCalibracao"
+        android:id="@+id/textViewSemItens"
         style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/naoExistemCalibracoes"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Não existem itens."/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/novaCalibracaoButton"
+        android:id="@+id/novoItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        android:onClick="onNovaCalibracaoButtonClick"
         android:src="@drawable/ic_add_24dp"
         android:theme="@style/FloatingActionButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="onNovoItemButtonClick"/>
 
     <ListView
-        android:id="@+id/listViewCalibracoes"
+        android:id="@+id/listViewItens"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/colorPrimaryTransparent"

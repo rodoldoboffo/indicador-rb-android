@@ -113,4 +113,9 @@
         <item name="android:layout_margin">1dp</item>
         <item name="android:textAlignment">center</item>
     </style>
+
+    <style name="IndicacaoSobrecarga" parent="HugeText">
+        <item name="android:textColor">@color/yellow</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
 </resources>

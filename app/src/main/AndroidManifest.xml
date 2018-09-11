@@ -28,8 +28,12 @@
             android:label="@string/conexoes_activity_label"></activity>
         <activity android:name=".activities.CalibracaoActivity"
             android:label="@string/calibracao_activity_label"></activity>
+        <activity android:name=".activities.EquipamentoActivity"
+            android:label="@string/equipamento_activity_label"></activity>
         <activity android:name=".activities.EditarCalibracaoActivity"
             android:label="@string/nova_calibracao_activity_label"></activity>
+        <activity android:name=".activities.EditarEquipamentoActivity"
+            android:label="@string/novo_equipamento_activity_label"></activity>
         <service android:name="net.rodolfoboffo.indicadorrb.services.IndicadorService"
             />
     </application>

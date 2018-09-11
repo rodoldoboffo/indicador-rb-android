@@ -25,10 +25,12 @@
     <string name="cancelar">Cancelar</string>
     <string name="salvar">Salvar</string>
     <string name="nomeCalibracaoVazioError">Nome da calibração não pode estar vazio.</string>
+    <string name="nomeEquipamentoVazioError">Nome do equipamento não pode estar vazio.</string>
     <string name="mpa">MPa</string>
     <string name="gpa">GPa</string>
     <string name="celsius">°C</string>
     <string name="calibracaoComMesmoNome">Já existe uma calibração com esse nome.</string>
+    <string name="equipamentoComMesmoNome">Já existe um equipamento com esse nome.</string>
     <string name="selecionar">Selecionar</string>
     <string name="editar">Editar</string>
     <string name="remover">Remover</string>
@@ -56,4 +58,17 @@
     <string name="calibracaoSemPontos">Ao menos dois pontos de calibração são necessários.</string>
     <string name="ok">OK</string>
     <string name="naoExistemEquipamentos">Ainda não existem equipamentos salvos.</string>
+    <string name="naoExistemItens">Ainda não existem itens salvos.</string>
+    <string name="nomeEquipamentoHint">Nome do Equipamento</string>
+    <string name="capacidade">Capacidade</string>
+    <string name="capacidadeHint">ex.: 1000</string>
+    <string name="novo_equipamento_activity_label">Novo Equipamento</string>
+    <string name="editar_equipamento_activity_label">Editar Equipamento</string>
+    <string name="capacidadeNaoEhNumero">Capacidade precisa ser um número decimal.</string>
+    <string name="capacidadeNaoPositivo">Capacidade precisa ser maior que zero.</string>
+    <string name="avisoDeSobrecarga">Aviso de Sobrecarga</string>
+    <string name="habilitarAviso">Habilitar Aviso de Sobrecarga</string>
+    <string name="normalmenteLigado">Normalmente Ligado</string>
+    <string name="normalmenteDesligado">Normalmente Desligado</string>
+    <string name="sobrecarga">Sobrecarga</string>
 </resources>

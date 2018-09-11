@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:id="@+id/layoutDetalhesEnsaio"
+        android:id="@+id/layoutSuperior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -83,31 +83,57 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/layoutCentral"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
+        android:layout_below="@id/layoutSuperior"
+        android:layout_above="@id/layoutInferior">
 
         <TextView
-            android:id="@+id/indicacao_principal_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/sobrecargaTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="indicacaoPrincipalOnClick"
             android:textStyle="bold"
-            android:layout_gravity="center_vertical"
-            android:theme="@style/HugeBlackText"
-            tools:text="1300000" />
-        <Spinner
-            android:id="@+id/unidadeExibicaoSpinner"
+            android:text="@string/sobrecarga"
+            android:padding="6dp"
+            android:gravity="center_horizontal"
+            android:layout_marginVertical="10dp"
+            android:layout_above="@id/layoutIndicacaoPrincipal"
+            android:theme="@style/IndicacaoSobrecarga" />
+
+        <RelativeLayout
+            android:id="@+id/layoutIndicacaoPrincipal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/indicacao_principal_text"
-            android:layout_gravity="center_vertical"
-            style="@style/BigTextBlack">
-        </Spinner>
+            android:layout_centerInParent="true">
 
+            <TextView
+                android:id="@+id/indicacao_principal_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="indicacaoPrincipalOnClick"
+                android:textStyle="bold"
+                android:theme="@style/HugeBlackText"
+                tools:text="1300000" />
+
+            <Spinner
+                android:id="@+id/unidadeExibicaoSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/indicacao_principal_text"
+                android:layout_gravity="center_vertical"
+                style="@style/BigTextBlack">
+            </Spinner>
+
+        </RelativeLayout>
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutInferior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <Button
             style="@style/Button"
@@ -115,7 +141,8 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/zero"
-            android:layout_alignParentBottom="true"
             android:onClick="zeroButtonOnClick"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -11,32 +11,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.Calibracao;
 
 import java.util.List;
 
-public class ArrayCalibracoesAdapter extends BaseAdapter {
+public class ArrayListaItemAdapter<T extends IListaItem> extends BaseAdapter {
 
-    private List<Calibracao> calibracoes;
+    private List<T> lista;
     private Context context;
 
-    public ArrayCalibracoesAdapter(Context context, List<Calibracao> list) {
+    public ArrayListaItemAdapter(Context context, List<T> list) {
         this.context = context;
-        this.calibracoes = list;
+        this.lista = list;
     }
 
-    public ArrayCalibracoesAdapter(Context context) {
+    public ArrayListaItemAdapter(Context context) {
         this(context, null);
     }
 
-    public void setCalibracoes(List<Calibracao> calibracoes) {
-        this.calibracoes = calibracoes;
+    public void setLista(List<T> list) {
+        this.lista = list;
     }
 
     @Override
     public Object getItem(int position) {
-        if (this.calibracoes != null) {
-            return this.calibracoes.get(position);
+        if (this.lista != null) {
+            return this.lista.get(position);
         }
         return null;
     }
@@ -48,8 +47,8 @@ public class ArrayCalibracoesAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (this.calibracoes != null) {
-            return this.calibracoes.size();
+        if (this.lista != null) {
+            return this.lista.size();
         }
         return 0;
     }
@@ -58,14 +57,14 @@ public class ArrayCalibracoesAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) this.context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        View view = inflater.inflate(R.layout.list_item_calibracao, parent, false);
+        View view = inflater.inflate(R.layout.list_item_array_adapter, parent, false);
 
-        TextView textViewNome = (TextView) view.findViewById(R.id.itemNomeCalibracaoText);
-        ImageView imageViewSelecionado = (ImageView) view.findViewById(R.id.imageCalibracaoSelecionado);
-        if (this.calibracoes != null) {
-            Calibracao calibracao = this.calibracoes.get(position);
-            textViewNome.setText(calibracao.getNome().get());
-            if (calibracao.getSelecionado().get()) {
+        TextView textViewNome = (TextView) view.findViewById(R.id.itemNomeExibicaoItemText);
+        ImageView imageViewSelecionado = (ImageView) view.findViewById(R.id.imageItemSelecionado);
+        if (this.lista != null) {
+            T item = this.lista.get(position);
+            textViewNome.setText(item.getNomeExibicaoLista());
+            if (item.isListsaItemSelecionado()) {
                 imageViewSelecionado.setVisibility(View.VISIBLE);
             }
             else {

@@ -164,7 +164,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
             this.nomeCalibracaoText.setError(this.getString(R.string.nomeCalibracaoVazioError));
             return false;
         }
-        if (!this.service.getGerenciadorCalibracao().validarNomeCalibracao(this.nomeCalibracaoText.getText().toString(), this.calibracao)) {
+        if (!this.service.getGerenciadorCalibracao().validarNomeObjeto(this.nomeCalibracaoText.getText().toString(), this.calibracao)) {
             this.nomeCalibracaoText.setError(this.getString(R.string.calibracaoComMesmoNome));
             return false;
         }
@@ -196,7 +196,7 @@ public class EditarCalibracaoActivity extends AbstractBaseActivity {
                 this.calibracao.setUnidadeCalibracao((UnidadeEnum) this.spinnerUnidade.getSelectedItem());
                 Reta ajuste = RegressaoLinear.getAjuste(this.calibracao.getPontosCalibracao());
                 this.calibracao.setAjuste(ajuste);
-                this.service.getGerenciadorCalibracao().salvarCalibracao(this.calibracao);
+                this.service.getGerenciadorCalibracao().salvarObjeto(this.calibracao);
                 this.setResult(RESULT_OK);
                 this.finish();
             }

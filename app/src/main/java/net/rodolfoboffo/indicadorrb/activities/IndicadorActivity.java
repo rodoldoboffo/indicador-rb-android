@@ -29,6 +29,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
     private Handler handler;
     private Spinner unidadeExibicaoSpinner;
     private EnumArrayAdapter spinnerUnidadeAdapter;
+    private TextView sobrecargaTextView;
 
     @Override
     protected int getLayoutResourceId() {
@@ -62,6 +63,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
 
             }
         });
+        this.sobrecargaTextView = this.findViewById(R.id.sobrecargaTextView);
     }
 
     @Override
@@ -89,6 +91,35 @@ public class IndicadorActivity extends AbstractBaseActivity {
         this.inicializarObservadorConexao();
         this.inicializarObservadorVelocidade();
         this.inicializarObservadorPico();
+        this.inicializarObservadorSobrecarga();
+    }
+
+    private void inicializarObservadorSobrecarga() {
+        if (this.service != null) {
+            this.service.getIndicador().getSobrecarga().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    IndicadorActivity.this.atualizaExibicaoAvisoSobrecarga();
+                }
+            });
+            this.atualizaExibicaoAvisoSobrecarga();
+        }
+    }
+
+    private void atualizaExibicaoAvisoSobrecarga() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (IndicadorActivity.this.service != null) {
+                    if (IndicadorActivity.this.service.getIndicador().getSobrecarga().get()) {
+                        IndicadorActivity.this.sobrecargaTextView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        IndicadorActivity.this.sobrecargaTextView.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 
     private void inicializarObservadorVelocidade() {
@@ -180,7 +211,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
             public void run() {
                 if (IndicadorActivity.this.service != null) {
                     if (IndicadorActivity.this.service.getCondicionadorSinais().get() != null &&
-                            IndicadorActivity.this.service.getGerenciadorCalibracao().getCalibracaoSelecionada().get() != null &&
+                            IndicadorActivity.this.service.getGerenciadorCalibracao().getObjetoSelecionado().get() != null &&
                             IndicadorActivity.this.service.getCondicionadorSinais().get().getUltimoLeitura().get() != null) {
                         if (IndicadorActivity.this.unidadeExibicaoSpinner.getVisibility() != View.VISIBLE) {
                             IndicadorActivity.this.unidadeExibicaoSpinner.setVisibility(View.VISIBLE);

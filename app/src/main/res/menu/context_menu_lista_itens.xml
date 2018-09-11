@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/selecionarCalibracao"
+    <item android:id="@+id/selecionarItem"
         android:title="@string/selecionar"
         />
-    <item android:id="@+id/editarCalibracao"
+    <item android:id="@+id/editarItem"
         android:title="@string/editar"
         />
-    <item android:id="@+id/removerCalibracao"
+    <item android:id="@+id/removerItem"
         android:title="@string/remover"
         />
 </menu>

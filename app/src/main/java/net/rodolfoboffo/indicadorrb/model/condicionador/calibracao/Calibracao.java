@@ -7,15 +7,17 @@ import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import net.rodolfoboffo.indicadorrb.adapter.IListaItem;
 import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
 import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
+import net.rodolfoboffo.indicadorrb.model.persistencia.IObjetoPersistente;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Calibracao implements Cloneable, Serializable, Comparable<Calibracao> {
+public class Calibracao implements Cloneable, Serializable, Comparable<Calibracao>, IListaItem, IObjetoPersistente {
     protected UUID id;
     protected ObservableField<String> nome;
     protected ObservableField<GrandezaEnum> grandeza;
@@ -25,11 +27,11 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
     protected ObservableField<Reta> ajuste;
 
     public Calibracao() {
-        this(UUID.randomUUID().toString());
+        this(UUID.randomUUID());
     }
 
-    public Calibracao(String id) {
-        this.id = UUID.fromString(id);
+    public Calibracao(UUID id) {
+        this.id = id;
         this.nome = new ObservableField<>("");
         this.grandeza = new ObservableField<>(GrandezaEnum.forca);
         this.unidadeCalibracao = new ObservableField<>();
@@ -39,8 +41,27 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
         this.ajuste = new ObservableField<>(new Reta());
     }
 
+    public Calibracao(String id) {
+        this(UUID.fromString(id));
+    }
+
+    @Override
+    public String getNomePersistencia() {
+        return this.nome.get();
+    }
+
     public final UUID getId() {
         return this.id;
+    }
+
+    @Override
+    public void setObjetoSelecionado(Boolean selecionado) {
+        this.setSelecionado(selecionado);
+    }
+
+    @Override
+    public Boolean isObjetoSelecionado() {
+        return this.getSelecionado().get();
     }
 
     public ObservableField<String> getNome() {
@@ -125,5 +146,15 @@ public class Calibracao implements Cloneable, Serializable, Comparable<Calibraca
     @Override
     public boolean equals(Object obj) {
         return this.id.equals(((Calibracao)obj).getId());
+    }
+
+    @Override
+    public String getNomeExibicaoLista() {
+        return this.nome.get();
+    }
+
+    @Override
+    public Boolean isListsaItemSelecionado() {
+        return this.selecionado.get();
     }
 }
