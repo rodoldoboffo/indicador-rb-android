@@ -71,7 +71,7 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
 
     private void iniciarAquisicaoAutomatica() {
         this.timerTask = new AquisicaoAutomaticaTask(this);
-        this.timerAquisicaoAutomatica.schedule(this.timerTask, 500, 100);
+        this.timerAquisicaoAutomatica.schedule(this.timerTask, 500, 20);
         this.aquisicaoAutomatica.set(true);
     }
 
