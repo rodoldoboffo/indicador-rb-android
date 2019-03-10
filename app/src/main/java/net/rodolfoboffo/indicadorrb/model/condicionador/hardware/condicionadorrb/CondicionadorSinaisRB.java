@@ -77,7 +77,7 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
 
     @Override
     public void solicitarLeitura() {
-        this.enviaComando(ComandosEnvio.REQUEST_AD_VALUE);
+        this.enviaComando(ComandosEnvio.REQUEST_STATE);
     }
 
     public void ligaRele() {
@@ -90,10 +90,10 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
 
     @Override
     public void ligaDesligaReleSobrecarga(Boolean liga) {
-        if (liga) {
+        if (liga && !this.estadoRelay.get()) {
             this.ligaRele();
         }
-        else {
+        else if (!liga && this.estadoRelay.get()) {
             this.desligaRele();
         }
     }

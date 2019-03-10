@@ -26,7 +26,7 @@ import java.util.List;
 public class IndicadorBase extends AbstractServiceRelatedObject {
 
     public static final int MAXIMO_CASAS_DECIMAIS = 8;
-    public static final int NUMERO_LEITURAS_VELOCIDADE = 5;
+    public static final int NUMERO_LEITURAS_VELOCIDADE = 10;
 
     private ObservableField<GrandezaEnum> grandezaExibicao;
     private ObservableField<UnidadeEnum> unidadeExibicao;
@@ -209,6 +209,7 @@ public class IndicadorBase extends AbstractServiceRelatedObject {
                     IndicadorBase.this.adicionaUltimaLeitura();
                     IndicadorBase.this.atualizaPico();
                     IndicadorBase.this.verificaSobrecarga();
+                    IndicadorBase.this.executaAcaoSobrecarga();
                 }
             });
         }
