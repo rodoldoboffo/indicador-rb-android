@@ -71,4 +71,5 @@
     <string name="normalmenteLigado">Normalmente Ligado</string>
     <string name="normalmenteDesligado">Normalmente Desligado</string>
     <string name="sobrecarga">Sobrecarga</string>
+    <string name="conectando">Conectando...</string>
 </resources>
