@@ -301,6 +301,7 @@ public class IndicadorActivity extends AbstractBaseActivity {
                             IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.conectar));
                         }
                         if (IndicadorActivity.this.service.getCondicionadorSinais().get().getConexao().getConectando().get()) {
+                            IndicadorActivity.this.conectarMenuItem.setTitle(getString(R.string.conectando));
                             IndicadorActivity.this.conectarMenuItem.setEnabled(false);
                         } else {
                             IndicadorActivity.this.conectarMenuItem.setEnabled(true);
