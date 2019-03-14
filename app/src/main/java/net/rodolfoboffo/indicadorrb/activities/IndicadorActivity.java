@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
@@ -374,7 +373,8 @@ public class IndicadorActivity extends AbstractBaseActivity {
                 this.service.getCondicionadorSinais().get().finalizar();
             }
             else {
-                this.service.getCondicionadorSinais().get().inicializar();
+                int response = this.service.getCondicionadorSinais().get().inicializar();
+                this.trataRespostaDispositivo(response);
             }
         }
     }
