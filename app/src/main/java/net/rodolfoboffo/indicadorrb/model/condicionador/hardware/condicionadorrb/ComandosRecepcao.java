@@ -26,7 +26,7 @@ public class ComandosRecepcao {
                 Leitura leitura = new Leitura(valorLido, new Date());
                 condicionador.setUltimaLeitura(leitura);
             }
-            catch (NumberFormatException e) {
+            catch (Exception e) {
                 Log.e(ComandosRecepcao.class.getName(), "Não foi possível interpretar leitura reebida.");
             }
         }
@@ -41,7 +41,7 @@ public class ComandosRecepcao {
                 byte[] estadoReleBytes = Arrays.copyOfRange(stateHex, 4, 5);
                 boolean estadoRele = HexUtil.byteArrayToBoolean(estadoReleBytes);
                 condicionador.setEstadoRelay(estadoRele);
-            } catch (DecoderException e) {
+            } catch (Exception e) {
                 Log.e(ComandosRecepcao.class.getName(), "Não foi possível interpretar estado recebido.");
                 e.printStackTrace();
             }

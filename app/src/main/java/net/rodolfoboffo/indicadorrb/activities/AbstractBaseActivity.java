@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import net.rodolfoboffo.indicadorrb.R;
+import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 import net.rodolfoboffo.indicadorrb.services.IndicadorServiceBinder;
 
@@ -228,4 +229,12 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
         }
     }
 
+    protected void trataRespostaDispositivo(int response) {
+        if (response == GerenciadorDeDispositivos.RESPONSE_BLUETOOTH_NAO_ATIVADO) {
+            this.requisitarAtivacaoBluetooth();
+        }
+        else if (response == GerenciadorDeDispositivos.RESPONSE_SEM_PERMISSAO_DE_LOCALIDADE) {
+            this.requisitarPermissoesDeLocalidade();
+        }
+    }
 }

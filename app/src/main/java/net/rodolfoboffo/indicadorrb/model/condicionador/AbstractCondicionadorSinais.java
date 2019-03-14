@@ -8,7 +8,6 @@ import net.rodolfoboffo.indicadorrb.model.basicos.Leitura;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.services.IndicadorService;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,9 +52,10 @@ public abstract class AbstractCondicionadorSinais extends AbstractServiceRelated
         this.getConexao().desconectar();
     }
 
-    public void inicializar() {
-        this.getConexao().conectar();
+    public int inicializar() {
+        int response = this.getConexao().conectar();
         this.iniciarAquisicaoAutomatica();
+        return response;
     }
 
     public abstract void solicitarLeitura();
