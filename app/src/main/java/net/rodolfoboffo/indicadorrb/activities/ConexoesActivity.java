@@ -180,7 +180,8 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
                         this.service.getCondicionadorSinais().get().finalizar();
                     }
                     this.service.criaCondicionadorSinais(dispositivo);
-                    this.service.getCondicionadorSinais().get().inicializar();
+                    int response = this.service.getCondicionadorSinais().get().inicializar();
+                    this.trataRespostaDispositivo(response);
                     break;
                 case R.id.desconectarDispositivo:
                     dispositivo.desconectar();
@@ -206,12 +207,7 @@ public class ConexoesActivity extends AbstractBaseActivity implements View.OnCre
         this.vibrarCurto();
         if (this.service != null) {
             int response = this.service.getGerenciadorConexoes().atualizarListaDispositivos();
-            if (response == GerenciadorDeDispositivos.RESPONSE_BLUETOOTH_NAO_ATIVADO) {
-                this.requisitarAtivacaoBluetooth();
-            }
-            else if (response == GerenciadorDeDispositivos.RESPONSE_SEM_PERMISSAO_DE_LOCALIDADE) {
-                this.requisitarPermissoesDeLocalidade();
-            }
+            this.trataRespostaDispositivo(response);
         }
         return true;
     }
