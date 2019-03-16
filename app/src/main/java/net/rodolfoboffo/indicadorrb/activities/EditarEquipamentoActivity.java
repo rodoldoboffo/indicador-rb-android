@@ -174,7 +174,7 @@ public class EditarEquipamentoActivity extends AbstractBaseActivity {
         this.spinnerUnidade.setAdapter(this.spinnerUnidadeAdapter);
     }
 
-    public static void novoEquipamento(Activity context) {
+    public static void novoItem(Activity context) {
         Intent intent = new Intent(context, EditarEquipamentoActivity.class);
         Bundle bundle = new Bundle();
         context.startActivityForResult(intent, NOVO_EQUIPAMENTO, bundle);

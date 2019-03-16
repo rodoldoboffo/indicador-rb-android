@@ -1,18 +1,10 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
-import android.content.ComponentName;
 import android.databinding.ObservableList;
-import android.os.Bundle;
-import android.os.IBinder;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.adapter.IListaItem;
 import net.rodolfoboffo.indicadorrb.model.equipamento.Equipamento;
-
-import java.util.List;
 
 public class EquipamentoActivity extends AbstractListaItemActivity<Equipamento> {
 
@@ -54,7 +46,7 @@ public class EquipamentoActivity extends AbstractListaItemActivity<Equipamento> 
     public void onNovoItemButtonClick(View view) {
         super.onNovoItemButtonClick(view);
         if (this.service != null) {
-            EditarEquipamentoActivity.novoEquipamento(this);
+            EditarEquipamentoActivity.novoItem(this);
         }
     }
 }

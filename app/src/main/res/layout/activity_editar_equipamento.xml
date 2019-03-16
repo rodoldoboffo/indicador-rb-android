@@ -15,7 +15,7 @@
         android:layout_alignParentBottom="true"
         android:src="@drawable/ic_save_24dp"
         android:theme="@style/FloatingActionButton"
-        android:onClick="onSalvarEquipamentoButtonClick"/>
+        android:onClick="onSalvarItemButtonClick"/>
 
     <ScrollView
         android:id="@+id/scrollViewPrincipal"

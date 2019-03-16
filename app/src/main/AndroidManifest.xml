@@ -35,8 +35,11 @@
             android:label="@string/nova_calibracao_activity_label"></activity>
         <activity android:name=".activities.EditarEquipamentoActivity"
             android:label="@string/novo_equipamento_activity_label"></activity>
-        <service android:name="net.rodolfoboffo.indicadorrb.services.IndicadorService"
-            />
+        <activity android:name=".activities.CorpoProvaActivity"
+            android:label="@string/corpo_prova_activity_label"></activity>
+        <activity android:name=".activities.EditarCorpoProvaActivity"
+            android:label="@string/novo_corpo_prova_activity_label"></activity>
+        <service android:name="net.rodolfoboffo.indicadorrb.services.IndicadorService" />
     </application>
 
 </manifest>

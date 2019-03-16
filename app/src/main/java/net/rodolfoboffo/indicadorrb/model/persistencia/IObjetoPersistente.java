@@ -2,7 +2,7 @@ package net.rodolfoboffo.indicadorrb.model.persistencia;
 
 import java.util.UUID;
 
-public interface IObjetoPersistente {
+public interface IObjetoPersistente extends Cloneable {
 
     public String getNomePersistencia();
 
@@ -11,4 +11,6 @@ public interface IObjetoPersistente {
     public void setObjetoSelecionado(Boolean selecionado);
 
     public Boolean isObjetoSelecionado();
+
+    public IObjetoPersistente clone();
 }

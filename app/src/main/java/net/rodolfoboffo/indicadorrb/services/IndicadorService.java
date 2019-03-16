@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import net.rodolfoboffo.indicadorrb.model.condicionador.AbstractCondicionadorSinais;
+import net.rodolfoboffo.indicadorrb.model.corpoprova.GerenciadorDeCorpoProva;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.DispositivoBLE;
 import net.rodolfoboffo.indicadorrb.model.dispositivos.GerenciadorDeDispositivos;
 import net.rodolfoboffo.indicadorrb.model.condicionador.calibracao.GerenciadorDeCalibracao;
@@ -36,6 +37,7 @@ public class IndicadorService extends Service {
     private GerenciadorDePermissoes gerenciadoPermissoes;
     private GerenciadorDeCalibracao gerenciadorCalibracao;
     private GerenciadorDeEquipamento gerenciadorEquipamento;
+    private GerenciadorDeCorpoProva gerenciadorCorpoProva;
     private ObservableField<AbstractCondicionadorSinais> condicionadorSinais;
     private IndicadorBase indicador;
 
@@ -57,6 +59,7 @@ public class IndicadorService extends Service {
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarObjetos();
         this.gerenciadorEquipamento = new GerenciadorDeEquipamento(this);
+        this.gerenciadorCorpoProva = new GerenciadorDeCorpoProva(this);
         this.gerenciadorEquipamento.carregarObjetos();
         this.condicionadorSinais = new ObservableField<>();
         this.indicador = new IndicadorBase(this);
@@ -153,6 +156,10 @@ public class IndicadorService extends Service {
 
     public final GerenciadorDeEquipamento getGerenciadorEquipamento() {
         return this.gerenciadorEquipamento;
+    }
+
+    public final GerenciadorDeCorpoProva getGerenciadorCorpoProva() {
+        return this.gerenciadorCorpoProva;
     }
 
     public final IndicadorBase getIndicador() {

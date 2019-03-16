@@ -14,7 +14,7 @@ import net.rodolfoboffo.indicadorrb.model.persistencia.IObjetoPersistente;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class Equipamento implements Cloneable, Serializable, Comparable<Equipamento>, IListaItem, IObjetoPersistente {
+public class Equipamento implements Serializable, Comparable<Equipamento>, IListaItem, IObjetoPersistente {
 
     private UUID id;
     private ObservableField<String> nome;
