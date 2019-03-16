@@ -71,7 +71,7 @@ public class CondicionadorSinaisRB extends AbstractCondicionadorSinais {
     }
 
     private void enviaComando(String comando) {
-        String comandoComSeparador = String.format("%s%s%s", Comandos.SEPARADOR, comando, Comandos.SEPARADOR);
+        String comandoComSeparador = String.format("%s%s", comando, Comandos.SEPARADOR);
         this.getConexao().enviarDados(comandoComSeparador);
     }
 
