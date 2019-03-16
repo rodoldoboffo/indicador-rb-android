@@ -1,30 +1,28 @@
 package net.rodolfoboffo.indicadorrb.activities;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.SeekBar;
 
 import net.rodolfoboffo.indicadorrb.R;
-import net.rodolfoboffo.indicadorrb.adapter.EnumArrayAdapter;
-import net.rodolfoboffo.indicadorrb.model.basicos.GrandezaEnum;
-import net.rodolfoboffo.indicadorrb.model.basicos.UnidadeEnum;
 import net.rodolfoboffo.indicadorrb.model.corpoprova.CorpoProva;
-import net.rodolfoboffo.indicadorrb.model.equipamento.Equipamento;
-import net.rodolfoboffo.indicadorrb.model.persistencia.IObjetoPersistente;
-
-import java.text.NumberFormat;
-import java.util.Arrays;
 
 public class EditarCorpoProvaActivity extends AbstractEditarItemPersistenteActivity<CorpoProva> {
 
     private EditText nomeCorpoProvaEditText;
+
+    private CorpoProva item;
+
+    @Override
+    public CorpoProva getItem() {
+        return item;
+    }
+
+    @Override
+    public void setItem(CorpoProva item) {
+        this.item = item;
+    }
 
     @Override
     protected Class getItemClass() {
@@ -63,6 +61,19 @@ public class EditarCorpoProvaActivity extends AbstractEditarItemPersistenteActiv
             return false;
         }
         return true;
+    }
+
+    public static void novoItem(Activity context) {
+        Intent intent = new Intent(context, EditarCorpoProvaActivity.class);
+        Bundle bundle = new Bundle();
+        context.startActivityForResult(intent, NOVO_ITEM, bundle);
+    }
+
+    public static void editarItem(Activity context, CorpoProva item) {
+        Intent intent = new Intent(context, EditarCorpoProvaActivity.class);
+        intent.putExtra(ITEM_EXTRA, item);
+        Bundle bundle = new Bundle();
+        context.startActivityForResult(intent, EDITAR_ITEM, bundle);
     }
 
     @Override

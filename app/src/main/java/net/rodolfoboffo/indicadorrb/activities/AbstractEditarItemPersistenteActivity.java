@@ -19,11 +19,9 @@ public abstract class AbstractEditarItemPersistenteActivity<I extends IObjetoPer
     public static final int NOVO_ITEM = 0;
     public static final int EDITAR_ITEM = 1;
 
-    private I item;
+    protected abstract I getItem();
 
-    protected I getItem() {
-        return this.item;
-    }
+    protected abstract void setItem(I item);
 
     protected int getNovoItemResource() {
         return R.string.novo_item_activity_label;
@@ -39,17 +37,17 @@ public abstract class AbstractEditarItemPersistenteActivity<I extends IObjetoPer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.item = (I) this.getIntent().getSerializableExtra(ITEM_EXTRA);
-        if (this.item == null) {
+        this.setItem((I) this.getIntent().getSerializableExtra(ITEM_EXTRA));
+        if (this.getItem() == null) {
             try {
-                this.item = (I) this.getItemClass().getConstructor().newInstance();
+                this.setItem((I) this.getItemClass().getConstructor().newInstance());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             this.getSupportActionBar().setTitle(this.getNovoItemResource());
         }
         else {
-            this.item = (I) this.item.clone();
+            this.setItem((I) this.getItem().clone());
             this.getSupportActionBar().setTitle(this.getEditarItemResource());
         }
     }
@@ -61,19 +59,6 @@ public abstract class AbstractEditarItemPersistenteActivity<I extends IObjetoPer
     }
 
     public void inicializaObservadores() {};
-
-    public static void novoItem(Activity context) {
-        Intent intent = new Intent(context, EditarCorpoProvaActivity.class);
-        Bundle bundle = new Bundle();
-        context.startActivityForResult(intent, NOVO_ITEM, bundle);
-    }
-
-    public static void editarItem(Activity context, CorpoProva item) {
-        Intent intent = new Intent(context, EditarCorpoProvaActivity.class);
-        intent.putExtra(ITEM_EXTRA, item);
-        Bundle bundle = new Bundle();
-        context.startActivityForResult(intent, EDITAR_ITEM, bundle);
-    }
 
     public abstract Boolean validar();
 

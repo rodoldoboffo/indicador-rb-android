@@ -38,7 +38,7 @@ public class EquipamentoActivity extends AbstractListaItemActivity<Equipamento> 
     public void editarItem(Equipamento item) {
         super.editarItem(item);
         if (this.service != null) {
-            EditarEquipamentoActivity.editarEquipamento(this, item);
+            EditarEquipamentoActivity.editarItem(this, item);
         }
     }
 

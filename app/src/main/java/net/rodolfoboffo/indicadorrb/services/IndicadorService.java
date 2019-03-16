@@ -59,8 +59,9 @@ public class IndicadorService extends Service {
         this.gerenciadorCalibracao = new GerenciadorDeCalibracao(this);
         this.gerenciadorCalibracao.carregarObjetos();
         this.gerenciadorEquipamento = new GerenciadorDeEquipamento(this);
-        this.gerenciadorCorpoProva = new GerenciadorDeCorpoProva(this);
         this.gerenciadorEquipamento.carregarObjetos();
+        this.gerenciadorCorpoProva = new GerenciadorDeCorpoProva(this);
+        this.gerenciadorCorpoProva.carregarObjetos();
         this.condicionadorSinais = new ObservableField<>();
         this.indicador = new IndicadorBase(this);
         this.carregarPreferencias();
